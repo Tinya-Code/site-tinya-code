@@ -1,0 +1,28 @@
+---
+import { siteConfig } from "@/data/siteConfig";
+import { contactData } from "@/data/social";
+
+interface Props {
+  url: string;
+}
+
+const { url } = Astro.props;
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  name: siteConfig.name,
+  image: new URL(siteConfig.ogImage, siteConfig.url).toString(),
+  "@id": url,
+  url: url,
+  telephone: contactData.phone,
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: contactData.address,
+  },
+  email: contactData.email,
+  description: siteConfig.description,
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} is:inline />

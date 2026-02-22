@@ -1,0 +1,33 @@
+---
+import { siteConfig } from "@/data/siteConfig";
+import AidaBanner from "@/components/ui/sections/AidaBanner.astro";
+import { aidaPhases } from "@/data/aida";
+
+// Smart component: Orchestrates AIDA model data
+interface Props {
+  title?: string;
+  subtitle?: string;
+  ctaText?: string;
+  ctaHref?: string;
+  modelLabel?: string;
+  badges?: string[];
+  background?: "brand" | "dark" | "light" | "white";
+}
+
+const { background = "light", ...customProps } = Astro.props;
+const data = { ...siteConfig.aida, ...customProps };
+---
+
+<AidaBanner background={background} {...data} phases={aidaPhases} />
+
+<script>
+  import { initScrollAnimations } from "@/scripts/observer";
+
+  // Initial run
+  initScrollAnimations();
+
+  // Handle View Transitions
+  document.addEventListener("astro:after-swap", () => {
+    initScrollAnimations();
+  });
+</script>

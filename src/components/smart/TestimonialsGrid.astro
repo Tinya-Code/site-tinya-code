@@ -1,0 +1,229 @@
+---
+import { testimonials } from "@/data/testimonials";
+import TestimonialCard from "@/components/ui/cards/TestimonialCard.astro";
+import Icon from "@/components/ui/common/Icon.astro";
+import { Image } from "astro:assets";
+
+// Smart component: fetches data from testimonials.ts and orchestrates slider logic
+---
+
+<div class="space-y-16">
+  <!-- Testimonials Slider -->
+  <div class="relative group">
+    <div class="testimonials-slider overflow-hidden">
+      <div
+        class="testimonials-track flex overflow-x-auto snap-x snap-mandatory scroll-smooth hide-scrollbar py-4"
+        aria-live="polite"
+      >
+        {
+          testimonials.map((testimonial) => (
+            <div class="testimonial-slide flex-none w-full md:w-1/2 lg:w-1/3 px-4 snap-center">
+              <TestimonialCard {...testimonial} />
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="flex justify-center items-center gap-6 mt-10">
+      <button
+        id="prev-testimonial"
+        class="size-12 rounded-full border border-gray-light flex items-center justify-center text-dark/40 hover:border-brand hover:text-brand transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed"
+        aria-label="Anterior testimonio"
+      >
+        <Icon name="mdi:arrow-left" size={5} ariaHidden={true} />
+      </button>
+
+      <div class="flex gap-2" id="testimonial-dots" role="tablist">
+        {
+          testimonials.map((_, i) => (
+            <button
+              class="size-2 rounded-full bg-gray-light transition-all duration-300"
+              data-index={i}
+              role="tab"
+              aria-label={`Ir al testimonio ${i + 1}`}
+              aria-current={i === 0 ? "true" : "false"}
+            />
+          ))
+        }
+      </div>
+
+      <button
+        id="next-testimonial"
+        class="size-12 rounded-full border border-gray-light flex items-center justify-center text-dark/40 hover:border-brand hover:text-brand transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed"
+        aria-label="Siguiente testimonio"
+      >
+        <Icon name="mdi:arrow-right" size={5} ariaHidden={true} />
+      </button>
+    </div>
+  </div>
+
+  <!-- Logos Infinite Loop -->
+  <div class="pt-12 border-t border-gray-light/30">
+    <div class="text-center mb-8">
+      <span class="font-poppins text-xs font-semibold text-gray/50 uppercase tracking-widest">
+        Empresas que confían en nosotros
+      </span>
+    </div>
+    <div class="overflow-hidden relative">
+      <div class="flex items-center gap-12 logos-track py-4">
+        {/* Loop logos twice for infinite effect */}
+        {
+          [...Array(2)].map(() => (
+            <div class="flex items-center gap-12 shrink-0">
+              <Image
+                src="/generico.jpeg"
+                alt=""
+                width={150}
+                height={50}
+                loading="lazy"
+                aria-hidden="true"
+                class="h-8 md:h-10 w-auto opacity-30 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-500"
+              />
+              <Image
+                src="/generico.jpeg"
+                alt=""
+                width={150}
+                height={50}
+                loading="lazy"
+                aria-hidden="true"
+                class="h-8 md:h-10 w-auto opacity-30 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-500"
+              />
+              <Image
+                src="/generico.jpeg"
+                alt=""
+                width={150}
+                height={50}
+                loading="lazy"
+                aria-hidden="true"
+                class="h-8 md:h-10 w-auto opacity-30 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-500"
+              />
+              <Image
+                src="/generico.jpeg"
+                alt=""
+                width={150}
+                height={50}
+                loading="lazy"
+                aria-hidden="true"
+                class="h-8 md:h-10 w-auto opacity-30 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-500"
+              />
+              <Image
+                src="/generico.jpeg"
+                alt=""
+                width={150}
+                height={50}
+                loading="lazy"
+                aria-hidden="true"
+                class="h-8 md:h-10 w-auto opacity-30 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-500"
+              />
+              <Image
+                src="/generico.jpeg"
+                alt=""
+                width={150}
+                height={50}
+                loading="lazy"
+                aria-hidden="true"
+                class="h-8 md:h-10 w-auto opacity-30 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-500"
+              />
+            </div>
+          ))
+        }
+      </div>
+      <div class="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-white to-transparent z-10">
+      </div>
+      <div class="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-white to-transparent z-10">
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { initScrollAnimations } from "@/scripts/observer";
+
+  const initSlider = (): void => {
+    const track = document.querySelector<HTMLElement>(".testimonials-track");
+    const prevBtn = document.querySelector<HTMLButtonElement>("#prev-testimonial");
+    const nextBtn = document.querySelector<HTMLButtonElement>("#next-testimonial");
+    const dots = document.querySelectorAll<HTMLButtonElement>("#testimonial-dots button");
+    const slides = document.querySelectorAll<HTMLElement>(".testimonial-slide");
+
+    if (!track || slides.length === 0) return;
+
+    const getCurrentSlide = (): number => {
+      const scrollLeft = track.scrollLeft;
+      const slideWidth = slides[0].clientWidth;
+      return Math.round(scrollLeft / slideWidth);
+    };
+
+    const updatePagination = (index: number): void => {
+      const visibleSlides = window.innerWidth >= 1024 ? 3 : window.innerWidth >= 768 ? 2 : 1;
+      const maxIndex = Math.max(0, slides.length - visibleSlides);
+
+      if (prevBtn) prevBtn.disabled = index === 0;
+      if (nextBtn) nextBtn.disabled = index >= maxIndex;
+
+      dots.forEach((dot, i) => {
+        const isActive = i === index;
+        dot.classList.toggle("bg-brand", isActive);
+        dot.classList.toggle("w-6", isActive);
+        dot.classList.toggle("bg-gray-light", !isActive);
+        dot.classList.toggle("w-2", !isActive);
+        dot.setAttribute("aria-current", String(isActive));
+      });
+    };
+
+    const scrollToSlide = (index: number): void => {
+      const slideWidth = slides[0].clientWidth;
+      track.scrollTo({ left: index * slideWidth, behavior: "smooth" });
+    };
+
+    const handleScroll = () => {
+      const currentIndex = getCurrentSlide();
+      updatePagination(currentIndex);
+    };
+
+    prevBtn?.addEventListener("click", () => {
+      const currentIndex = getCurrentSlide();
+      if (currentIndex > 0) scrollToSlide(currentIndex - 1);
+    });
+
+    nextBtn?.addEventListener("click", () => {
+      const currentIndex = getCurrentSlide();
+      const visibleSlides = window.innerWidth >= 1024 ? 3 : window.innerWidth >= 768 ? 2 : 1;
+      const maxIndex = Math.max(0, slides.length - visibleSlides);
+      if (currentIndex < maxIndex) scrollToSlide(currentIndex + 1);
+    });
+
+    dots.forEach((dot) => {
+      dot.addEventListener("click", () => {
+        const index = parseInt(dot.getAttribute("data-index") || "0", 10);
+        scrollToSlide(index);
+      });
+    });
+
+    track.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll);
+    updatePagination(getCurrentSlide());
+
+    // Cleanup for View Transitions
+    document.addEventListener(
+      "astro:before-swap",
+      () => {
+        track.removeEventListener("scroll", handleScroll);
+        window.removeEventListener("resize", handleScroll);
+      },
+      { once: true },
+    );
+  };
+
+  // Initial runs
+  initSlider();
+  initScrollAnimations();
+
+  // Handle View Transitions
+  document.addEventListener("astro:after-swap", () => {
+    initSlider();
+    initScrollAnimations();
+  });
+</script>

@@ -1,0 +1,99 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SectionHeader from "@/components/ui/sections/SectionHeader.astro";
+import Hero from "@/components/ui/sections/Hero.astro";
+import { siteConfig } from "@/data/siteConfig";
+
+import ServicesGrid from "@/components/smart/ServicesGrid.astro";
+import ReasonsGrid from "@/components/smart/ReasonsGrid.astro";
+import SectorsGrid from "@/components/smart/SectorsGrid.astro";
+import WhyChooseUsSection from "@/components/smart/WhyChooseUsSection.astro";
+import MethodologySection from "@/components/smart/MethodologySection.astro";
+import TestimonialsGrid from "@/components/smart/TestimonialsGrid.astro";
+import StatsSection from "@/components/smart/StatsSection.astro";
+import AidaBannerSection from "@/components/smart/AidaBannerSection.astro";
+import PortfolioGallery from "@/components/smart/PortfolioGallery.astro";
+
+const seo = {
+  title: "Tinya Code — Diseño Web y Software B2B en Lima",
+  description:
+    "Agencia de diseño web, desarrollo de software y automatización para empresas de construcción, minería e industria en Lima, Perú.",
+  canonical: new URL(Astro.url.pathname, siteConfig.url).toString(),
+};
+
+// Home page uses BaseLayout directly for better control over section backgrounds
+---
+
+<BaseLayout {...seo}>
+  <!-- 1. Hero Section (bg-light) -->
+  <Hero {...siteConfig.hero} />
+
+  <!-- 2. 4 Poderosas Razones (bg-white) -->
+  <section class="section-base section-white">
+    <div class="container-main">
+      <SectionHeader
+        title={siteConfig.home.reasons.title}
+        subtitle={siteConfig.home.reasons.subtitle}
+      />
+      <ReasonsGrid />
+    </div>
+  </section>
+
+  <!-- 3. Servicios destacados (bg-light) -->
+  <section class="section-base section-light">
+    <div class="container-main">
+      <SectionHeader
+        title={siteConfig.home.services.title}
+        subtitle={siteConfig.home.services.subtitle}
+      />
+      <ServicesGrid />
+    </div>
+  </section>
+
+  <!-- 4. Por qué elegirnos (bg-white) -->
+  <WhyChooseUsSection />
+
+  <!-- 5. Estadísticas (bg-dark) -->
+  <StatsSection />
+
+  <!-- 6. Metodología (bg-light) -->
+  <MethodologySection />
+
+  <!-- 7. Testimonios destacados (bg-white) -->
+  <section class="section-base section-white">
+    <div class="container-main">
+      <SectionHeader
+        title={siteConfig.home.testimonials.title}
+        subtitle={siteConfig.home.testimonials.subtitle}
+      />
+      <TestimonialsGrid />
+    </div>
+  </section>
+
+  <!-- 8. Sectores que Atendemos (bg-light) -->
+  <section class="section-base section-light">
+    <div class="container-main">
+      <SectionHeader
+        title={siteConfig.home.sectors.title}
+        subtitle={siteConfig.home.sectors.subtitle}
+      />
+      <SectorsGrid />
+    </div>
+  </section>
+
+  <!-- 9. Portafolio destacado (bg-white) -->
+  <section class="section-base section-white">
+    <div class="container-main">
+      <SectionHeader
+        title={siteConfig.home.portfolio.title}
+        subtitle={siteConfig.home.portfolio.subtitle}
+      />
+      <div class="mt-12">
+        <PortfolioGallery />
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. CTA Final / Aida Banner (bg-brand) -->
+  <AidaBannerSection />
+</BaseLayout>

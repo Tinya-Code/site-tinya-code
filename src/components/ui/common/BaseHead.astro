@@ -1,0 +1,32 @@
+---
+import SEO from "./SEO.astro";
+import "@/styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  ogType?: "website" | "article";
+  canonical?: string;
+  noindex?: boolean;
+  siteName: string;
+}
+
+const { title, description, ogImage, ogType, canonical, noindex, siteName } = Astro.props;
+---
+
+<meta charset="utf-8" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta name="viewport" content="width=device-width" />
+
+<SEO
+  title={title}
+  description={description!}
+  ogImage={ogImage!}
+  ogType={ogType}
+  canonical={canonical}
+  noindex={noindex}
+  siteName={siteName}
+/>
+
+<!-- Fuentes se cargan vía CSS en global.css -->

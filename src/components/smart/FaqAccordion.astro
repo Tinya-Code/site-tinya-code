@@ -1,0 +1,271 @@
+---
+import { faqs } from "@/data/faq";
+import Icon from "@/components/ui/common/Icon.astro";
+
+// Smart component: manages FAQ data, search, and filtering
+const categories = ["todos", "general", "proceso", "precios", "tecnico"];
+---
+
+<section class="section-base section-light">
+  <div class="container-main">
+    <div class="max-w-4xl mx-auto space-y-12">
+      <!-- Interactive Header -->
+      <div class="space-y-10 animate-on-scroll">
+        <!-- Search Bar -->
+        <div class="relative max-w-xl mx-auto group">
+          <div class="absolute inset-y-0 left-5 flex items-center pointer-events-none">
+            <Icon
+              name="mdi:magnify"
+              size={5}
+              class="text-dark/30 group-focus-within:text-brand transition-colors"
+            />
+          </div>
+          <input
+            type="text"
+            id="faq-search"
+            placeholder="¿En qué podemos ayudarte hoy?"
+            class="faq-search-input w-full pl-14 pr-6 py-5 bg-white border border-gray-light/30 rounded-sm outline-none shadow-sm transition-all font-poppins text-sm placeholder:text-dark/30"
+          />
+        </div>
+
+        <!-- Category Tabs -->
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          {
+            categories.map((cat) => (
+              <button
+                class:list={[
+                  "chip-sector faq-category-tab capitalize !px-6 !py-2.5 outline-none",
+                  cat === "todos" && "active",
+                ]}
+                data-category-tab={cat}
+                role="tab"
+                aria-selected={cat === "todos" ? "true" : "false"}
+              >
+                {cat}
+              </button>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- FAQ List -->
+      <div class="space-y-5" id="faq-list">
+        {
+          faqs.map((faq, index) => (
+            <div
+              class="faq-item group animate-on-scroll"
+              data-category={faq.category}
+              data-question={faq.question.toLowerCase()}
+              data-answer={faq.answer.toLowerCase()}
+              style={`transition-delay: ${index * 50}ms`}
+            >
+              <button
+                class="faq-trigger w-full flex justify-between items-center py-6 cursor-pointer text-left focus:outline-none"
+                aria-expanded="false"
+              >
+                <span class="font-poppins font-semibold text-base text-dark group-hover:text-brand transition-colors pr-8">
+                  {faq.question}
+                </span>
+                <Icon
+                  name="mdi:chevron-down"
+                  size={5}
+                  class="faq-icon text-dark/30 transition-transform duration-500 shrink-0"
+                  ariaHidden={true}
+                />
+              </button>
+              <div class="faq-content overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] max-h-0 opacity-0">
+                <p class="font-poppins text-sm text-gray leading-relaxed px-8 pb-8 pt-4 border-t border-gray-light/20">
+                  {faq.answer}
+                </p>
+              </div>
+            </div>
+          ))
+        }
+
+        <!-- Empty State -->
+        <div id="faq-empty" class="hidden text-center py-20 space-y-6 animate-on-scroll">
+          <div
+            class="inline-flex items-center justify-center size-20 rounded-sm bg-white shadow-sm border border-gray-light/30 text-dark/20 mb-2"
+          >
+            <Icon name="mdi:comment-search-outline" size={8} />
+          </div>
+          <div class="space-y-2">
+            <h3 class="font-poppins font-semibold text-xl text-dark">No hay resultados</h3>
+            <p class="font-poppins text-sm text-dark/50 max-w-xs mx-auto">
+              Intenta usar otros términos o explora las categorías de arriba.
+            </p>
+          </div>
+          <div class="pt-4">
+            <a
+              href="/contact"
+              class="inline-flex items-center gap-2 text-brand font-semibold hover:gap-3 transition-all"
+            >
+              Hablar con un experto
+              <Icon name="mdi:arrow-right" size={4} />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq-search-input:focus {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  }
+
+  .faq-item {
+    border-bottom: 1px solid var(--color-gray-light);
+    transition: all 300ms ease;
+  }
+
+  .faq-item:last-child {
+    border-bottom: none;
+  }
+
+  .faq-item.is-open .faq-icon {
+    color: var(--color-brand);
+    transform: rotate(180deg);
+  }
+
+  .faq-item.is-open .faq-content {
+    max-height: 800px;
+    opacity: 1;
+  }
+
+  .faq-item.hidden-by-filter {
+    display: none;
+  }
+</style>
+
+<script>
+  import { initScrollAnimations, debounce } from "@/scripts/observer";
+
+  const initFaq = (): void => {
+    const searchInput = document.querySelector<HTMLInputElement>("#faq-search");
+    const tabs = document.querySelectorAll<HTMLButtonElement>("[data-category-tab]");
+    const items = document.querySelectorAll<HTMLElement>(".faq-item");
+    const emptyState = document.querySelector<HTMLElement>("#faq-empty");
+    const triggers = document.querySelectorAll<HTMLButtonElement>(".faq-trigger");
+
+    if (items.length === 0) return;
+
+    let currentCategory = "todos";
+    let searchQuery = "";
+
+    const normalizeText = (text: string): string => {
+      return text
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase();
+    };
+
+    const closeAll = (): void => {
+      items.forEach((item) => {
+        item.classList.remove("is-open");
+        item.querySelector(".faq-trigger")?.setAttribute("aria-expanded", "false");
+      });
+    };
+
+    const filterFaqs = (): void => {
+      let visibleCount = 0;
+      const normalizedQuery = normalizeText(searchQuery);
+
+      closeAll();
+
+      items.forEach((item) => {
+        const category = item.getAttribute("data-category");
+        const question = item.getAttribute("data-question") || "";
+        const answer = item.getAttribute("data-answer") || "";
+
+        const matchesCategory = currentCategory === "todos" || category === currentCategory;
+        const matchesSearch =
+          normalizeText(question).includes(normalizedQuery) ||
+          normalizeText(answer).includes(normalizedQuery);
+
+        if (matchesCategory && matchesSearch) {
+          item.classList.remove("hidden-by-filter");
+          visibleCount++;
+        } else {
+          item.classList.add("hidden-by-filter");
+        }
+      });
+
+      if (emptyState) {
+        emptyState.classList.toggle("hidden", visibleCount > 0);
+      }
+    };
+
+    // Search Logic with Debounce
+    const handleSearch = debounce((e: Event) => {
+      searchQuery = (e.target as HTMLInputElement).value;
+      filterFaqs();
+    }, 300);
+    searchInput?.addEventListener("input", handleSearch);
+
+    // Tab Logic
+    const handleTabClick = (tab: HTMLButtonElement) => {
+      const cat = tab.getAttribute("data-category-tab") || "todos";
+      currentCategory = cat;
+
+      tabs.forEach((t) => {
+        const isActive = t === tab;
+        t.classList.toggle("active", isActive);
+        t.setAttribute("aria-selected", String(isActive));
+      });
+
+      filterFaqs();
+    };
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => handleTabClick(tab));
+    });
+
+    // Accordion Logic
+    const handleTriggerClick = (trigger: HTMLButtonElement) => {
+      const item = trigger.closest(".faq-item") as HTMLElement;
+      const isOpen = item.classList.contains("is-open");
+
+      closeAll();
+
+      if (!isOpen) {
+        item.classList.add("is-open");
+        trigger.setAttribute("aria-expanded", "true");
+      }
+    };
+
+    const handleKeydown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        closeAll();
+      }
+    };
+
+    triggers.forEach((trigger) => {
+      trigger.addEventListener("click", () => handleTriggerClick(trigger));
+      trigger.addEventListener("keydown", handleKeydown);
+    });
+
+    // Cleanup for View Transitions
+    document.addEventListener(
+      "astro:before-swap",
+      () => {
+        searchInput?.removeEventListener("input", handleSearch);
+        triggers.forEach((trigger) => {
+          trigger.removeEventListener("keydown", handleKeydown);
+        });
+      },
+      { once: true },
+    );
+  };
+
+  // Initial runs
+  initFaq();
+  initScrollAnimations();
+
+  // Handle View Transitions
+  document.addEventListener("astro:after-swap", () => {
+    initFaq();
+    initScrollAnimations();
+  });
+</script>

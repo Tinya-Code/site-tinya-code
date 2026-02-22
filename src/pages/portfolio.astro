@@ -1,0 +1,35 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PortfolioGallery from "@/components/smart/PortfolioGallery.astro";
+import CallToAction from "@/components/ui/sections/CallToAction.astro";
+import { siteConfig } from "@/data/siteConfig";
+
+const { portfolio } = siteConfig.pages;
+
+const seo = {
+  title: `Portafolio — Tinya Code`,
+  description: `Proyectos de diseño web, tiendas virtuales y software a medida para empresas de construcción, minería y servicios en Perú.`,
+  canonical: new URL(Astro.url.pathname, siteConfig.url).toString(),
+};
+---
+
+<BaseLayout {...seo}>
+  {/* 1. Portfolio Header (bg-light) */}
+  <section class="section-base section-light pb-0">
+    <div class="container-main text-center">
+      <div class="mb-12">
+        <h1 class="titulo-hero mb-4">{portfolio.title}</h1>
+        <p class="subtitulo mx-auto">{portfolio.subtitle}</p>
+      </div>
+    </div>
+  </section>
+
+  {/* 2. Portfolio Grid (bg-white) */}
+  <section class="section-base section-white">
+    <div class="container-main">
+      <PortfolioGallery />
+    </div>
+  </section>
+
+  <CallToAction {...siteConfig.cta} />
+</BaseLayout>

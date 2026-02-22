@@ -1,0 +1,39 @@
+---
+import type { HeadingTag } from "@/types";
+
+export interface Props {
+  title: string;
+  subtitle?: string;
+  centered?: boolean;
+  class?: string;
+  as?: HeadingTag;
+}
+
+const { title, subtitle, centered = false, class: className, as: Tag = "h2" } = Astro.props;
+---
+
+<div
+  class:list={[
+    "mb-12 md:mb-16",
+    centered ? "text-center mx-auto max-w-3xl" : "text-left",
+    className,
+  ]}
+>
+  <Tag class="titulo-seccion mb-4 animate-on-scroll">
+    {title}
+  </Tag>
+
+  {
+    !centered && (
+      <span class="line-draw animate-on-scroll w-12 mt-3 mb-8 animate-delay-2 border-brand" />
+    )
+  }
+
+  {
+    subtitle && (
+      <p class:list={["subtitulo animate-on-scroll animate-delay-2", centered && "mx-auto"]}>
+        {subtitle}
+      </p>
+    )
+  }
+</div>

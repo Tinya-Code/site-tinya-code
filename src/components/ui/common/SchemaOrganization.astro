@@ -1,0 +1,22 @@
+---
+interface Props {
+  name: string;
+  url: string;
+  description: string;
+  socialLinks: string[];
+}
+
+const { name, url, description, socialLinks } = Astro.props;
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: name,
+  url: url,
+  logo: `${url}/favicon.svg`,
+  description: description,
+  sameAs: socialLinks,
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} is:inline />

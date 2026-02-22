@@ -1,0 +1,79 @@
+---
+import { siteConfig } from "@/data/siteConfig";
+import Stats from "@/components/ui/sections/Stats.astro";
+
+// Smart component: Orchestrates stats data from siteConfig
+const { stats } = siteConfig.pages.about;
+---
+
+<section class="section-base section-stats-bg">
+  <div class="container-main animate-on-scroll">
+    <Stats stats={stats} />
+  </div>
+</section>
+
+<script>
+  import { initScrollAnimations } from "@/scripts/observer";
+
+  // Initialize general animations
+  initScrollAnimations();
+
+  // Stats Counter Logic
+  const initCounters = (): void => {
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const counters = document.querySelectorAll<HTMLElement>(".stat-number[data-target]");
+
+    if (counters.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+
+          const el = entry.target as HTMLElement;
+          const targetValue = parseInt(el.getAttribute("data-target") ?? "0", 10);
+
+          if (prefersReduced) {
+            el.textContent = targetValue.toString();
+            observer.unobserve(el);
+            return;
+          }
+
+          const duration = 1500;
+          const frameRate = 16;
+          const totalFrames = duration / frameRate;
+          const increment = targetValue / totalFrames;
+          let current = 0;
+
+          const timer = setInterval(() => {
+            current += increment;
+            if (current >= targetValue) {
+              current = targetValue;
+              clearInterval(timer);
+            }
+            el.textContent = Math.floor(current).toString();
+            if (el.getAttribute("data-target")?.includes("%")) {
+              el.textContent += "%";
+            } else if (el.getAttribute("data-target")?.includes("+")) {
+              el.textContent = "+" + el.textContent;
+            }
+          }, frameRate);
+
+          observer.unobserve(el);
+        });
+      },
+      { threshold: 0.3 },
+    );
+
+    counters.forEach((el) => observer.observe(el));
+  };
+
+  // Initial run
+  initCounters();
+
+  // Handle View Transitions
+  document.addEventListener("astro:after-swap", () => {
+    initScrollAnimations();
+    initCounters();
+  });
+</script>

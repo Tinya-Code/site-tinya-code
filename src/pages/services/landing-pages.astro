@@ -1,0 +1,98 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SectionHeader from "@/components/ui/sections/SectionHeader.astro";
+import AidaBannerSection from "@/components/smart/AidaBannerSection.astro";
+import DepositBadge from "@/components/ui/sections/DepositBadge.astro";
+import { services } from "@/data/services";
+import { siteConfig } from "@/data/siteConfig";
+import { aidaPhases, landingPageFocus } from "@/data/aida";
+import { Icon } from "astro-icon/components";
+import { Image } from "astro:assets";
+
+const { services: servicesLabels } = siteConfig.pages;
+const service = services.find((s) => s.id === "landing-pages")!;
+
+const seo = {
+  title: `${service.title} — Tinya Code`,
+  description: service.description,
+  canonical: new URL(Astro.url.pathname, siteConfig.url).toString(),
+};
+---
+
+<BaseLayout {...seo}>
+  {/* 1. Hero Service (bg-light) */}
+  <section class="section-base section-light">
+    <div class="container-main grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div class="space-y-8">
+        <div
+          class="inline-flex items-center gap-2 px-3 py-1 bg-brand/10 text-brand rounded-sm text-xs font-bold uppercase tracking-widest font-poppins"
+        >
+          <Icon name={service.icon} class="size-4" />
+          {servicesLabels.badge}
+        </div>
+
+        <h1 class="text-4xl md:text-6xl font-poppins font-extrabold text-dark leading-tight italic">
+          {service.title}
+        </h1>
+
+        <p class="text-dark/70 text-lg leading-relaxed font-poppins">
+          {service.fullDescription}
+        </p>
+
+        <DepositBadge />
+      </div>
+
+      <div class="relative rounded-sm overflow-hidden border border-accent/20">
+        <Image
+          src={service.image}
+          alt={service.title}
+          width={800}
+          height={600}
+          loading="eager"
+          class="w-full h-auto object-cover grayscale hover:grayscale-0 transition-all duration-700"
+        />
+      </div>
+    </div>
+  </section>
+
+  {/* 2. Focus Section (bg-white) */}
+  <section class="section-base section-white">
+    <div class="container-main">
+      <SectionHeader title={landingPageFocus.title} subtitle={landingPageFocus.subtitle} />
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mt-12">
+        {
+          aidaPhases.map((phase, i) => (
+            <div class="space-y-4 relative group">
+              <span class="text-5xl font-extrabold text-brand/10 font-poppins mb-2 block group-hover:text-brand transition-colors">
+                0{i + 1}
+              </span>
+              <h4 class="text-xl font-bold text-dark font-poppins">{phase.phase}</h4>
+              <p class="text-xs text-dark/60 uppercase font-semibold font-poppins tracking-widest">
+                {landingPageFocus.label}
+              </p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* 3. Detailed Features (bg-light) */}
+  <section class="section-base section-light">
+    <div class="container-main">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+        {
+          service.detailedFeatures.map((feature) => (
+            <div class="space-y-4">
+              <Icon name={feature.icon} class="size-8 text-brand" />
+              <h3 class="text-xl font-bold text-dark font-poppins">{feature.title}</h3>
+              <p class="text-gray text-sm leading-relaxed font-poppins">{feature.description}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <AidaBannerSection />
+</BaseLayout>

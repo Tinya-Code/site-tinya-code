@@ -1,0 +1,26 @@
+---
+import { sectors } from "@/data/sectors";
+import SectorChip from "@/components/ui/chips/SectorChip.astro";
+
+// Smart component: fetches data from sectors.ts and passes props to SectorCard (Dumb)
+---
+
+<div class="flex flex-wrap items-center justify-center gap-4">
+  {
+    sectors.map((sector, index) => (
+      <div class="animate-on-scroll" style={`transition-delay: ${(index % 3) * 100}ms`}>
+        <SectorChip name={sector.name} icon={sector.icon} href={sector.href} />
+      </div>
+    ))
+  }
+</div>
+
+<script>
+  import { initScrollAnimations } from "@/scripts/observer";
+
+  // Initialize animations
+  initScrollAnimations();
+
+  // Handle View Transitions
+  document.addEventListener("astro:after-swap", initScrollAnimations);
+</script>

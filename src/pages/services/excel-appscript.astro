@@ -1,0 +1,74 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SectionHeader from "@/components/ui/sections/SectionHeader.astro";
+import AidaBannerSection from "@/components/smart/AidaBannerSection.astro";
+import DepositBadge from "@/components/ui/sections/DepositBadge.astro";
+import { services } from "@/data/services";
+import { siteConfig } from "@/data/siteConfig";
+import { Icon } from "astro-icon/components";
+
+const { services: servicesLabels } = siteConfig.pages;
+const service = services.find((s) => s.id === "excel-appscript")!;
+
+const seo = {
+  title: `${service.title} — Tinya Code`,
+  description: service.description,
+  canonical: new URL(Astro.url.pathname, siteConfig.url).toString(),
+};
+---
+
+<BaseLayout {...seo}>
+  {/* 1. Hero Service (bg-light) */}
+  <section class="section-base section-light">
+    <div class="container-main grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div class="space-y-8">
+        <div
+          class="inline-flex items-center gap-2 px-3 py-1 bg-[#217346]/10 text-[#217346] rounded-sm text-xs font-bold uppercase tracking-widest font-poppins"
+        >
+          <Icon name={service.icon} class="size-4" />
+          {service.features[0]}
+        </div>
+
+        <h1 class="text-4xl md:text-6xl font-poppins font-extrabold text-dark leading-tight italic">
+          {service.title}
+        </h1>
+
+        <p class="text-dark/70 text-lg leading-relaxed font-poppins">
+          {service.fullDescription}
+        </p>
+
+        <DepositBadge />
+      </div>
+
+      <div
+        class="relative rounded-sm overflow-hidden p-12 bg-white border border-accent/20 flex items-center justify-center"
+      >
+        <div class="relative">
+          <Icon name="mdi:microsoft-excel" class="size-32 text-[#217346] relative z-10" />
+          <div class="absolute -inset-8 bg-[#217346]/5 rounded-sm blur-2xl"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* 2. Features Grid (bg-white) */}
+  <section class="section-base section-white">
+    <div class="container-main">
+      <SectionHeader title={servicesLabels.featuresTitle} centered={false} />
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mt-12">
+        {
+          service.detailedFeatures.map((feature) => (
+            <div class="space-y-4">
+              <Icon name={feature.icon} class="size-8 text-brand" />
+              <h3 class="text-xl font-bold text-dark font-poppins">{feature.title}</h3>
+              <p class="text-dark/70 text-sm leading-relaxed font-poppins">{feature.description}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* 3. CTA (bg-brand) */}
+  <AidaBannerSection />
+</BaseLayout>

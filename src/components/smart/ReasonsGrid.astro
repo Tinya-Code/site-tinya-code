@@ -1,0 +1,26 @@
+---
+import { reasons } from "@/data/reasons";
+import ReasonItem from "@/components/ui/common/ReasonItem.astro";
+
+// Smart component that fetches reasons from data and passes props to ReasonItem (Dumb)
+---
+
+<div class="flex flex-col gap-8 max-w-2xl">
+  {
+    reasons.map((reason, index) => (
+      <div class="animate-on-scroll" style={`transition-delay: ${(index % 3) * 100}ms`}>
+        <ReasonItem {...reason} />
+      </div>
+    ))
+  }
+</div>
+
+<script>
+  import { initScrollAnimations } from "@/scripts/observer";
+
+  // Initialize animations
+  initScrollAnimations();
+
+  // Handle View Transitions
+  document.addEventListener("astro:after-swap", initScrollAnimations);
+</script>

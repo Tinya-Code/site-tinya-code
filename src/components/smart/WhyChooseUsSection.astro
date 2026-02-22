@@ -1,0 +1,30 @@
+---
+import { whyUsData } from "@/data/whyUs";
+import WhyChooseUs from "@/components/ui/sections/WhyChooseUs.astro";
+import SectionHeader from "@/components/ui/sections/SectionHeader.astro";
+import { siteConfig } from "@/data/siteConfig";
+
+// Smart component: Orchestrates Why Choose Us section data and structure
+const { title, subtitle } = siteConfig.home.whyUs;
+---
+
+<section class="section-base section-white">
+  <div class="container-main grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+    <div class="lg:col-span-5 animate-on-scroll-left">
+      <SectionHeader title={title} subtitle={subtitle} centered={false} class="mb-0!" />
+    </div>
+    <div class="lg:col-span-7 animate-on-scroll-right" style="transition-delay: 200ms">
+      <WhyChooseUs items={whyUsData} />
+    </div>
+  </div>
+</section>
+
+<script>
+  import { initScrollAnimations } from "@/scripts/observer";
+
+  // Initialize animations
+  initScrollAnimations();
+
+  // Handle View Transitions
+  document.addEventListener("astro:after-swap", initScrollAnimations);
+</script>

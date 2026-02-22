@@ -1,0 +1,94 @@
+---
+import Icon from "../common/Icon.astro";
+import { Image } from "astro:assets";
+
+interface Props {
+  name: string;
+  role: string;
+  bio: string;
+  photo: string;
+  skills: string[];
+  linkedin?: string;
+  github?: string;
+}
+
+const { name, role, bio, photo, skills, linkedin, github } = Astro.props;
+---
+
+<article
+  class="team-card group flex flex-col bg-white rounded-sm border border-gray-light/20 p-5 hover:translate-y-[-4px] transition-all duration-500"
+>
+  <!-- Photo Container -->
+  <div class="relative aspect-square overflow-hidden rounded-sm bg-gray-light/10">
+    <Image
+      src={photo}
+      alt={name}
+      width={400}
+      height={400}
+      class="team-photo w-full h-full object-cover transition-all duration-700 group-hover:scale-110"
+    />
+
+    <!-- Social Overlay -->
+    {
+      (linkedin || github) && (
+        <div class="absolute bottom-4 left-4 flex gap-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+          {linkedin && (
+            <a
+              href={linkedin}
+              class="text-white hover:text-white/80 transition-colors drop-shadow-md"
+              aria-label={`LinkedIn de ${name}`}
+            >
+              <Icon name="mdi:linkedin" size={6} />
+            </a>
+          )}
+          {github && (
+            <a
+              href={github}
+              class="text-white hover:text-white/80 transition-colors drop-shadow-md"
+              aria-label={`GitHub de ${name}`}
+            >
+              <Icon name="mdi:github" size={6} />
+            </a>
+          )}
+        </div>
+      )
+    }
+  </div>
+
+  <!-- Content -->
+  <div class="flex flex-col mt-6">
+    <h1 class="font-poppins font-bold text-lg text-dark tracking-tight leading-tight">
+      {name}
+    </h1>
+    <span class="font-poppins text-[10px] font-bold text-brand uppercase tracking-[0.2em] mt-1.5">
+      {role}
+    </span>
+
+    <p class="font-poppins text-sm text-dark/60 leading-relaxed mt-4 line-clamp-2 italic">
+      "{bio}"
+    </p>
+
+    <!-- Skills Chips -->
+    <div class="flex flex-wrap gap-2 mb-6">
+      {skills.map((skill) => <span class="chip-tech">{skill}</span>)}
+    </div>
+  </div>
+</article>
+
+<style>
+  /* Local override for deeper grayscale if needed, but using global class */
+  .team-photo {
+    filter: grayscale(100%); /* Full desaturation as per common premium pattern */
+  }
+
+  .team-card:hover .team-photo {
+    filter: grayscale(0%);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .team-photo {
+      filter: grayscale(0%);
+      transition: none;
+    }
+  }
+</style>

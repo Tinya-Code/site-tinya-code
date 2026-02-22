@@ -1,0 +1,58 @@
+---
+import type { ButtonVariant, ButtonSize } from "@/types";
+
+interface Props {
+  label?: string;
+  href?: string;
+  type?: "button" | "submit" | "reset";
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  external?: boolean;
+  disabled?: boolean;
+  ariaLabel?: string;
+  class?: string;
+}
+
+const {
+  label,
+  href,
+  type = "button",
+  variant = "primary",
+  size = "md",
+  external = false,
+  disabled = false,
+  ariaLabel,
+  class: className,
+} = Astro.props;
+
+const Element = href ? "a" : "button";
+
+const variantClasses = {
+  primary: "btn-primary",
+  outline: "btn-outline",
+  "outline-white": "btn-outline-white",
+};
+
+const sizeClasses = {
+  sm: "px-4 py-2 text-xs",
+  md: "px-6 py-3 text-sm",
+  lg: "px-8 py-4 text-base",
+};
+
+const activeClass = variantClasses[variant] || "btn-primary";
+const activeSize = sizeClasses[size];
+
+const externalProps = external ? { target: "_blank", rel: "noopener noreferrer" } : {};
+---
+
+<Element
+  href={href}
+  type={!href ? type : undefined}
+  class:list={[activeClass, activeSize, className]}
+  disabled={!href ? disabled : undefined}
+  aria-disabled={disabled ? "true" : undefined}
+  aria-label={ariaLabel}
+  {...externalProps}
+>
+  {label || <slot />}
+</Element>

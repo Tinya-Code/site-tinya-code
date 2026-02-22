@@ -1,0 +1,72 @@
+---
+interface Props {
+  phases: {
+    step: string;
+    title: string;
+    description: string;
+  }[];
+}
+
+const { phases } = Astro.props;
+const isHorizontal = phases.length === 5;
+---
+
+<div
+  class:list={[
+    "mx-auto w-full",
+    isHorizontal
+      ? "grid grid-cols-1 lg:grid-cols-5 gap-y-12 lg:gap-x-12 lg:gap-y-0"
+      : "flex flex-col max-w-2xl",
+  ]}
+>
+  {
+    phases.map((phase, index) => (
+      <div
+        class:list={[
+          "relative animate-on-scroll group",
+          isHorizontal ? "flex lg:flex-col gap-6 lg:gap-0" : "flex gap-6",
+          `animate-delay-${(index % 3) + 1}`,
+        ]}
+      >
+        {/* Connector lines logic */}
+        {index < phases.length - 1 && (
+          <>
+            {/* Vertical line: always on non-horizontal, or mobile on horizontal */}
+            <div
+              class:list={[
+                "absolute left-[11px] z-0 border-l border-gray-light",
+                isHorizontal ? "top-10 bottom-[-3rem] lg:hidden" : "top-8 bottom-0",
+              ]}
+            />
+
+            {/* Horizontal line: only desktop and horizontal mode */}
+            {isHorizontal && <div class="methodology-connector hidden lg:block" />}
+          </>
+        )}
+
+        {/* Step number */}
+        <span
+          class:list={[
+            "methodology-step-number font-poppins text-xs font-bold text-brand border border-brand bg-white rounded-sm px-2 py-1 shrink-0 h-fit relative z-10",
+            isHorizontal ? "lg:mb-6" : "mt-1",
+          ]}
+        >
+          {phase.step.padStart(2, "0")}
+        </span>
+
+        {/* Content */}
+        <div class:list={[isHorizontal ? "flex-1" : "pb-12 last:pb-0"]}>
+          <h3 class="font-poppins font-semibold text-base text-dark transition-colors duration-200 group-hover:text-brand">
+            {phase.title}
+          </h3>
+          <p class="font-poppins text-sm text-gray leading-relaxed mt-1">{phase.description}</p>
+        </div>
+      </div>
+    ))
+  }
+</div>
+
+<script>
+  import { initScrollAnimations } from "@/scripts/observer";
+  initScrollAnimations();
+</script>

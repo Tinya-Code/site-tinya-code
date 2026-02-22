@@ -1,0 +1,36 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ServicesGrid from "@/components/smart/ServicesGrid.astro";
+import AidaBannerSection from "@/components/smart/AidaBannerSection.astro";
+import { siteConfig } from "@/data/siteConfig";
+
+const { services } = siteConfig.pages;
+
+const seo = {
+  title: `Servicios — Tinya Code`,
+  description: `Diseño web, desarrollo de software, tiendas virtuales y automatización con Excel y AppScript para empresas en Lima, Perú.`,
+  canonical: new URL(Astro.url.pathname, siteConfig.url).toString(),
+};
+---
+
+<BaseLayout {...seo}>
+  {/* 1. Header (bg-light) */}
+  <section class="section-base section-light pb-0">
+    <div class="container-main text-center">
+      <div class="mb-12">
+        <h1 class="titulo-hero mb-4">{services.title}</h1>
+        <p class="subtitulo mx-auto">{services.subtitle}</p>
+      </div>
+    </div>
+  </section>
+
+  {/* 2. Services Grid (bg-white) */}
+  <section class="section-base section-white">
+    <div class="container-main">
+      <ServicesGrid />
+    </div>
+  </section>
+
+  {/* 3. CTA (bg-brand) */}
+  <AidaBannerSection />
+</BaseLayout>

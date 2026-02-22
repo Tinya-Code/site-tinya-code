@@ -1,0 +1,134 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import type { CollectionEntry } from "astro:content";
+import { Icon } from "astro-icon/components";
+import { siteConfig } from "@/data/siteConfig";
+import { Image } from "astro:assets";
+
+interface Props {
+  project: CollectionEntry<"projects">;
+}
+
+const { project } = Astro.props;
+const { title, description, heroImage, category, client, technologies } = project.data;
+
+const seo = {
+  title: `${title} | Casos de Éxito ${siteConfig.name}`,
+  description: description,
+};
+---
+
+<BaseLayout title={seo.title} description={seo.description}>
+  <section class="section-base section-light">
+    <article class="container-main max-w-5xl mx-auto">
+      <div class="mb-8">
+        <a
+          href="/portfolio"
+          class="inline-flex items-center gap-2 text-dark/60 hover:text-brand font-poppins text-xs font-bold uppercase tracking-widest transition-colors group/back"
+        >
+          <Icon
+            name="mdi:arrow-left"
+            class="size-4 group-hover/back:-translate-x-1 transition-transform"
+          />
+          Volver a Portafolio
+        </a>
+      </div>
+
+      <header class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
+        <div class="space-y-8">
+          <div
+            class="inline-flex items-center gap-2 text-brand text-[10px] font-bold uppercase tracking-widest font-poppins"
+          >
+            <Icon name="mdi:briefcase-check-outline" class="size-4" />
+            Caso de Éxito / {category}
+          </div>
+          <h1
+            class="text-4xl md:text-6xl font-poppins font-extrabold text-dark leading-tight italic"
+          >
+            {title}
+          </h1>
+          <p class="text-lg text-gray leading-relaxed font-poppins">
+            {description}
+          </p>
+
+          <div class="grid grid-cols-2 gap-8 pt-6 border-t border-accent/20">
+            {
+              client && (
+                <div class="space-y-1">
+                  <span class="text-[10px] uppercase font-poppins font-bold text-gray tracking-widest opacity-60">
+                    Cliente
+                  </span>
+                  <p class="font-poppins font-semibold text-dark">{client}</p>
+                </div>
+              )
+            }
+            <div class="space-y-1">
+              <span
+                class="text-[10px] uppercase font-poppins font-bold text-gray tracking-widest opacity-60"
+                >Categoría</span
+              >
+              <p class="font-poppins font-semibold text-dark">{category}</p>
+            </div>
+            {
+              technologies && (
+                <div class="col-span-2 space-y-2">
+                  <span class="text-[10px] uppercase font-poppins font-bold text-gray tracking-widest opacity-60">
+                    Stack Tecnológico
+                  </span>
+                  <div class="flex flex-wrap gap-2">
+                    {technologies.map((tech) => (
+                      <span class="px-2 py-0.5 bg-white border border-accent/20 text-dark text-[10px] font-poppins font-bold rounded-sm tracking-wide">
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )
+            }
+          </div>
+        </div>
+
+        <div class="relative rounded-sm overflow-hidden border border-accent/20 group">
+          {
+            heroImage && (
+              <Image
+                src={heroImage}
+                alt={title}
+                width={1200}
+                height={800}
+                loading="eager"
+                class="w-full h-auto object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+              />
+            )
+          }
+        </div>
+      </header>
+
+      <div
+        class="prose prose-lg max-w-none prose-headings:font-poppins prose-headings:font-bold prose-headings:italic prose-brand font-poppins"
+      >
+        <slot />
+      </div>
+
+      <div
+        class="mt-20 p-10 bg-brand text-white rounded-sm text-center space-y-8 relative overflow-hidden"
+      >
+        <h3 class="text-3xl md:text-4xl font-poppins font-bold italic text-white relative z-10">
+          ¿Listo para lograr resultados similares?
+        </h3>
+        <p class="text-white/80 max-w-xl mx-auto relative z-10 font-poppins">
+          Cada proyecto es único. Hablemos sobre cómo podemos aplicar nuestra experiencia para
+          solucionar tus desafíos específicos.
+        </p>
+        <div class="pt-4 relative z-10">
+          <a
+            href="/contact"
+            class="inline-block bg-transparent text-white border border-white font-poppins font-bold px-12 py-4 rounded-sm hover:bg-white hover:text-dark transition-all duration-300 tracking-widest text-[10px] uppercase"
+          >
+            Iniciar mi Proyecto
+          </a>
+        </div>
+      </div>
+    </article>
+  </section>
+</BaseLayout>

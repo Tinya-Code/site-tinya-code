@@ -1,0 +1,113 @@
+---
+import { Image } from "astro:assets";
+import Icon from "../common/Icon.astro";
+import type { CardBase, WithCategory } from "@/types";
+
+interface Props extends CardBase, WithCategory {
+  id: string;
+  size: "featured" | "secondary" | "small";
+  type: "web" | "tienda" | "software" | "excel";
+  demo?: string;
+  preview?: string;
+  technologies: string[];
+}
+
+const { id, title, description, category, image, size, type, demo, preview, technologies, href } =
+  Astro.props;
+
+// Determine status badge
+const hasDemo = !!demo;
+const statusLabel = hasDemo ? "Live Demo" : "Case Study";
+const statusClass = hasDemo ? "badge-status-live" : "badge-status-demo";
+const featured = size === "featured";
+---
+
+<article
+  class:list={[
+    "group relative overflow-hidden transition-all duration-500 rounded-sm border border-white/10",
+    featured ? "bento-item-featured" : "bento-item-secondary",
+    size === "small" && "bento-item-small",
+    "flex flex-col md:block",
+    `filter-${type}`,
+  ]}
+  data-project-id={id}
+  data-title={title}
+  data-description={description}
+  data-category={category}
+  data-image={image}
+  data-demo={demo}
+  data-preview={preview}
+  data-tech={technologies.join(", ")}
+  data-type={type}
+  data-href={href}
+>
+  <!-- Background Image -->
+  <Image
+    src={image || "/generico.jpeg"}
+    alt={title}
+    width={size === "featured" ? 1200 : 800}
+    height={size === "featured" ? 800 : 600}
+    class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+  />
+
+  <!-- Gradient Overlay -->
+  <div
+    class="absolute inset-0 bg-gradient-to-t from-dark/95 via-dark/20 to-transparent opacity-90 md:opacity-80 md:group-hover:opacity-90 transition-opacity"
+  >
+  </div>
+
+  <!-- Content Overlay -->
+  <div class="absolute inset-0 p-6 flex flex-col justify-between">
+    <div
+      class="flex justify-between items-start opacity-100 md:opacity-0 md:group-hover:opacity-100 translate-y-0 md:-translate-y-2 md:group-hover:translate-y-0 transition-all duration-500"
+    >
+      <span class="badge-accent bg-white/10 backdrop-blur-md text-white border border-white/20">
+        {category}
+      </span>
+      <span
+        class:list={[
+          statusClass,
+          "backdrop-blur-md px-3 py-1 text-[10px] uppercase tracking-widest font-bold rounded-xs border border-white/10",
+        ]}
+      >
+        {statusLabel}
+      </span>
+    </div>
+
+    <div
+      class="space-y-4 translate-y-0 md:translate-y-4 md:group-hover:translate-y-0 transition-transform duration-500"
+    >
+      <h3
+        class:list={[
+          "font-poppins font-bold text-white tracking-tight",
+          size === "featured" ? "text-2xl md:text-3xl" : "text-xl",
+        ]}
+      >
+        {title}
+      </h3>
+
+      <div
+        class="flex items-center gap-6 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 delay-100"
+      >
+        <button
+          class="open-modal-btn inline-flex items-center gap-2 text-white/80 font-poppins text-[10px] font-bold uppercase tracking-widest hover:text-brand transition-colors"
+        >
+          <Icon name="mdi:plus-circle-outline" size={4} />
+          Detalle
+        </button>
+        {
+          demo && (
+            <a
+              href={demo}
+              target="_blank"
+              class="inline-flex items-center gap-2 text-white/80 font-poppins text-[10px] font-bold uppercase tracking-widest hover:text-brand transition-colors"
+            >
+              <Icon name="mdi:launch" size={4} />
+              Live
+            </a>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</article>

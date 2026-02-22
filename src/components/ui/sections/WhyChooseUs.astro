@@ -1,0 +1,27 @@
+---
+import Icon from "../common/Icon.astro";
+
+interface Props {
+  items: {
+    icon: string;
+    title: string;
+    description: string;
+  }[];
+}
+
+const { items } = Astro.props;
+---
+
+<div class="space-y-8">
+  {
+    items.map((item) => (
+      <div class="flex gap-4">
+        <Icon name={item.icon} size={6} class="text-brand mt-0.5 shrink-0" />
+        <div class="space-y-1">
+          <h3 class="font-poppins font-semibold text-base text-dark">{item.title}</h3>
+          <p class="font-poppins text-sm text-gray leading-relaxed">{item.description}</p>
+        </div>
+      </div>
+    ))
+  }
+</div>

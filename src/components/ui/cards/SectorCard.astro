@@ -1,0 +1,41 @@
+---
+import Icon from "../common/Icon.astro";
+import type { CardBase, WithIcon } from "@/types";
+
+interface Props extends CardBase, WithIcon {
+  id: string;
+}
+
+const { id, title: name, href, description: fullDescription, icon } = Astro.props;
+---
+
+<a href={href} class="card-base flex flex-col gap-4 group" id={`sector-card-${id}`}>
+  <!-- Icon -->
+  <Icon
+    name={icon}
+    size={8}
+    class="text-brand transition-colors duration-200 group-hover:text-brand-dark"
+  />
+
+  <!-- Content -->
+  <div class="space-y-2">
+    <h3
+      class="font-poppins font-semibold text-base text-dark group-hover:text-brand transition-colors duration-200"
+    >
+      {name}
+    </h3>
+    <p class="font-poppins text-sm text-dark/60 leading-relaxed">
+      {fullDescription}
+    </p>
+  </div>
+
+  <!-- CTA -->
+  <span class="font-poppins text-xs font-medium text-brand flex items-center gap-1 mt-auto">
+    Ver soluciones
+    <Icon
+      name="mdi:arrow-right"
+      size={4}
+      class="transition-transform duration-200 group-hover:translate-x-1"
+    />
+  </span>
+</a>

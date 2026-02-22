@@ -1,0 +1,25 @@
+---
+import PricingCard from "@/components/ui/cards/PricingCard.astro";
+import type { ComponentProps } from "astro/types";
+
+interface Props {
+  plans: ComponentProps<typeof PricingCard>[];
+}
+
+const { plans } = Astro.props;
+---
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-6 py-12">
+  {
+    plans.map((plan, index) => (
+      <div class:list={["animate-on-scroll", `animate-delay-${(index % 3) + 1}`]}>
+        <PricingCard {...plan} />
+      </div>
+    ))
+  }
+</div>
+
+<script>
+  import { initScrollAnimations } from "@/scripts/observer";
+  initScrollAnimations();
+</script>

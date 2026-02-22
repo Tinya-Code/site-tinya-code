@@ -1,0 +1,580 @@
+---
+import Icon from "./Icon.astro";
+import type { NavLink, SubLink } from "@/data/navigation";
+
+interface Props {
+  navLinks: NavLink[];
+  siteName: string;
+}
+
+const { navLinks, siteName } = Astro.props;
+const currentPath = Astro.url.pathname;
+
+function isActive(href: string): boolean {
+  if (href === '/') return currentPath === '/';
+  return currentPath === href || currentPath.startsWith(href + '/');
+}
+
+function isSubActive(sublinks?: SubLink[]): boolean {
+  if (!sublinks) return false;
+  return sublinks.some(sub => isActive(sub.href));
+}
+---
+
+<header
+  id="main-header"
+  class="sticky top-0 z-50 w-full bg-white border-b border-gray-light transition-all duration-300"
+>
+  <div class="container-main flex h-20 items-center justify-between">
+    <!-- Logo -->
+    <a href="/" class="flex items-center h-8" aria-label={`Ir a inicio — ${siteName}`}>
+      <span class="font-rader text-2xl font-bold tracking-tight text-brand" aria-hidden="true">
+        {siteName}
+      </span>
+    </a>
+
+    <!-- Desktop Navigation -->
+    <nav class="hidden md:flex items-center gap-8" aria-label="Navegación principal">
+      {
+        navLinks.map((link) => (
+          <div class="relative group">
+            <a
+              href={link.href}
+              class:list={[
+                link.isCTA ? "btn-primary !px-5 !py-2 !text-xs" : "nav-link",
+                (isActive(link.href) || isSubActive(link.sublinks)) && !link.isCTA ? "nav-link-active" : "",
+              ]}
+              aria-current={(isActive(link.href) || isSubActive(link.sublinks)) && !link.isCTA ? "page" : undefined}
+              aria-haspopup={link.sublinks ? "menu" : undefined}
+              aria-expanded={link.sublinks ? "false" : undefined}
+            >
+              {link.text}
+              {link.sublinks && (
+                <Icon
+                  name="mdi:chevron-down"
+                  size={3}
+                  class="inline-block ml-1 group-hover:rotate-180 transition-transform"
+                  ariaHidden={true}
+                />
+              )}
+            </a>
+
+            {link.sublinks && link.sublinks[0]?.description ? (
+              <div
+                class="absolute top-full left-1/2 -translate-x-1/2 pt-4
+                       opacity-0 pointer-events-none
+                       group-hover:opacity-100 group-hover:pointer-events-auto
+                       group-focus-within:opacity-100 group-focus-within:pointer-events-auto
+                       transition-all duration-200 transform translate-y-2
+                       group-hover:translate-y-0 group-focus-within:translate-y-0 z-50"
+                role="menu"
+                aria-label={`Submenú de ${link.text}`}
+              >
+                <div class="bg-white border border-gray-light rounded-sm shadow-sm p-4
+                            grid grid-cols-2 gap-1 min-w-[480px]">
+                  {link.sublinks.map((sub) => (
+                    <a
+                      href={sub.href}
+                      role="menuitem"
+                      class:list={[
+                        "group/item flex items-start gap-3 px-3 py-3 rounded-xs",
+                        "hover:bg-light/50 transition-colors duration-200",
+                        isActive(sub.href) && "bg-light",
+                      ]}
+                    >
+                      {sub.icon && (
+                        <Icon
+                          name={sub.icon}
+                          size={5}
+                          class:list={[
+                            "mt-0.5 shrink-0 transition-colors duration-200",
+                            isActive(sub.href) ? "text-brand" : "text-gray group-hover/item:text-brand",
+                          ]}
+                          ariaHidden={true}
+                        />
+                      )}
+                      <div>
+                        <span
+                          class:list={[
+                            "block font-poppins text-sm font-medium transition-colors duration-200",
+                            isActive(sub.href) ? "text-brand" : "text-dark group-hover/item:text-brand",
+                          ]}
+                        >
+                          {sub.text}
+                          {isActive(sub.href) && (
+                            <span class="ml-1 text-brand">&bull;</span>
+                          )}
+                        </span>
+                        {sub.description && (
+                          <span class="block font-poppins text-xs text-gray mt-0.5">
+                            {sub.description}
+                          </span>
+                        )}
+                      </div>
+                    </a>
+                  ))}
+                  <a
+                    href={link.href}
+                    role="menuitem"
+                    class="col-span-2 flex items-center justify-between
+                           px-3 py-2 mt-1 border-t 
+                           font-poppins text-sm font-medium text-dark hover:text-brand hover:bg-light/50 transition-colors duration-200"
+                  >
+                    Ver todos los {link.text.toLowerCase()}
+                    <Icon name="mdi:arrow-right" size={4} class="text-brand" ariaHidden={true} />
+                  </a>
+                </div>
+              </div>
+            ) : link.sublinks ? (
+              <div
+                class="absolute top-full left-0 pt-4
+                       opacity-0 pointer-events-none
+                       group-hover:opacity-100 group-hover:pointer-events-auto
+                       group-focus-within:opacity-100 group-focus-within:pointer-events-auto
+                       transition-all duration-200 transform translate-y-2
+                       group-hover:translate-y-0 group-focus-within:translate-y-0 z-50"
+                role="menu"
+                aria-label={`Submenú de ${link.text}`}
+              >
+                <div class="bg-white border border-gray-light rounded-sm shadow-sm p-2
+                            grid grid-cols-2 gap-1 min-w-[300px]">
+                  {link.sublinks.map((sub) => (
+                    <a
+                      href={sub.href}
+                      role="menuitem"
+                      class:list={[
+                        "group/item flex items-center gap-2 px-3 py-2 rounded-xs",
+                        "font-poppins text-sm transition-colors duration-200",
+                        isActive(sub.href)
+                          ? "text-brand font-medium bg-light"
+                          : "text-dark hover:text-brand hover:bg-light/50",
+                      ]}
+                    >
+                      {sub.icon && (
+                        <Icon
+                          name={sub.icon}
+                          size={4}
+                          class:list={[
+                            "shrink-0 transition-colors duration-200",
+                            isActive(sub.href) ? "text-brand" : "text-gray group-hover/item:text-brand",
+                          ]}
+                          ariaHidden={true}
+                        />
+                      )}
+                      {sub.text}
+                      {isActive(sub.href) && (
+                        <span class="ml-auto text-brand text-xs">&bull;</span>
+                      )}
+                    </a>
+                  ))}
+                  <a
+                    href={link.href}
+                    role="menuitem"
+                    class="col-span-2 justify-between flex items-center gap-2 px-3 py-2 mt-1
+                           border-t 
+                           font-poppins text-sm font-medium text-dark hover:text-brand hover:bg-light/50 transition-colors duration-200"
+                  >
+                    Ver todos
+                    <Icon name="mdi:arrow-right" size={4} class="text-brand" ariaHidden={true} />
+                  </a>
+                </div>
+              </div>
+            ) : null}
+          </div>
+        ))
+      }
+    </nav>
+
+    <!-- Mobile Menu Button (Hamburger) -->
+    <button
+      type="button"
+      id="menu-toggle"
+      class="md:hidden p-2 text-dark focus:outline-none focus:ring-2 focus:ring-brand rounded-sm transition-colors"
+      aria-label="Abrir menú"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+    >
+      <div id="menu-icon-open">
+        <Icon name="mdi:menu" size={6} ariaHidden={true} />
+      </div>
+      <div id="menu-icon-close" class="hidden">
+        <Icon name="mdi:close" size={6} ariaHidden={true} />
+      </div>
+    </button>
+  </div>
+
+  <!-- Mobile Navigation (Overlay) -->
+  <div
+    id="mobile-menu"
+    role="dialog"
+    aria-label="Menú de navegación"
+    class="mobile-menu fixed top-20 left-0 w-full bg-white border-b border-gray-light md:hidden z-40 h-[calc(100vh-80px)] overflow-y-auto"
+  >
+    <nav class="flex flex-col p-6 gap-6" aria-label="Menú móvil">
+      <div class="flex flex-col gap-2">
+        {
+          navLinks
+            .filter((l) => !l.isCTA)
+            .map((link) => (
+              <div class="mobile-nav-group">
+                {link.sublinks ? (
+                  <div>
+                    <button
+                      type="button"
+                      class:list={[
+                        "mobile-nav-trigger w-full flex items-center justify-between",
+                        "py-3 font-poppins text-lg font-medium",
+                        "focus:outline-none focus:text-brand",
+                        isActive(link.href) || isSubActive(link.sublinks)
+                          ? "text-brand"
+                          : "text-dark",
+                      ]}
+                      aria-expanded="false"
+                      aria-controls={`mobile-sub-${link.href.replace(/\//g, '')}`}
+                    >
+                      {link.text}
+                      <Icon
+                        name="mdi:chevron-down"
+                        size={5}
+                        class="mobile-chevron transition-transform duration-300 shrink-0"
+                        ariaHidden={true}
+                      />
+                    </button>
+                    <div
+                      id={`mobile-sub-${link.href.replace(/\//g, '')}`}
+                      class="mobile-sublinks overflow-hidden max-h-0
+                             transition-[max-height] duration-300 ease-in-out"
+                    >
+                      <div class="flex flex-col gap-1 pb-2 pl-4
+                                  border-l border-gray-light ml-1">
+                        <a
+                          href={link.href}
+                          class:list={[
+                            " py-2 font-poppins text-sm font-semibold",
+                            "flex items-center  gap-2",
+                            isActive(link.href) ? "text-brand" : "text-gray",
+                          ]}
+                        >
+                          Ver todos los {link.text.toLowerCase()}
+                          <Icon name="mdi:arrow-right" size={4} ariaHidden={true} />
+                        </a>
+                        {link.sublinks.map((sub) => (
+                          <a
+                            href={sub.href}
+                            class:list={[
+                              "py-2 font-poppins text-sm flex items-center gap-2",
+                              "transition-colors duration-200",
+                              isActive(sub.href)
+                                ? "text-brand font-medium"
+                                : "text-dark hover:text-brand",
+                            ]}
+                          >
+                            {sub.icon && (
+                              <Icon
+                                name={sub.icon}
+                                size={4}
+                                class="shrink-0 text-gray"
+                                ariaHidden={true}
+                              />
+                            )}
+                            {sub.text}
+                            {isActive(sub.href) && (
+                              <span class="ml-auto text-brand text-xs">&bull;</span>
+                            )}
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <a
+                    href={link.href}
+                    class:list={[
+                      "block py-3 font-poppins text-lg font-medium",
+                      "transition-colors duration-200",
+                      isActive(link.href)
+                        ? "text-brand"
+                        : "text-dark hover:text-brand",
+                    ]}
+                  >
+                    {link.text}
+                  </a>
+                )}
+              </div>
+            ))
+        }
+      </div>
+
+      <div class="pt-6 border-t border-gray-light">
+        {
+          navLinks
+            .filter((l) => l.isCTA)
+            .map((link) => (
+              <a href={link.href} class="btn-primary block text-center">
+                {link.text}
+              </a>
+            ))
+        }
+      </div>
+    </nav>
+  </div>
+</header>
+
+<script>
+  import { trapFocus } from "@/scripts/observer";
+
+  function initNavbar() {
+    const header = document.getElementById("main-header");
+    const toggle = document.getElementById("menu-toggle");
+    const menu = document.getElementById("mobile-menu");
+    const iconOpen = document.getElementById("menu-icon-open");
+    const iconClose = document.getElementById("menu-icon-close");
+    const mobileLinks = menu?.querySelectorAll("a");
+
+    let removeTrap: (() => void) | null = null;
+
+    // Scroll Logic
+    const handleScroll = () => {
+      if (window.scrollY > 80) {
+        header?.classList.add("navbar-scrolled");
+      } else {
+        header?.classList.remove("navbar-scrolled");
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+
+    const openMenu = () => {
+      toggle?.setAttribute("aria-expanded", "true");
+      toggle?.setAttribute("aria-label", "Cerrar menú");
+      menu?.classList.add("is-open");
+      iconOpen?.classList.add("hidden");
+      iconClose?.classList.remove("hidden");
+      document.body.classList.add("overflow-hidden");
+      if (menu) removeTrap = trapFocus(menu);
+    };
+
+    const closeMenu = () => {
+      toggle?.setAttribute("aria-expanded", "false");
+      toggle?.setAttribute("aria-label", "Abrir menú");
+      menu?.classList.remove("is-open");
+      iconOpen?.classList.remove("hidden");
+      iconClose?.classList.add("hidden");
+      document.body.classList.remove("overflow-hidden");
+      if (removeTrap) {
+        removeTrap();
+        removeTrap = null;
+      }
+    };
+
+    toggle?.addEventListener("click", () => {
+      const isExpanded = toggle.getAttribute("aria-expanded") === "true";
+      if (isExpanded) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    });
+
+    mobileLinks?.forEach((link) => {
+      link.addEventListener("click", () => {
+        closeMenu();
+      });
+    });
+
+    // Cleanup and global listeners
+    const handleKeydown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        const isExpanded = toggle?.getAttribute("aria-expanded") === "true";
+        if (isExpanded) closeMenu();
+      }
+    };
+
+    // Mobile sublinks expansion
+    const mobileTriggers = document.querySelectorAll<HTMLButtonElement>(
+      ".mobile-nav-trigger",
+    );
+
+    mobileTriggers.forEach((trigger) => {
+      trigger.addEventListener("click", () => {
+        const targetId = trigger.dataset.target || trigger.getAttribute("aria-controls");
+        if (!targetId) return;
+
+        const sublist = document.getElementById(targetId);
+        const chevron = trigger.querySelector<HTMLElement>(".mobile-chevron");
+        const isExpanded = trigger.getAttribute("aria-expanded") === "true";
+
+        // Close all others
+        mobileTriggers.forEach((otherTrigger) => {
+          if (otherTrigger === trigger) return;
+          const otherId = otherTrigger.dataset.target || otherTrigger.getAttribute("aria-controls");
+          if (!otherId) return;
+          const otherSublist = document.getElementById(otherId);
+          const otherChevron = otherTrigger.querySelector<HTMLElement>(".mobile-chevron");
+          otherTrigger.setAttribute("aria-expanded", "false");
+          if (otherSublist) otherSublist.style.maxHeight = "0px";
+          otherChevron?.classList.remove("rotate-180");
+        });
+
+        // Toggle current
+        trigger.setAttribute("aria-expanded", String(!isExpanded));
+        if (!isExpanded && sublist) {
+          sublist.style.maxHeight = sublist.scrollHeight + "px";
+          chevron?.classList.add("rotate-180");
+        } else if (sublist) {
+          sublist.style.maxHeight = "0px";
+          chevron?.classList.remove("rotate-180");
+        }
+      });
+    });
+
+    // Auto-expand active group on page load
+    mobileTriggers.forEach((trigger) => {
+      const targetId = trigger.dataset.target || trigger.getAttribute("aria-controls");
+      if (!targetId) return;
+      const sublist = document.getElementById(targetId);
+      const chevron = trigger.querySelector<HTMLElement>(".mobile-chevron");
+
+      const activeSublink = sublist?.querySelector<HTMLElement>(".text-brand");
+      if (activeSublink && sublist) {
+        trigger.setAttribute("aria-expanded", "true");
+        sublist.style.maxHeight = sublist.scrollHeight + "px";
+        chevron?.classList.add("rotate-180");
+      }
+    });
+
+    // Dropdown Logic (Desktop) — keyboard navigation
+    const dropdownGroups = document.querySelectorAll<HTMLElement>(".group");
+
+    dropdownGroups.forEach((group) => {
+      const parentLink = group.querySelector<HTMLAnchorElement>(
+        'a[aria-haspopup="menu"]',
+      );
+      const dropdownPanel = group.querySelector<HTMLElement>('[role="menu"]');
+      const menuItems = dropdownPanel?.querySelectorAll<HTMLAnchorElement>(
+        '[role="menuitem"]',
+      );
+
+      if (!parentLink || !dropdownPanel || !menuItems?.length) return;
+
+      let isOpen = false;
+
+      function openDropdown(): void {
+        isOpen = true;
+        parentLink!.setAttribute("aria-expanded", "true");
+        dropdownPanel!.classList.add("opacity-100", "pointer-events-auto");
+        dropdownPanel!.classList.remove("opacity-0", "pointer-events-none");
+      }
+
+      function closeDropdown(): void {
+        isOpen = false;
+        parentLink!.setAttribute("aria-expanded", "false");
+        dropdownPanel!.classList.remove("opacity-100", "pointer-events-auto");
+        dropdownPanel!.classList.add("opacity-0", "pointer-events-none");
+      }
+
+      function focusItem(index: number): void {
+        const items = Array.from(menuItems!);
+        const target = items[Math.max(0, Math.min(index, items.length - 1))];
+        target?.focus();
+      }
+
+      // Hover
+      group.addEventListener("mouseenter", openDropdown);
+      group.addEventListener("mouseleave", closeDropdown);
+
+      // Keyboard on parent link
+      parentLink.addEventListener("keydown", (e: KeyboardEvent) => {
+        if (e.key === " " && menuItems?.length) {
+          e.preventDefault();
+          openDropdown();
+          focusItem(0);
+        }
+        if (e.key === "ArrowDown" && menuItems?.length) {
+          e.preventDefault();
+          openDropdown();
+          focusItem(0);
+        }
+        if (e.key === "Escape") {
+          closeDropdown();
+        }
+      });
+
+      // Keyboard inside dropdown
+      menuItems.forEach((item, index) => {
+        item.addEventListener("keydown", (e: KeyboardEvent) => {
+          const items = Array.from(menuItems!);
+
+          switch (e.key) {
+            case "ArrowDown":
+              e.preventDefault();
+              if (index < items.length - 1) {
+                focusItem(index + 1);
+              }
+              break;
+            case "ArrowUp":
+              e.preventDefault();
+              if (index === 0) {
+                parentLink!.focus();
+                closeDropdown();
+              } else {
+                focusItem(index - 1);
+              }
+              break;
+            case "Home":
+              e.preventDefault();
+              focusItem(0);
+              break;
+            case "End":
+              e.preventDefault();
+              focusItem(items.length - 1);
+              break;
+            case "Escape":
+              e.preventDefault();
+              closeDropdown();
+              parentLink!.focus();
+              break;
+            case "Tab":
+              closeDropdown();
+              break;
+          }
+        });
+      });
+
+      // Click outside closes dropdown
+      document.addEventListener("click", (e: MouseEvent) => {
+        if (!group.contains(e.target as Node) && isOpen) {
+          closeDropdown();
+        }
+      });
+    });
+
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      const isMenuOpen = menu?.classList.contains("is-open");
+      if (isMenuOpen && !menu?.contains(target) && !toggle?.contains(target)) {
+        closeMenu();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeydown);
+    document.addEventListener("click", handleClickOutside);
+
+    // Astro transition cleanup
+    document.addEventListener(
+      "astro:before-swap",
+      () => {
+        window.removeEventListener("scroll", handleScroll);
+        document.removeEventListener("keydown", handleKeydown);
+        document.removeEventListener("click", handleClickOutside);
+        closeMenu();
+      },
+      { once: true },
+    );
+  }
+
+  // Initialize
+  initNavbar();
+  document.addEventListener("astro:after-swap", initNavbar);
+</script>

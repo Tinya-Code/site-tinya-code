@@ -1,0 +1,110 @@
+---
+import Button from "@/components/ui/buttons/Button.astro";
+
+interface Phase {
+  letter: string;
+  phase: string;
+  description: string;
+}
+
+interface Props {
+  title: string;
+  subtitle: string;
+  ctaText: string;
+  ctaHref: string;
+  modelLabel: string;
+  badges: string[];
+  background?: "light" | "white" | "brand" | "dark";
+  phases: Phase[];
+}
+
+const {
+  title,
+  subtitle,
+  ctaText,
+  ctaHref,
+  modelLabel,
+  badges,
+  background = "dark",
+  phases,
+} = Astro.props;
+---
+
+<section class:list={["section-base", `section-${background}`]}>
+  <div class="container-main">
+    <div class="mb-12 text-center">
+      <p
+        class:list={[
+          "font-poppins text-xs font-semibold uppercase tracking-widest mb-3",
+          background === "brand" ? "text-white" : "text-brand",
+        ]}
+      >
+        {modelLabel}
+      </p>
+      <h2
+        class:list={[
+          "titulo-seccion",
+          background === "brand" || background === "dark" ? "text-white" : "text-dark",
+        ]}
+      >
+        {title}
+      </h2>
+      <p
+        class:list={[
+          "subtitulo mt-4 max-w-2xl mx-auto",
+          background === "brand" || background === "dark" ? "text-white/80" : "text-gray",
+        ]}
+      >
+        {subtitle}
+      </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row gap-10 md:gap-6 max-w-4xl mx-auto">
+      {
+        phases.map(({ letter, phase, description }) => (
+          <div class="flex-1">
+            <p class="font-poppins text-4xl font-bold text-brand">{letter}</p>
+            <h3
+              class:list={[
+                "font-poppins font-semibold text-base mt-2",
+                background === "brand" || background === "dark" ? "text-white" : "text-dark",
+              ]}
+            >
+              {phase}
+            </h3>
+            <p
+              class:list={[
+                "font-poppins text-sm mt-1",
+                background === "brand" || background === "dark" ? "text-white/70" : "text-gray",
+              ]}
+            >
+              {description}
+            </p>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-6 mt-12">
+      <Button
+        href={ctaHref}
+        variant={background === "brand" || background === "dark" ? "outline-white" : "outline"}
+        >{ctaText}</Button
+      >
+      <div class="flex gap-6">
+        {
+          badges.map((badge) => (
+            <span
+              class:list={[
+                "font-poppins text-xs",
+                background === "brand" || background === "dark" ? "text-white/60" : "text-gray",
+              ]}
+            >
+              {badge}
+            </span>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>

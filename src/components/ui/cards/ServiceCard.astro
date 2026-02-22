@@ -1,0 +1,74 @@
+---
+import Icon from "../common/Icon.astro";
+import type { WithIcon, WithCategory } from "@/types";
+
+interface Props extends WithIcon, WithCategory {
+  id: string;
+  title: string;
+  description: string;
+  longDescription: string;
+  href: string;
+  technologies: string[];
+  estimatedTime: string;
+  category: "web" | "software" | "automatizacion";
+  ctaLabel?: string;
+}
+
+const {
+  id,
+  title,
+  description,
+  longDescription,
+  icon,
+  href,
+  technologies,
+  estimatedTime,
+  category,
+  ctaLabel = "Ver más",
+} = Astro.props;
+---
+
+<div class="card-base group cursor-pointer" data-service-card={id} data-category={category}>
+  <!-- Icon -->
+  <Icon name={icon} size={7} class="text-brand mb-5 transition-colors duration-200" />
+
+  <!-- Content -->
+  <div class="space-y-3">
+    <h3 class="font-poppins font-semibold text-base text-dark transition-colors">
+      {title}
+    </h3>
+    <p class="font-poppins text-sm text-gray leading-relaxed mt-2">
+      {description}
+    </p>
+
+    <!-- Expansion Area -->
+    <div class="faq-content overflow-hidden transition-all duration-300">
+      <div class="pt-6 space-y-4">
+        <p class="font-poppins text-sm text-gray leading-relaxed">
+          {longDescription}
+        </p>
+
+        <div class="flex flex-wrap gap-2">
+          {technologies.map((tech) => <span class="chip-tech">{tech}</span>)}
+        </div>
+
+        <div class="flex items-center justify-between pt-2">
+          <span class="font-poppins text-xs font-medium text-gray/60 uppercase tracking-wider">
+            Tiempo est.: {estimatedTime}
+          </span>
+          <a href={href} class="btn-primary !py-2 !px-4 !text-xs"> Ver más detalles </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile/Closed View Indicator -->
+    <div
+      class="pt-4 flex items-center justify-between text-sm font-medium text-brand hover:text-brand-dark transition-colors duration-200 show-on-closed"
+    >
+      <span class="inline-flex items-center gap-1">
+        {ctaLabel}
+        <Icon name="mdi:arrow-right" size={4} />
+      </span>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,75 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import MethodologySection from "@/components/smart/MethodologySection.astro";
+import AidaBannerSection from "@/components/smart/AidaBannerSection.astro";
+import { siteConfig } from "@/data/siteConfig";
+import { Image } from "astro:assets";
+
+const { methodology } = siteConfig.pages;
+
+const seo = {
+  title: `Metodología — Tinya Code`,
+  description: `Conoce las 5 fases de trabajo de Tinya Code: análisis, diseño UX, desarrollo, pruebas y lanzamiento con monitoreo.`,
+  canonical: new URL(Astro.url.pathname, siteConfig.url).toString(),
+};
+---
+
+<BaseLayout {...seo}>
+  {/* 1. Hero / Introduction (bg-white) */}
+  <section class="section-base section-white">
+    <div class="container-main text-center">
+      <div class="mb-12">
+        <h1 class="titulo-hero mb-4">{methodology.title}</h1>
+        <p class="subtitulo mx-auto">{methodology.subtitle}</p>
+      </div>
+    </div>
+  </section>
+
+  {/* 2. Methodology Steps (bg-light via MethodologySection) */}
+  <MethodologySection />
+
+  {/* 3. Focus Section (bg-white) */}
+  <section class="section-base section-white">
+    <div class="container-main">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div class="space-y-6">
+          <h2 class="text-3xl font-poppins font-bold text-dark italic">
+            {methodology.focus.title}
+          </h2>
+          <p
+            class="text-dark/70 text-lg leading-relaxed font-poppins"
+            set:html={methodology.focus.text.replace(
+              "**AIDA (Atención, Interés, Deseo, Acción)**",
+              '<strong class="font-bold text-brand">AIDA (Atención, Interés, Deseo, Acción)</strong>',
+            )}
+          />
+          <ul class="space-y-4">
+            {
+              methodology.focus.items.map((item) => (
+                <li class="flex items-start gap-3 font-poppins text-dark/80">
+                  <span class="text-brand font-bold">✓</span>
+                  <span class="font-medium">{item}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div class="relative rounded-sm overflow-hidden border border-accent/20">
+          <Image
+            src="/generico.jpeg"
+            alt={methodology.focus.title}
+            width={800}
+            height={600}
+            class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* 4. CTA (bg-brand) */}
+  <AidaBannerSection
+    title="Transformemos tu metodología de trabajo"
+    subtitle="Aplicamos este proceso a cada proyecto para garantizar resultados que impacten en tu facturación."
+  />
+</BaseLayout>

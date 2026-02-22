@@ -1,0 +1,21 @@
+---
+import Icon from "../common/Icon.astro";
+
+interface Props {
+  name: string;
+  icon: string;
+  href: string;
+  active?: boolean;
+}
+
+const { name, icon, href, active = false } = Astro.props;
+---
+
+<a href={href} class:list={["chip-sector", active && "active"]}>
+  <Icon name={icon} size={4} class="shrink-0 transition-colors duration-300" />
+  <span
+    class="font-poppins text-xs font-semibold uppercase tracking-widest transition-colors duration-300"
+  >
+    {name}
+  </span>
+</a>

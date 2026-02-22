@@ -1,0 +1,105 @@
+---
+import Icon from "../common/Icon.astro";
+import Button from "@/components/ui/buttons/Button.astro";
+
+interface TrustItem {
+  icon: string;
+  text: string;
+  description: string;
+}
+
+interface Props {
+  title: string;
+  subtitle: string;
+  button: {
+    text: string;
+    href: string;
+  };
+  trustItems?: TrustItem[];
+}
+
+const { title, subtitle, button, trustItems = [] } = Astro.props;
+---
+
+<section class="section-base section-cta-bg relative overflow-hidden">
+  <div class="container-main relative z-10">
+    <div class="animate-on-scroll flex flex-col items-center text-center gap-8 py-24 md:py-32">
+      <div class="relative inline-block mb-4">
+        <span class="line-draw bg-white/40"></span>
+        <h2 class="font-poppins text-3xl md:text-5xl font-bold text-white max-w-3xl leading-tight">
+          {title}
+        </h2>
+        <svg
+          class="absolute -bottom-4 left-1/2 -translate-x-1/2 w-48 h-3 text-white/20"
+          viewBox="0 0 200 12"
+          fill="none"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M2 10C30 10 60 2 100 2C140 2 170 10 198 10"
+            stroke="currentColor"
+            stroke-width="4"
+            stroke-linecap="round"></path>
+        </svg>
+      </div>
+
+      <p class="font-poppins text-base text-white/80 max-w-xl mb-4 leading-relaxed">
+        {subtitle}
+      </p>
+
+      <div class="flex flex-col items-center gap-12">
+        <Button
+          href={button.href}
+          variant="outline-white"
+          class="!px-10 !py-5 !text-lg hover:bg-white hover:text-brand transition-all duration-300"
+        >
+          {button.text}
+          <Icon
+            name="mdi:arrow-right"
+            size={5}
+            class="inline-block ml-2 group-hover:translate-x-1 transition-transform"
+          />
+        </Button>
+
+        <!-- Trust Items / Metrics Row -->
+        {
+          trustItems.length > 0 && (
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 md:gap-16 pt-12 border-t border-white/10 w-full max-w-4xl">
+              {trustItems.map((item) => (
+                <div class="flex flex-col items-center gap-3 text-center group">
+                  <div class="size-10 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                    <Icon name={item.icon} size={5} class="text-white" />
+                  </div>
+                  <div class="space-y-1">
+                    <span class="block font-poppins text-sm font-bold text-white uppercase tracking-widest">
+                      {item.text}
+                    </span>
+                    <span class="block font-poppins text-[10px] text-white/50 uppercase tracking-tighter">
+                      {item.description}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Perspective Circles decoration -->
+  <div class="absolute -top-24 -left-24 size-96 rounded-full bg-white/5 blur-3xl"></div>
+  <div class="absolute -bottom-24 -right-24 size-96 rounded-full bg-white/5 blur-3xl"></div>
+</section>
+
+<script>
+  import { initScrollAnimations } from "@/scripts/observer";
+  initScrollAnimations();
+</script>
+
+<style>
+  /* SVG Underline animation if needed in the future */
+  h2 {
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+</style>

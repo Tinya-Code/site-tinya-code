@@ -1,0 +1,32 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import FaqAccordion from "@/components/smart/FaqAccordion.astro";
+import AidaBannerSection from "@/components/smart/AidaBannerSection.astro";
+import { siteConfig } from "@/data/siteConfig";
+
+const { faq } = siteConfig.pages;
+
+const seo = {
+  title: `Preguntas Frecuentes — Tinya Code`,
+  description: `Resolvemos tus dudas sobre nuestros procesos, tiempos de entrega, precios y metodología de trabajo en Tinya Code.`,
+  canonical: new URL(Astro.url.pathname, siteConfig.url).toString(),
+};
+---
+
+<BaseLayout {...seo}>
+  {/* 1. FAQ Section (bg-light) */}
+  <section class="section-base section-light">
+    <div class="container-main">
+      <div class="text-center mb-12">
+        <h1 class="titulo-hero mb-4">{faq.title}</h1>
+        <p class="subtitulo mx-auto">{faq.subtitle}</p>
+      </div>
+      <div class="mt-16">
+        <FaqAccordion />
+      </div>
+    </div>
+  </section>
+
+  {/* 2. AIDA / CTA (bg-light via AidaBannerSection) */}
+  <AidaBannerSection background="white" />
+</BaseLayout>

@@ -1,0 +1,22 @@
+---
+import Icon from "../common/Icon.astro";
+
+interface Props {
+  percentage?: string;
+  class?: string;
+}
+
+const { percentage = "30%", class: className } = Astro.props;
+---
+
+<div
+  class:list={[
+    "badge !rounded-sm !px-4 !py-2.5 !gap-2 !bg-transparent !border !border-accent !text-dark",
+    className,
+  ]}
+>
+  <Icon name="mdi:shield-check" size={4} class="text-brand shrink-0" ariaHidden={true} />
+  <span class="font-poppins text-sm font-semibold text-dark">
+    Reserva con solo el <span class="text-brand font-bold">{percentage}</span>
+  </span>
+</div>

@@ -1,0 +1,58 @@
+---
+import Icon from "../common/Icon.astro";
+import { Image } from "astro:assets";
+
+interface Props {
+  name: string;
+  role: string;
+  company: string;
+  content: string;
+  avatar: string;
+  rating?: number;
+}
+
+const { name, role, company, content, avatar, rating = 5 } = Astro.props;
+---
+
+<div class="flex flex-col gap-6 h-full border-l-2 border-brand pl-6">
+  <!-- Rating Stars -->
+  <div class="flex gap-1" aria-hidden="true">
+    {
+      [...Array(5)].map((_, i) => (
+        <Icon
+          name="mdi:star"
+          size={4}
+          class:list={[i < rating ? "text-brand" : "text-gray-light"]}
+        />
+      ))
+    }
+  </div>
+
+  <!-- Content -->
+  <blockquote class="flex-grow">
+    <p class="font-poppins text-base text-gray leading-relaxed italic">
+      "{content}"
+    </p>
+  </blockquote>
+
+  <!-- Author -->
+  <div class="flex items-center gap-4 pt-2 border-t border-gray-light">
+    <div class="size-10 rounded-full overflow-hidden shrink-0">
+      <Image src={avatar} alt={name} width={80} height={80} class="w-full h-full object-cover" />
+    </div>
+    <div class="flex flex-col">
+      <cite class="not-italic font-poppins font-bold text-sm text-dark tracking-tight">
+        {name}
+      </cite>
+      <div class="flex items-center gap-2">
+        <span class="font-poppins text-xs text-gray uppercase tracking-widest leading-none">
+          {company}
+        </span>
+        <span class="text-dark/20">•</span>
+        <span class="font-poppins text-xs text-dark/40 font-medium">
+          {role}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

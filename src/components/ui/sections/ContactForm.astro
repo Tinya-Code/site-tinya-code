@@ -1,0 +1,100 @@
+---
+import Button from "@/components/ui/buttons/Button.astro";
+
+interface Props {
+  labels: {
+    name: string;
+    email: string;
+    company: string;
+    service: string;
+    message: string;
+    privacy: string;
+    submit: string;
+  };
+  placeholders: {
+    name: string;
+    email: string;
+    company: string;
+    service: string;
+    message: string;
+  };
+  services: {
+    label: string;
+    value: string;
+  }[];
+}
+
+const { labels, placeholders, services } = Astro.props;
+---
+
+<form class="space-y-5">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <div>
+      <label for="name" class="label-base">{labels.name}</label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        placeholder={placeholders.name}
+        required
+        class="input-base"
+      />
+    </div>
+    <div>
+      <label for="email" class="label-base">{labels.email}</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        placeholder={placeholders.email}
+        required
+        class="input-base"
+      />
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <div>
+      <label for="company" class="label-base">{labels.company}</label>
+      <input
+        type="text"
+        id="company"
+        name="company"
+        placeholder={placeholders.company}
+        class="input-base"
+      />
+    </div>
+    <div>
+      <label for="service" class="label-base">{labels.service}</label>
+      <select id="service" name="service" class="input-base">
+        <option value="">{placeholders.service}</option>
+        {services.map((service) => <option value={service.value}>{service.label}</option>)}
+      </select>
+    </div>
+  </div>
+
+  <div>
+    <label for="message" class="label-base">{labels.message}</label>
+    <textarea
+      id="message"
+      name="message"
+      rows="5"
+      placeholder={placeholders.message}
+      required
+      class="textarea-base"></textarea>
+  </div>
+
+  <div
+    class="flex flex-col sm:flex-row items-center justify-between gap-6 pt-6 border-t border-gray-light/20"
+  >
+    <div class="flex items-center gap-3">
+      <div class="size-2 rounded-full bg-brand/40 animate-pulse"></div>
+      <p class="font-poppins text-[11px] text-gray uppercase tracking-wider font-medium">
+        {labels.privacy}
+      </p>
+    </div>
+    <Button type="submit" class="w-full sm:w-auto !px-12 !py-4 shadow-lg shadow-brand/10">
+      {labels.submit}
+    </Button>
+  </div>
+</form>

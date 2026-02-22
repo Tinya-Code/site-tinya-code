@@ -1,0 +1,94 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import AidaBannerSection from "@/components/smart/AidaBannerSection.astro";
+import { sectors } from "@/data/sectors";
+import { siteConfig } from "@/data/siteConfig";
+import { Icon } from "astro-icon/components";
+import { Image } from "astro:assets";
+
+const { sectors: sectorsLabels } = siteConfig.pages;
+const sector = sectors.find((s) => s.id === "mineria")!;
+
+const seo = {
+  title: `Sector ${sector.name} — Tinya Code`,
+  description: sector.fullDescription,
+  canonical: new URL(Astro.url.pathname, siteConfig.url).toString(),
+};
+---
+
+<BaseLayout {...seo}>
+  {/* 1. Hero Sector (bg-light) */}
+  <section class="section-base section-light">
+    <div class="container-main space-y-12">
+      <div class="space-y-6">
+        <div
+          class="inline-flex items-center gap-2 px-3 py-1 bg-brand/10 text-brand rounded-sm text-[10px] font-bold uppercase tracking-widest font-poppins"
+        >
+          <Icon name={sector.icon} class="w-4 h-4" />
+          {sectorsLabels.badge}
+        </div>
+        <h1 class="text-4xl md:text-6xl font-poppins font-extrabold text-dark leading-tight italic">
+          {sector.name}
+        </h1>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <p class="text-gray text-lg md:text-xl leading-relaxed font-poppins">
+          {sector.fullDescription}
+        </p>
+        <div class="relative rounded-sm overflow-hidden border border-accent/20">
+          <Image
+            src={sector.image}
+            alt={sector.name}
+            width={800}
+            height={600}
+            loading="eager"
+            class="w-full h-80 object-cover grayscale hover:grayscale-0 transition-all duration-700"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* 2. Challenges & Solutions (bg-white) */}
+  <section class="section-base section-white">
+    <div class="container-main grid grid-cols-1 md:grid-cols-2 gap-16">
+      <div class="space-y-8">
+        <h2
+          class="text-2xl md:text-3xl font-poppins font-bold text-dark italic border-l-4 border-brand pl-6 leading-none"
+        >
+          {sectorsLabels.challengesTitle}
+        </h2>
+        <ul class="space-y-6">
+          {
+            sector.challenges.map((challenge) => (
+              <li class="flex items-start gap-3 text-gray font-poppins">
+                <Icon name="mdi:alert-circle-outline" class="size-5 text-brand mt-1 shrink-0" />
+                <span>{challenge}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div class="space-y-8">
+        <h2
+          class="text-2xl md:text-3xl font-poppins font-bold text-dark italic border-l-4 border-brand pl-6 leading-none"
+        >
+          {sectorsLabels.solutionsTitle}
+        </h2>
+        <ul class="space-y-6">
+          {
+            sector.solutions.map((solution) => (
+              <li class="flex items-start gap-4 text-gray font-poppins">
+                <Icon name="mdi:check" class="size-6 text-brand shrink-0" />
+                <span class="font-medium text-dark/80">{solution}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <AidaBannerSection />
+</BaseLayout>

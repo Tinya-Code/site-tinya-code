@@ -1,0 +1,23 @@
+---
+import Icon from "../common/Icon.astro";
+import type { WithIcon } from "@/types";
+
+interface Props extends WithIcon {
+  title: string;
+  description: string;
+}
+
+const { title, description, icon } = Astro.props;
+---
+
+<div class="flex items-start gap-4">
+  <Icon name={icon} size={7} class="text-brand mt-0.5 shrink-0" />
+  <div class="space-y-1">
+    <h3 class="font-poppins font-semibold text-base text-dark">
+      {title}
+    </h3>
+    <p class="font-poppins text-sm text-gray leading-relaxed mt-1">
+      {description}
+    </p>
+  </div>
+</div>

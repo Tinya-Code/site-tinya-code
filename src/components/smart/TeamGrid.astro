@@ -1,0 +1,30 @@
+---
+import { team } from "@/data/team";
+import TeamCard from "@/components/ui/cards/TeamCard.astro";
+
+// Smart component: Orchestrates team data and animations
+---
+
+<div class="space-y-16">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+    {
+      team.map((member, index) => (
+        <div class="animate-on-scroll" style={`transition-delay: ${index * 100}ms`}>
+          <TeamCard {...member} />
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<script>
+  import { initScrollAnimations } from "@/scripts/observer";
+
+  // Initial run
+  initScrollAnimations();
+
+  // Handle View Transitions
+  document.addEventListener("astro:after-swap", () => {
+    initScrollAnimations();
+  });
+</script>

@@ -1,0 +1,109 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ContactForm from "@/components/ui/sections/ContactForm.astro";
+import Icon from "@/components/ui/common/Icon.astro";
+import { contactData, socialLinks } from "@/data/social";
+import { siteConfig } from "@/data/siteConfig";
+import SchemaLocalBusiness from "@/components/ui/common/SchemaLocalBusiness.astro";
+
+const { contact: contactLabels } = siteConfig.pages;
+
+const seo = {
+  title: `Contacto — Tinya Code`,
+  description: `Solicita tu propuesta sin costo. Respondemos en menos de 24 horas con un plan personalizado para tu empresa.`,
+  canonical: new URL(Astro.url.pathname, siteConfig.url).toString(),
+};
+---
+
+<BaseLayout {...seo}>
+  <SchemaLocalBusiness url={seo.canonical} />
+  <section class="section-base section-light">
+    <div class="container-main">
+      <div class="mb-12">
+        <h1 class="titulo-hero mb-4">{contactLabels.title}</h1>
+        <p class="subtitulo">{contactLabels.subtitle}</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mt-12">
+        {/* Contact Info Sidebar */}
+        <div class="lg:col-span-4 space-y-10">
+          <div class="space-y-6">
+            <h3 class="font-poppins italic text-dark text-lg font-medium">
+              {contactLabels.sidebar}
+            </h3>
+            <div class="space-y-4">
+              <a
+                href={`mailto:${contactData.email}`}
+                class="flex items-center gap-4 text-gray hover:text-brand transition-colors group"
+              >
+                <Icon
+                  name="mdi:email-outline"
+                  size={5}
+                  class="text-dark group-hover:text-brand transition-colors"
+                  ariaHidden={true}
+                />
+                <span class="text-sm font-poppins font-medium">{contactData.email}</span>
+              </a>
+              <a
+                href={`tel:${contactData.phone}`}
+                class="flex items-center gap-4 text-gray hover:text-brand transition-colors group"
+              >
+                <Icon
+                  name="mdi:phone-outline"
+                  size={5}
+                  class="text-dark group-hover:text-brand transition-colors"
+                  ariaHidden={true}
+                />
+                <span class="text-sm font-poppins font-medium">{contactData.phone}</span>
+              </a>
+              <div class="flex items-center gap-4 text-gray">
+                <Icon name="mdi:map-marker-outline" size={5} class="text-dark" ariaHidden={true} />
+                <span class="text-sm font-poppins font-medium"
+                  >{contactData.address} (Global Delivery)</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-6">
+            <h3 class="font-poppins italic text-dark text-lg font-medium">
+              {contactLabels.social}
+            </h3>
+            <div class="flex gap-4">
+              {
+                socialLinks.map((net) => (
+                  <a
+                    href={net.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="size-10 flex items-center justify-center text-dark hover:text-brand transition-colors"
+                    aria-label={net.label}
+                  >
+                    <Icon name={net.icon} size={6} ariaHidden={true} />
+                  </a>
+                ))
+              }
+            </div>
+          </div>
+
+          <div class="p-8 bg-brand text-white rounded-sm space-y-4">
+            <Icon name="mdi:lightning-bolt" size={8} ariaHidden={true} />
+            <h4 class="font-poppins font-bold text-lg">{contactLabels.badge.title}</h4>
+            <p class="text-sm font-poppins text-white/80 leading-relaxed">
+              {contactLabels.badge.text}
+            </p>
+          </div>
+        </div>
+
+        {/* Form Area */}
+        <div class="lg:col-span-8">
+          <ContactForm
+            labels={siteConfig.contactForm.labels}
+            placeholders={siteConfig.contactForm.placeholders}
+            services={siteConfig.contactForm.services}
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

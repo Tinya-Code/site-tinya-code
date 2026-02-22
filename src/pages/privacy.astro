@@ -1,0 +1,31 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro";
+import { siteConfig } from "@/data/siteConfig";
+import { privacyContent } from "@/data/legal";
+
+const { privacy } = siteConfig.pages;
+
+const seo = {
+  title: `Política de Privacidad — Tinya Code`,
+  description: `Política de privacidad y tratamiento de datos personales de Tinya Code conforme a la legislación peruana vigente.`,
+  noindex: true,
+  canonical: new URL(Astro.url.pathname, siteConfig.url).toString(),
+};
+---
+
+<PageLayout {...seo}>
+  <article class="max-w-4xl mx-auto py-12 prose prose-brand">
+    <h1 class="titulo-seccion mb-8">{privacy.title}</h1>
+
+    <p>{privacyContent.intro}</p>
+
+    {
+      privacyContent.sections.map((section) => (
+        <>
+          <h2>{section.title}</h2>
+          <p>{section.content}</p>
+        </>
+      ))
+    }
+  </article>
+</PageLayout>

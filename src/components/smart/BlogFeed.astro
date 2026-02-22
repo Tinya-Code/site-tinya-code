@@ -1,0 +1,72 @@
+---
+import { getCollection } from "astro:content";
+import BlogCard from "@/components/ui/cards/BlogCard.astro";
+import { Image } from "astro:assets";
+
+// Smart component: Orchestrates blog data and layout
+const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+---
+
+<div class="space-y-12">
+  {
+    posts.length === 0 && (
+      <div class="text-center py-20 border-2 border-dashed border-gray-light rounded-sm">
+        <p class="text-gray font-poppins">No se encontraron artículos en el blog.</p>
+      </div>
+    )
+  }
+
+  <!-- Desktop Bento Grid -->
+  <div class="blog-bento hidden md:grid" id="blog-grid">
+    {posts.map((post, index) => <BlogCard post={post} featured={index === 0} />)}
+  </div>
+
+  <!-- Mobile List View -->
+  <div class="md:hidden flex flex-col gap-6">
+    {
+      posts.map((post) => (
+        <a
+          href={`/blog/${post.id}/`}
+          class="flex gap-4 group items-center bg-white p-3 rounded-sm border border-gray-light/20 shadow-sm active:scale-95 transition-transform"
+        >
+          <div class="size-20 rounded-sm overflow-hidden flex-shrink-0 bg-gray-light/10">
+            <Image
+              src={post.data.heroImage || "/generico.jpeg"}
+              alt={post.data.title}
+              width={200}
+              height={200}
+              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+            />
+          </div>
+          <div class="flex flex-col gap-1 justify-center">
+            <span class="font-poppins text-[9px] font-bold text-brand uppercase tracking-widest">
+              {post.data.category}
+            </span>
+            <h3 class="font-poppins font-bold text-dark text-sm leading-tight line-clamp-2 group-hover:text-brand transition-colors">
+              {post.data.title}
+            </h3>
+            <div class="flex items-center gap-3 font-poppins text-[9px] text-dark/40 uppercase font-medium">
+              <span>{post.data.readingTime} min</span>
+              <span>•</span>
+              <span>{post.data.date.toLocaleDateString("es-PE", { month: "short" })}</span>
+            </div>
+          </div>
+        </a>
+      ))
+    }
+  </div>
+</div>
+
+<script>
+  import { initScrollAnimations } from "@/scripts/observer";
+
+  // Initial run
+  initScrollAnimations();
+
+  // Handle View Transitions
+  document.addEventListener("astro:after-swap", () => {
+    initScrollAnimations();
+  });
+</script>

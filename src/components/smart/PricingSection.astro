@@ -1,0 +1,109 @@
+---
+import { webPricing } from "@/data/pricing";
+import PricingTable from "@/components/ui/sections/PricingTable.astro";
+
+// Smart component: Orchestrates pricing data and billing toggle
+const { pricing = webPricing } = Astro.props;
+---
+
+<div class="space-y-12">
+  <!-- Billing Toggle -->
+  <div class="flex flex-col items-center justify-center gap-4 animate-on-scroll">
+    <button
+      id="billing-toggle"
+      class="flex items-center gap-2 bg-white/50 p-1.5 rounded-sm border border-gray-light/30 shadow-sm relative focus:outline-none focus:ring-2 focus:ring-brand"
+      role="switch"
+      aria-checked="false"
+      aria-label="Alternar entre pago mensual y anual"
+    >
+      <div
+        id="billing-indicator"
+        class="absolute left-1.5 top-1.5 bottom-1.5 w-[calc(50%-0.375rem)] bg-brand rounded-sm transition-transform duration-300 pointer-events-none"
+      >
+      </div>
+
+      <span
+        id="billing-monthly"
+        class="relative z-10 w-40 text-center py-2.5 text-white font-poppins text-sm font-semibold transition-colors duration-300"
+      >
+        Pago mensual
+      </span>
+      <span
+        id="billing-annual"
+        class="relative z-10 w-40 flex items-center justify-center gap-2 py-2.5 text-dark/40 font-poppins text-sm font-semibold transition-colors duration-300"
+      >
+        Pago anual
+        <span
+          class="font-poppins text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-brand/10 text-brand"
+        >
+          -15%
+        </span>
+      </span>
+    </button>
+  </div>
+
+  <PricingTable plans={pricing} />
+</div>
+
+<style>
+  #billing-toggle[aria-checked="true"] #billing-indicator {
+    transform: translateX(100%);
+  }
+
+  #billing-toggle[aria-checked="true"] #billing-monthly {
+    color: rgba(20, 20, 20, 0.4);
+  }
+
+  #billing-toggle[aria-checked="true"] #billing-annual {
+    color: white;
+  }
+</style>
+
+<script>
+  import { initScrollAnimations } from "@/scripts/observer";
+
+  const initPricing = (): void => {
+    const toggle = document.getElementById("billing-toggle");
+    const cards = document.querySelectorAll<HTMLElement>(".pricing-card");
+
+    if (!toggle) return;
+
+    toggle.addEventListener("click", () => {
+      const isAnnual = toggle.getAttribute("aria-checked") === "true";
+      const newState = !isAnnual;
+
+      toggle.setAttribute("aria-checked", String(newState));
+
+      // Update cards instantly (no animation)
+      cards.forEach((card) => {
+        const priceMonthly = parseFloat(card.getAttribute("data-price-monthly") || "0");
+        const priceAnnual = parseFloat(card.getAttribute("data-price-annual") || "0");
+        const priceEl = card.querySelector<HTMLElement>(".pricing-card__price");
+        const noteEl = card.querySelector<HTMLElement>(".pricing-card__annual-note");
+
+        if (!priceEl) return;
+
+        // Si no tiene priceAnnual, el precio no cambia
+        const periodIsAnnual = newState && priceAnnual > 0;
+        const targetPrice = periodIsAnnual ? priceAnnual : priceMonthly;
+
+        priceEl.textContent = `S/ ${targetPrice.toLocaleString("en-US")}`;
+
+        if (noteEl) {
+          noteEl.classList.toggle("opacity-100", periodIsAnnual);
+          noteEl.classList.toggle("opacity-0", !periodIsAnnual);
+        }
+      });
+    });
+  };
+
+  // Initial runs
+  initPricing();
+  initScrollAnimations();
+
+  // Handle View Transitions
+  document.addEventListener("astro:after-swap", () => {
+    initPricing();
+    initScrollAnimations();
+  });
+</script>

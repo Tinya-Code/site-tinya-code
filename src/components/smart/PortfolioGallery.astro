@@ -1,0 +1,279 @@
+---
+import { getCollection } from "astro:content";
+import ProjectCard from "@/components/ui/cards/ProjectCard.astro";
+import Icon from "@/components/ui/common/Icon.astro";
+import { Image } from "astro:assets";
+
+// Smart component: Orchestrates project data, filtering, and modal detail
+const projects = (await getCollection("projects", ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+
+const categories = [
+  { id: "all", label: "Todos" },
+  { id: "web", label: "Web" },
+  { id: "tienda", label: "Tienda" },
+  { id: "software", label: "Software" },
+  { id: "excel", label: "Excel" },
+];
+---
+
+<div class="space-y-12">
+  <!-- Filters -->
+  <div
+    class="flex flex-wrap justify-center gap-3"
+    role="tablist"
+    aria-label="Filtrar proyectos por categoría"
+  >
+    {
+      categories.map((cat) => (
+        <button
+          data-category={cat.id}
+          class:list={["chip-sector filter-btn !px-6 !py-2.5", cat.id === "all" && "active"]}
+          role="tab"
+          aria-selected={cat.id === "all" ? "true" : "false"}
+        >
+          {cat.label}
+        </button>
+      ))
+    }
+  </div>
+
+  <!-- Bento Grid -->
+  <div class="bento-grid" id="portfolio-grid">
+    {
+      projects.map((project) => (
+        <ProjectCard
+          id={project.id}
+          title={project.data.title}
+          description={project.data.description}
+          category={project.data.category}
+          image={project.data.heroImage || "/generico.jpeg"}
+          href={`/projects/${project.id}/`}
+          size={project.data.size}
+          type={project.data.type}
+          demo={project.data.demo}
+          preview={project.data.preview}
+          technologies={project.data.technologies}
+        />
+      ))
+    }
+  </div>
+
+  {
+    projects.length === 0 && (
+      <div class="py-20 text-center border border-dashed border-gray-light rounded-sm">
+        <p class="text-gray italic">Cargando próximos casos de éxito...</p>
+      </div>
+    )
+  }
+</div>
+
+<!-- Project Modal -->
+<div
+  id="project-modal"
+  class="project-modal-overlay"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="modal-title"
+>
+  <div class="project-modal-content relative overflow-hidden rounded-sm shadow-lg">
+    <button
+      id="close-modal"
+      class="absolute top-6 right-6 z-20 size-10 rounded-sm bg-black/20 hover:bg-brand text-white flex items-center justify-center transition-colors focus:ring-2 focus:ring-brand focus:ring-offset-2"
+      aria-label="Cerrar proyecto"
+    >
+      <Icon name="mdi:close" size={6} ariaHidden={true} />
+    </button>
+
+    <div class="flex flex-col lg:flex-row h-full max-h-[90vh]">
+      <!-- Media Side -->
+      <div class="lg:w-1/2 bg-dark flex items-center justify-center overflow-hidden">
+        <Image
+          id="modal-image"
+          src="/generico.jpeg"
+          alt=""
+          width={800}
+          height={600}
+          loading="lazy"
+          class="w-full h-full object-cover"
+        />
+      </div>
+
+      <!-- Content Side -->
+      <div class="lg:w-1/2 p-8 md:p-12 overflow-y-auto bg-white flex flex-col">
+        <span
+          id="modal-category"
+          class="font-poppins text-[10px] font-bold text-brand uppercase tracking-[0.2em] mb-4"
+        ></span>
+        <h2
+          id="modal-title"
+          class="font-poppins font-bold text-3xl md:text-4xl text-dark leading-tight mb-6"
+        >
+        </h2>
+        <div class="mb-8">
+          <p id="modal-description" class="text-dark/70 text-lg leading-relaxed"></p>
+        </div>
+
+        <div class="mt-auto space-y-8">
+          <div>
+            <h4 class="font-poppins text-xs font-bold text-dark/30 uppercase tracking-widest mb-4">
+              Tecnologías Clave
+            </h4>
+            <div id="modal-tech" class="flex flex-wrap gap-2"></div>
+          </div>
+
+          <div class="flex flex-wrap gap-4 pt-8 border-t border-gray-light/20">
+            <a
+              id="modal-link"
+              href="#"
+              class="hidden btn-primary px-8 py-3 flex items-center gap-2 text-sm font-bold transition-all"
+            >
+              <Icon name="mdi:text-box-outline" size={5} />
+              Caso de Éxito
+            </a>
+            <a
+              id="modal-demo"
+              href="#"
+              target="_blank"
+              class="hidden btn-outline px-8 py-3 flex items-center gap-2 text-sm font-bold transition-all"
+            >
+              <Icon name="mdi:launch" size={5} />
+              Visitar sitio
+            </a>
+            <button
+              id="modal-preview"
+              class="hidden btn-outline px-8 py-3 flex items-center gap-2 text-sm font-bold transition-all"
+            >
+              <Icon name="mdi:play" size={5} />
+              Ver preview
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+  import { initScrollAnimations, initFilter, trapFocus } from "@/scripts/observer";
+
+  const initProjectModal = (): void => {
+    const modal = document.getElementById("project-modal");
+    const closeBtn = document.getElementById("close-modal");
+    const triggers = document.querySelectorAll(".open-modal-btn");
+
+    const modalImage = document.getElementById("modal-image") as HTMLImageElement;
+    const modalTitle = document.getElementById("modal-title");
+    const modalDesc = document.getElementById("modal-description");
+    const modalCat = document.getElementById("modal-category");
+    const modalTech = document.getElementById("modal-tech");
+    const modalLink = document.getElementById("modal-link") as HTMLAnchorElement;
+    const modalDemo = document.getElementById("modal-demo") as HTMLAnchorElement;
+    const modalPreview = document.getElementById("modal-preview") as HTMLButtonElement;
+
+    if (!modal || !closeBtn) return;
+
+    let lastTrigger: HTMLElement | null = null;
+    let removeTrap: (() => void) | null = null;
+
+    const openModal = (trigger: HTMLElement): void => {
+      lastTrigger = trigger;
+      const card = trigger.closest("article") as HTMLElement;
+      if (!card) return;
+
+      const data = card.dataset;
+
+      // Update content
+      if (modalImage) modalImage.src = data.image || "";
+      if (modalImage) modalImage.alt = data.title || "";
+      if (modalTitle) modalTitle.innerText = data.title || "";
+      if (modalDesc) modalDesc.innerText = data.description || "";
+      if (modalCat) modalCat.innerText = data.category || "";
+
+      if (modalTech) {
+        modalTech.innerHTML = (data.tech || "")
+          .split(",")
+          .map((t) => `<span class="chip-tech">${t.trim()}</span>`)
+          .join("");
+      }
+
+      if (modalLink) {
+        if (data.href) {
+          modalLink.href = data.href;
+          modalLink.classList.remove("hidden");
+        } else {
+          modalLink.classList.add("hidden");
+        }
+      }
+
+      if (modalDemo) {
+        if (data.demo) {
+          modalDemo.href = data.demo;
+          modalDemo.classList.remove("hidden");
+        } else {
+          modalDemo.classList.add("hidden");
+        }
+      }
+
+      if (modalPreview) {
+        if (data.preview) {
+          modalPreview.classList.remove("hidden");
+        } else {
+          modalPreview.classList.add("hidden");
+        }
+      }
+
+      modal.classList.add("is-open");
+      document.body.classList.add("overflow-hidden");
+      closeBtn.focus();
+      removeTrap = trapFocus(modal);
+    };
+
+    const closeModal = (): void => {
+      modal.classList.remove("is-open");
+      document.body.classList.remove("overflow-hidden");
+      removeTrap?.();
+      lastTrigger?.focus();
+    };
+
+    triggers.forEach((trigger) => {
+      trigger.addEventListener("click", (e) => {
+        e.preventDefault();
+        openModal(trigger as HTMLElement);
+      });
+    });
+
+    closeBtn.addEventListener("click", closeModal);
+
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && modal.classList.contains("is-open")) closeModal();
+    };
+
+    window.addEventListener("keydown", handleEscape);
+
+    // Cleanup for View Transitions
+    document.addEventListener(
+      "astro:before-swap",
+      () => {
+        window.removeEventListener("keydown", handleEscape);
+        closeModal();
+      },
+      { once: true },
+    );
+  };
+
+  const setupPortfolio = (): void => {
+    initFilter(".filter-btn", "article", "type");
+    initProjectModal();
+    initScrollAnimations();
+  };
+
+  // Initial runs
+  setupPortfolio();
+
+  // Handle View Transitions
+  document.addEventListener("astro:after-swap", setupPortfolio);
+</script>

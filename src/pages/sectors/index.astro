@@ -1,0 +1,49 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SectorCard from "@/components/ui/cards/SectorCard.astro";
+import AidaBannerSection from "@/components/smart/AidaBannerSection.astro";
+import { sectors } from "@/data/sectors";
+import { siteConfig } from "@/data/siteConfig";
+
+const { sectors: sectorsLabels } = siteConfig.pages;
+
+const seo = {
+  title: `Sectores y Soluciones — Tinya Code`,
+  description: `Especialistas en soluciones digitales para sectores B2B: construcción, minería, industria y servicios corporativos en Lima.`,
+  canonical: new URL(Astro.url.pathname, siteConfig.url).toString(),
+};
+---
+
+<BaseLayout {...seo}>
+  {/* 1. Header (bg-light) */}
+  <section class="section-base section-light pb-0">
+    <div class="container-main text-center">
+      <div class="mb-12">
+        <h1 class="titulo-hero mb-4">{sectorsLabels.title}</h1>
+        <p class="subtitulo mx-auto">{sectorsLabels.subtitle}</p>
+      </div>
+    </div>
+  </section>
+
+  {/* 2. Sectors Grid (bg-white) */}
+  <section class="section-base section-white">
+    <div class="container-main">
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+        {
+          sectors.map((sector) => (
+            <SectorCard
+              id={sector.id}
+              title={sector.name}
+              description={sector.fullDescription}
+              icon={sector.icon}
+              href={sector.href}
+            />
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* 3. CTA (bg-brand) */}
+  <AidaBannerSection />
+</BaseLayout>

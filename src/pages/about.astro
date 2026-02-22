@@ -1,0 +1,80 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SectionHeader from "@/components/ui/sections/SectionHeader.astro";
+import ReasonsGrid from "@/components/smart/ReasonsGrid.astro";
+import TeamGrid from "@/components/smart/TeamGrid.astro";
+import CallToAction from "@/components/ui/sections/CallToAction.astro";
+import { siteConfig } from "@/data/siteConfig";
+
+const { about } = siteConfig.pages;
+
+const seo = {
+  title: `Nosotros — Tinya Code`,
+  description: `Conoce al equipo detrás de Tinya Code. Diseñadores y desarrolladores especializados en soluciones digitales para empresas B2B en Lima.`,
+  canonical: new URL(Astro.url.pathname, siteConfig.url).toString(),
+};
+---
+
+<BaseLayout {...seo}>
+  {/* 1. Hero "About" (bg-light) */}
+  <section class="section-base section-light pb-0">
+    <div class="container-main text-center space-y-8">
+      <h1
+        class="titulo-hero text-dark"
+        set:html={about.title.replace("construye", '<span class="text-brand">construye</span>')}
+      />
+      <p class="subtitulo text-dark/70 max-w-2xl mx-auto">
+        {about.subtitle}
+      </p>
+    </div>
+  </section>
+
+  {/* 2. Manifest / Philosophy (bg-dark) */}
+  <section class="section-base section-dark relative overflow-hidden">
+    <div class="absolute -right-20 -top-20 size-80 bg-brand/10 blur-[100px]"></div>
+    <div class="container-main relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div class="space-y-6">
+        <h2 class="titulo-seccion text-white">{about.philosophy.title}</h2>
+        <div class="space-y-4 text-white/80 leading-relaxed font-poppins">
+          <p>
+            {about.philosophy.text1}
+          </p>
+          <p>
+            {about.philosophy.text2}
+          </p>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        {
+          about.stats.map((stat) => (
+            <div class="bg-white/5 p-6 rounded-sm border border-white/10">
+              <div class="text-3xl font-poppins font-bold text-brand mb-2">{stat.value}</div>
+              <div class="text-xs font-poppins font-medium opacity-60 text-white mt-1">
+                {stat.label}
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* 3. Reasons (bg-white) */}
+  <section class="section-base section-white">
+    <div class="container-main">
+      <SectionHeader title={about.reasonsTitle} subtitle={about.reasonsSubtitle} />
+      <ReasonsGrid />
+    </div>
+  </section>
+
+  {/* 4. Team Section (bg-light) */}
+  <section class="section-base section-light relative overflow-hidden">
+    <div class="container-main">
+      <SectionHeader title={about.teamTitle} subtitle={about.teamSubtitle} />
+      <TeamGrid />
+    </div>
+  </section>
+
+  {/* 5. CTA (bg-brand) */}
+  <CallToAction {...siteConfig.cta} />
+</BaseLayout>

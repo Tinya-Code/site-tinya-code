@@ -1,0 +1,26 @@
+---
+import { methodologyContent } from "@/data/methodology";
+import Methodology from "@/components/ui/sections/Methodology.astro";
+import SectionHeader from "@/components/ui/sections/SectionHeader.astro";
+import { siteConfig } from "@/data/siteConfig";
+
+// Smart component: Orchestrates methodology data and section structure
+const { title, subtitle } = siteConfig.home.methodology;
+---
+
+<section class="section-base section-light">
+  <div class="container-main space-y-16">
+    <SectionHeader title={title} subtitle={subtitle} />
+    <Methodology phases={methodologyContent} />
+  </div>
+</section>
+
+<script>
+  import { initScrollAnimations } from "@/scripts/observer";
+
+  // Initialize animations
+  initScrollAnimations();
+
+  // Handle View Transitions
+  document.addEventListener("astro:after-swap", initScrollAnimations);
+</script>

@@ -1,0 +1,296 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import type { CollectionEntry } from "astro:content";
+import { Icon } from "astro-icon/components";
+import { siteConfig } from "@/data/siteConfig";
+import BlogContentFormatter from "@/components/ui/common/BlogContentFormatter.astro";
+import { blogTerms } from "@/data/blogTerms";
+import { Image } from "astro:assets";
+import SchemaArticle from "@/components/ui/common/SchemaArticle.astro";
+
+interface Props {
+  post: CollectionEntry<"blog">;
+  relatedPosts?: CollectionEntry<"blog">[];
+}
+
+const { post, relatedPosts = [] } = Astro.props;
+const { title, description, date, author, tags, category, readingTime } = post.data;
+
+const formattedDate = date.toLocaleDateString("es-PE", {
+  year: "numeric",
+  month: "short",
+  day: "numeric",
+});
+
+const seo = {
+  title: `${title} | Blog ${siteConfig.name}`,
+  description: description,
+  canonical: new URL(Astro.url.pathname, siteConfig.url).toString(),
+};
+---
+
+<BaseLayout
+  title={seo.title}
+  description={seo.description}
+  canonical={seo.canonical}
+  ogType="article"
+  ogImage={post.data.heroImage}
+>
+  <SchemaArticle
+    title={title}
+    description={description}
+    publishDate={date}
+    author={author}
+    image={post.data.heroImage}
+    url={seo.canonical}
+  />
+  <!-- Reading Progress Bar -->
+  <div id="progress-bar" class="reading-progress-bar"></div>
+
+  <section class="section-base section-light pb-0">
+    <div class="container-main max-w-5xl mx-auto">
+      <div class="mb-8">
+        <a
+          href="/blog"
+          class="inline-flex items-center gap-2 text-dark/60 hover:text-brand font-poppins text-xs font-bold uppercase tracking-widest transition-colors group/back"
+        >
+          <Icon
+            name="mdi:arrow-left"
+            size={4}
+            class="group-hover/back:-translate-x-1 transition-transform"
+          />
+          Volver al Blog
+        </a>
+      </div>
+
+      <header class="mb-12 space-y-6">
+        <div class="flex items-center gap-3">
+          <span class="chip-category bg-brand text-white border-none">{category}</span>
+          <span class="text-[10px] font-poppins font-bold text-gray uppercase tracking-widest"
+            >{readingTime} min lectura</span
+          >
+        </div>
+
+        <h1 class="text-4xl md:text-6xl font-poppins font-extrabold text-dark leading-[1.1] italic">
+          {title}
+        </h1>
+
+        <div class="flex items-center gap-6 pt-4 border-t border-gray-light/20">
+          <div class="flex items-center gap-3">
+            <Icon name="mdi:account" size={4} class="text-brand" />
+            <div>
+              <p class="text-[10px] font-bold text-gray uppercase tracking-tighter">Escrito por</p>
+              <p class="text-sm font-bold text-dark font-poppins">{author}</p>
+            </div>
+          </div>
+          <div class="h-8 w-px bg-gray-light/20"></div>
+          <div>
+            <p class="text-[10px] font-bold text-gray uppercase tracking-tighter">Publicado</p>
+            <p class="text-sm font-bold text-dark font-poppins">{formattedDate}</p>
+          </div>
+        </div>
+      </header>
+    </div>
+  </section>
+
+  <section class="section-base section-white">
+    <div class="container-main max-w-5xl mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-[1fr_240px] gap-16 items-start">
+        <!-- Article Content -->
+        <article class="prose-blog">
+          <BlogContentFormatter blogTerms={blogTerms}>
+            <slot />
+          </BlogContentFormatter>
+
+          {
+            tags && (
+              <div class="mt-16 flex flex-wrap gap-2 pt-8 border-t border-gray-light/10">
+                {tags.map((tag) => (
+                  <span class="badge !bg-gray-light/10 !text-gray">#{tag}</span>
+                ))}
+              </div>
+            )
+          }
+        </article>
+
+        <!-- Sidebar TOC -->
+        <aside class="hidden lg:block sticky top-24 space-y-8">
+          <div
+            id="toc-container"
+            class="p-6 bg-gray-light/5 rounded-sm border border-gray-light/10"
+            style="display: none;"
+          >
+            <h4
+              class="font-poppins text-xs font-bold text-dark uppercase tracking-widest mb-6 flex items-center gap-2"
+            >
+              <Icon name="mdi:format-list-bulleted" class="text-brand size-4" />
+              Contenido
+            </h4>
+            <nav
+              id="toc-nav"
+              class="flex flex-col gap-3"
+              aria-label="Tabla de contenidos"
+              role="navigation"
+            >
+              <!-- Dynamically populated -->
+            </nav>
+          </div>
+
+          <div class="p-6 bg-brand/5 rounded-sm border border-brand/10">
+            <p class="font-poppins text-xs font-bold text-brand uppercase tracking-widest mb-2">
+              ¿Necesitas ayuda?
+            </p>
+            <p class="text-sm text-dark/70 mb-4">Transformamos tu visión en realidad digital.</p>
+            <a
+              href="/contact"
+              class="inline-block w-full text-center py-3 bg-brand text-white text-[10px] font-bold uppercase tracking-widest rounded-sm hover:bg-dark transition-colors"
+              >Contactar</a
+            >
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- Related Posts -->
+  {
+    relatedPosts.length > 0 && (
+      <section class="section-base section-light border-t border-gray-light/10">
+        <div class="container-main max-w-5xl mx-auto">
+          <h3 class="font-poppins font-bold text-2xl text-dark mb-10 italic">
+            Más sobre {category}
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {relatedPosts.map((rel) => (
+              <a href={`/blog/${rel.id}/`} class="group flex gap-4 items-start">
+                <div class="size-20 rounded-sm overflow-hidden flex-shrink-0 bg-dark">
+                  <Image
+                    src={rel.data.heroImage || "/generico.jpeg"}
+                    alt={rel.data.title}
+                    width={200}
+                    height={200}
+                    class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-500"
+                  />
+                </div>
+                <div class="flex flex-col gap-1">
+                  <h4 class="font-poppins font-bold text-sm text-dark group-hover:text-brand transition-colors line-clamp-2">
+                    {rel.data.title}
+                  </h4>
+                  <p class="text-[10px] text-gray font-medium uppercase tracking-wider">
+                    {rel.data.readingTime} min lectura
+                  </p>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+</BaseLayout>
+
+<script>
+  // Reading Progress logic
+  const progressBar = document.getElementById("progress-bar");
+  window.addEventListener("scroll", () => {
+    const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = (window.pageYOffset / totalHeight) * 100;
+    if (progressBar) progressBar.style.width = `${progress}%`;
+  });
+
+  // TOC Generation logic
+  const content = document.getElementById("blog-content");
+  const tocNav = document.getElementById("toc-nav");
+  const tocContainer = document.getElementById("toc-container");
+
+  if (content && tocNav && tocContainer) {
+    const headings = content.querySelectorAll<HTMLHeadingElement>("h2, h3");
+
+    if (headings.length >= 2) {
+      tocContainer.style.display = "block";
+
+      headings.forEach((heading, index) => {
+        let id = heading.id;
+        if (!id) {
+          id = heading.textContent?.toLowerCase().replace(/[^a-z0-9]+/g, "-") || `heading-${index}`;
+          // Remove leading/trailing formatting
+          id = id.replace(/^-+|-+$/g, "");
+          heading.id = id;
+        }
+
+        const link = document.createElement("a");
+        link.href = `#${id}`;
+        link.textContent = heading.textContent;
+        link.className = `toc-link text-[11px] font-poppins font-medium transition-all duration-300 ${heading.tagName === "H3" ? "pl-4 text-dark/40" : "text-dark/60"}`;
+
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          const htmlHeading = heading as HTMLElement;
+          window.scrollTo({
+            top: htmlHeading.offsetTop - 100,
+            behavior: "smooth",
+          });
+        });
+
+        tocNav.appendChild(link);
+      });
+
+      // Intersection Observer for Active State
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const id = entry.target.id;
+              const activeLink = tocNav.querySelector(`[href="#${id}"]`);
+
+              tocNav.querySelectorAll(".toc-link").forEach((l) => l.classList.remove("active"));
+              if (activeLink) {
+                activeLink.classList.add("active");
+                if (activeLink.classList.contains("text-dark/40")) {
+                  activeLink.classList.remove("text-dark/40");
+                  activeLink.classList.add("text-brand");
+                } else {
+                  activeLink.classList.remove("text-dark/60");
+                  activeLink.classList.add("text-brand");
+                }
+              }
+            }
+          });
+        },
+        { rootMargin: "-100px 0px -70% 0px" },
+      );
+
+      headings.forEach((h) => observer.observe(h));
+    }
+  }
+</script>
+
+<style is:global>
+  .toc-link.active {
+    color: var(--color-brand) !important;
+    font-weight: 700 !important;
+    transform: translateX(4px);
+  }
+
+  .prose-blog {
+    color: var(--color-dark);
+    font-size: 1.125rem;
+    line-height: 1.8;
+  }
+
+  .prose-blog h2 {
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+    font-size: 1.875rem;
+  }
+
+  .prose-blog h3 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+  }
+
+  .prose-blog p {
+    margin-bottom: 1.5rem;
+  }
+</style>

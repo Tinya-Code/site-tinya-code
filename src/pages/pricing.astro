@@ -1,0 +1,56 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PricingSection from "@/components/smart/PricingSection.astro";
+import CallToAction from "@/components/ui/sections/CallToAction.astro";
+import { siteConfig } from "@/data/siteConfig";
+
+const { pricing } = siteConfig.pages;
+
+const seo = {
+  title: `Planes y Precios — Tinya Code`,
+  description: `Inversión transparente para diseño web y desarrollo de software. Planes desde el 30% de anticipo. Sin letra pequeña.`,
+  canonical: new URL(Astro.url.pathname, siteConfig.url).toString(),
+};
+---
+
+<BaseLayout {...seo}>
+  {/* 1. Header (bg-light) */}
+  <section class="section-base section-light">
+    <div class="container-main text-center">
+      <div class="mb-12">
+        <h1 class="titulo-hero mb-4">{pricing.title}</h1>
+        <p class="subtitulo mx-auto">{pricing.subtitle}</p>
+      </div>
+    </div>
+  </section>
+
+  {/* 2. Pricing Grid (bg-white) */}
+  <section class="section-base section-white">
+    <div class="container-main">
+      <PricingSection />
+    </div>
+  </section>
+
+  {/* 3. Custom Plan (bg-light) */}
+  <section class="section-base section-light">
+    <div class="container-main text-center max-w-4xl mx-auto space-y-8">
+      <h2 class="titulo-seccion text-dark">{pricing.custom.title}</h2>
+      <p class="text-dark/70 text-lg font-poppins text-balance">
+        {pricing.custom.text}
+      </p>
+      <div class="flex flex-wrap justify-center gap-6">
+        {
+          pricing.custom.badges.map((badge) => (
+            <div class="flex items-center gap-2 text-sm font-semibold font-poppins text-dark/70">
+              <span class="size-2 bg-brand inline-block" aria-hidden="true" />
+              {badge}
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* 4. CTA (bg-brand) */}
+  <CallToAction {...siteConfig.cta} />
+</BaseLayout>

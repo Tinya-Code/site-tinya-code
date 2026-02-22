@@ -1,0 +1,35 @@
+---
+import { Icon as AstroIcon } from "astro-icon/components";
+
+interface Props {
+  name: string;
+  size?: 2 | 3 | 4 | 5 | 6 | 7 | 8 | 10 | 12 | 16;
+  ariaHidden?: boolean;
+  ariaLabel?: string;
+  class?: string;
+}
+
+const { name, size = 5, ariaHidden = true, ariaLabel, class: className } = Astro.props;
+
+const sizeClasses: Record<number, string> = {
+  2: "size-2",
+  3: "size-3",
+  4: "size-4",
+  5: "size-5",
+  6: "size-6",
+  7: "size-7",
+  8: "size-8",
+  10: "size-10",
+  12: "size-12",
+  16: "size-16",
+};
+
+const activeSize = sizeClasses[size] || "size-5";
+---
+
+<AstroIcon
+  name={name}
+  class:list={[activeSize, className]}
+  aria-hidden={ariaHidden ? "true" : undefined}
+  aria-label={ariaLabel}
+/>

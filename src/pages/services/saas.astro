@@ -1,0 +1,113 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SectionHeader from "@/components/ui/sections/SectionHeader.astro";
+import AidaBannerSection from "@/components/smart/AidaBannerSection.astro";
+import DepositBadge from "@/components/ui/sections/DepositBadge.astro";
+import { services } from "@/data/services";
+import { siteConfig } from "@/data/siteConfig";
+import { Icon } from "astro-icon/components";
+
+const { services: servicesLabels } = siteConfig.pages;
+const service = services.find((s) => s.id === "saas")!;
+
+const seo = {
+  title: `${service.title} — Tinya Code`,
+  description: service.description,
+  canonical: new URL(Astro.url.pathname, siteConfig.url).toString(),
+};
+---
+
+<BaseLayout {...seo}>
+  {/* 1. Hero Service (bg-light) */}
+  <section class="section-base section-light">
+    <div class="container-main grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div class="space-y-8">
+        <div class="badge !bg-brand !text-white !px-3 !py-1 !gap-2">
+          <Icon name={service.icon} class="size-4" />
+          {service.features[0]}
+        </div>
+
+        <h1 class="text-4xl md:text-6xl font-poppins font-extrabold text-dark leading-tight italic">
+          {service.title}
+        </h1>
+
+        <p class="text-dark/70 text-lg leading-relaxed font-poppins">
+          {service.fullDescription}
+        </p>
+
+        <div class="flex flex-wrap gap-4">
+          <DepositBadge />
+          <div class="badge !bg-dark !text-white !px-4 !py-2 !gap-2">
+            <Icon name="mdi:cloud-check" class="size-4 text-brand" />
+            AWS / Google Cloud Ready
+          </div>
+        </div>
+      </div>
+
+      <div class="relative rounded-sm overflow-hidden py-12 px-6 bg-white border border-accent/20">
+        <div class="grid grid-cols-2 gap-6 items-center">
+          <div class="space-y-4">
+            <Icon name="mdi:account-group-outline" class="size-10 text-brand" />
+            <h4 class="font-poppins font-bold text-dark uppercase text-xs tracking-widest">
+              Multi-usuario
+            </h4>
+          </div>
+          <div class="space-y-4">
+            <Icon name="mdi:cash-sync" class="size-10 text-brand" />
+            <h4 class="font-poppins font-bold text-dark uppercase text-xs tracking-widest">
+              Suscripción
+            </h4>
+          </div>
+          <div class="col-span-2 pt-6 border-t border-accent/10">
+            <Icon name="mdi:cloud-outline" class="size-14 text-dark/20 mx-auto" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* 2. Business Model (bg-dark) */}
+  <section class="section-base section-dark relative overflow-hidden">
+    <div class="absolute top-0 right-0 size-80 bg-brand/10 blur-[120px] rounded-sm"></div>
+    <div class="container-main relative z-10 grid grid-cols-1 md:grid-cols-2 gap-12">
+      <div>
+        <h2 class="text-3xl font-bold italic mb-6 font-poppins text-white">
+          {servicesLabels.targetTitle}
+        </h2>
+        <p class="text-white/80 text-lg leading-relaxed font-poppins">
+          {service.targetAudience}
+        </p>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {
+          service.benefits.map((benefit) => (
+            <div class="p-6 bg-white/5 border border-white/10 rounded-sm">
+              <p class="text-sm font-semibold font-poppins text-white">{benefit}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* 3. Features Grid (bg-white) */}
+  <section class="section-base section-white">
+    <div class="container-main">
+      <SectionHeader title={servicesLabels.featuresTitle} centered={false} />
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mt-12">
+        {
+          service.detailedFeatures.map((feature) => (
+            <div class="space-y-4">
+              <Icon name={feature.icon} class="size-8 text-brand" />
+              <h3 class="text-xl font-bold text-dark font-poppins">{feature.title}</h3>
+              <p class="text-dark/70 text-sm leading-relaxed font-poppins">{feature.description}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* 4. CTA (bg-brand) */}
+  <AidaBannerSection />
+</BaseLayout>

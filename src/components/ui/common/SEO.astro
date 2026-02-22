@@ -1,0 +1,56 @@
+---
+import { SEO as AstroSEO } from "astro-seo";
+
+interface Props {
+  title?: string;
+  description: string;
+  ogImage: string;
+  ogType?: "website" | "article";
+  canonical?: string;
+  noindex?: boolean;
+  siteName: string;
+  twitterHandle?: string;
+}
+
+const {
+  title,
+  description,
+  ogImage,
+  ogType = "website",
+  canonical,
+  noindex = false,
+  siteName,
+  twitterHandle = "@tinyacode",
+} = Astro.props;
+
+const fullTitle = title ? `${title} | ${siteName}` : `${siteName} | Soluciones Digitales`;
+---
+
+<AstroSEO
+  title={fullTitle}
+  description={description}
+  canonical={canonical}
+  noindex={noindex}
+  openGraph={{
+    basic: {
+      title: fullTitle,
+      type: ogType,
+      image: ogImage,
+    },
+    optional: {
+      description: description,
+      siteName: siteName,
+    },
+  }}
+  twitter={{
+    card: "summary_large_image",
+    site: twitterHandle,
+    creator: twitterHandle,
+  }}
+  extend={{
+    meta: [
+      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "generator", content: Astro.generator },
+    ],
+  }}
+/>

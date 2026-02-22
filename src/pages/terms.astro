@@ -1,0 +1,31 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro";
+import { siteConfig } from "@/data/siteConfig";
+import { termsContent } from "@/data/legal";
+
+const { terms } = siteConfig.pages;
+
+const seo = {
+  title: `Términos y Condiciones — Tinya Code`,
+  description: `Términos y condiciones de los servicios de diseño web y desarrollo de software de Tinya Code en Lima, Perú.`,
+  noindex: true,
+  canonical: new URL(Astro.url.pathname, siteConfig.url).toString(),
+};
+---
+
+<PageLayout {...seo}>
+  <article class="max-w-4xl mx-auto py-12 prose prose-brand">
+    <h1 class="titulo-seccion mb-8">{terms.title}</h1>
+
+    <p>{termsContent.intro}</p>
+
+    {
+      termsContent.sections.map((section) => (
+        <>
+          <h2>{section.title}</h2>
+          <p>{section.content}</p>
+        </>
+      ))
+    }
+  </article>
+</PageLayout>
