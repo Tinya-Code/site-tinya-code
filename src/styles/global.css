@@ -9,10 +9,10 @@
   /* Colores Activos */
   --color-dark: #141414;
   --color-light: #edf1e8;
-  --color-accent: #d3b9aa;
+  --color-accent: #FFC312;
   --color-white: #ffffff;
-  --color-brand: #8c6a5d;
-  --color-brand-dark: #5f473e;
+  --color-brand:#ff9f43;
+  --color-brand-dark: #e0b15c;
   --color-gray: #60739f;
   --color-gray-light: #e5e9f0;
 }
@@ -103,7 +103,7 @@
 
   /* Secciones */
   .section-base {
-    @apply py-16 md:py-24;
+    @apply py-10 md:py-18;
   }
 
   .section-light {
@@ -653,7 +653,7 @@
   }
 
   .bento-item-featured {
-    grid-column: span 4;
+    grid-column: span 2;
     grid-row: span 2;
   }
 
@@ -1099,7 +1099,7 @@
   .project-modal-content {
     background-color: var(--color-white);
     border-radius: 2px;
-    max-width: 42rem;
+    
     width: 100%;
     margin-left: 1rem;
     margin-right: 1rem;

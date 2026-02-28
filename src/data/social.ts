@@ -26,8 +26,8 @@ export const socialLinks = [
 ];
 
 export const contactData = {
-  phone: "+51 900 000 000",
-  email: "hola@tinyacode.com",
+  phone: "+51 924 932 128",
+  email: "tinyacode@gmail.com",
   address: "Lima, Perú",
-  whatsapp: "+51 900 000 000",
+  whatsapp: "+51 924 932 128",
 };

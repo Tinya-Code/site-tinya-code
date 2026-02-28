@@ -8,10 +8,10 @@ import { siteConfig } from "@/data/siteConfig";
 const { title, subtitle } = siteConfig.home.methodology;
 ---
 
-<section class="section-base section-light">
-  <div class="container-main space-y-16">
+<section class="section-base section-light py-12">
+  <div class="container-main space-y-2">
     <SectionHeader title={title} subtitle={subtitle} />
-    <Methodology phases={methodologyContent} />
+    <Methodology phases={methodologyContent} autoplayMs={10000}/>
   </div>
 </section>
 

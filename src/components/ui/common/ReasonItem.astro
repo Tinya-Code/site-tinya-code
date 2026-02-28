@@ -2,22 +2,120 @@
 import Icon from "./Icon.astro";
 
 interface Props {
-  title: string;
-  description: string;
+  percentage: string;
+  headline: string;
+  detail: string;
+  source: string;
   icon: string;
 }
 
-const { title, description, icon } = Astro.props;
+const { percentage, headline, detail, source, icon } = Astro.props;
+
+// Separar número del símbolo (ej: "58%" → "58" y "%")
+const match = percentage.match(/^([\d.]+)(.*)$/);
+const numericValue = match ? match[1] : percentage;
+const suffix = match ? match[2] : "";
 ---
 
-<div class="flex items-start gap-4">
-  <Icon name={icon} size={6} class="text-brand mt-0.5 shrink-0" />
-  <div class="space-y-1">
-    <h3 class="font-poppins font-semibold text-base text-dark">
-      {title}
+<div
+  class="group relative flex flex-col gap-3 p-6 sm:p-7 overflow-hidden
+         opacity-0 translate-y-6
+         transition-all duration-700 ease-out
+         data-[visible=true]:opacity-100 data-[visible=true]:translate-y-0"
+  data-reason-item
+>
+
+  <!-- Ícono + porcentaje en fila -->
+  <div class="relative flex items-center gap-3">
+    <Icon name={icon} size={6} class="text-brand transition-transform duration-300 group-hover:scale-110" />
+    <span
+      class="font-poppins font-extrabold text-4xl sm:text-5xl text-brand leading-none tabular-nums tracking-tight"
+      data-counter
+      data-target={numericValue}
+      data-suffix={suffix}
+    >
+      0{suffix}
+    </span>
+  </div>
+
+  <!-- Línea decorativa -->
+  <div class="relative w-8 h-0.5 bg-brand/30 group-hover:w-14 transition-all duration-500 rounded-full"></div>
+
+  <!-- Texto -->
+  <div class="relative flex flex-col gap-1.5">
+    <h3 class="font-poppins font-semibold text-sm sm:text-base text-dark leading-snug">
+      {headline}
     </h3>
-    <p class="font-poppins text-sm text-gray leading-relaxed mt-1">
-      {description}
+    <p class="font-poppins text-xs sm:text-sm text-gray leading-relaxed">
+      {detail}
     </p>
   </div>
+
+  <!-- Fuente al pie -->
+  <div class="relative flex items-center gap-1.5 mt-auto pt-3 border-t border-gray-100">
+    <div class="w-1 h-1 rounded-full bg-brand/40 shrink-0"></div>
+    <span class="font-poppins text-[10px] sm:text-xs text-gray/50 italic leading-tight">
+      {source}
+    </span>
+  </div>
+
 </div>
+
+<script>
+  function animateCounter(el: HTMLElement) {
+    const target = parseFloat(el.dataset.target ?? "0");
+    const suffix = el.dataset.suffix ?? "";
+    const isDecimal = el.dataset.target?.includes(".") ?? false;
+    const duration = 1800;
+    const startTime = performance.now();
+
+    function update(currentTime: number) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      // Ease out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = target * eased;
+
+      el.textContent = (isDecimal ? current.toFixed(1) : Math.floor(current).toString()) + suffix;
+
+      if (progress < 1) requestAnimationFrame(update);
+    }
+
+    requestAnimationFrame(update);
+  }
+
+  function initReasonItems() {
+    const items = document.querySelectorAll<HTMLElement>("[data-reason-item]");
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry, i) => {
+          if (entry.isIntersecting) {
+            const el = entry.target as HTMLElement;
+
+            // Retraso escalonado según posición en el DOM
+            const index = Array.from(items).indexOf(el);
+            setTimeout(() => {
+              el.dataset.visible = "true";
+
+              // Iniciar contador después de que la card aparece
+              const counter = el.querySelector<HTMLElement>("[data-counter]");
+              if (counter) {
+                setTimeout(() => animateCounter(counter), 200);
+              }
+            }, index * 120);
+
+            observer.unobserve(el);
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    items.forEach((item) => observer.observe(item));
+  }
+
+  initReasonItems();
+  document.addEventListener("astro:after-swap", initReasonItems);
+</script>

@@ -3,7 +3,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import ServicesGrid from "@/components/smart/ServicesGrid.astro";
 import AidaBannerSection from "@/components/smart/AidaBannerSection.astro";
 import { siteConfig } from "@/data/siteConfig";
-
+import PageHero from "@/components/ui/sections/PageHero.astro";
 const { services } = siteConfig.pages;
 
 const seo = {
@@ -15,14 +15,14 @@ const seo = {
 
 <BaseLayout {...seo}>
   {/* 1. Header (bg-light) */}
-  <section class="section-base section-light pb-0">
-    <div class="container-main text-center">
-      <div class="mb-12">
-        <h1 class="titulo-hero mb-4">{services.title}</h1>
-        <p class="subtitulo mx-auto">{services.subtitle}</p>
-      </div>
-    </div>
-  </section>
+
+  <PageHero
+  categoryLabel="Servicios"
+  title={services.title}
+  subtitle={services.subtitle}
+  align="left"
+>
+</PageHero>
 
   {/* 2. Services Grid (bg-white) */}
   <section class="section-base section-white">

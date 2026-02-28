@@ -5,6 +5,7 @@ import type { CardBase } from "@/types";
 
 interface Props extends Omit<CardBase, "image" | "href"> {
   id: string;
+  name:string;
   priceMonthly: number;
   priceAnnual: number;
   period: string;
@@ -17,7 +18,7 @@ interface Props extends Omit<CardBase, "image" | "href"> {
 
 const {
   id,
-  title: name,
+   name,
   priceMonthly,
   priceAnnual,
   period,
@@ -30,7 +31,7 @@ const {
 } = Astro.props;
 
 // Formateador de moneda
-const formatPrice = (p: number) => `S/ ${p.toLocaleString("en-US")}`;
+const formatPrice = (p: number) => `S/ ${p.toLocaleString("es-PE")}`;
 ---
 
 <div
@@ -54,14 +55,14 @@ const formatPrice = (p: number) => `S/ ${p.toLocaleString("en-US")}`;
 
   <div class="p-6 flex flex-col h-full">
     <div class="mb-6">
-      <h3 class="font-poppins font-bold text-xl text-dark mb-2">{name}</h3>
+      <h3 class="font-rader  italic  text-4xl text-center text-dark mb-2">{name}</h3>
       <p class="font-poppins text-sm text-gray leading-relaxed">{description}</p>
     </div>
 
     <div class="mb-8">
       <div class="flex items-baseline gap-1">
         <span
-          class="pricing-card__price font-poppins text-4xl font-bold text-dark transition-all duration-300"
+          class="pricing-card__price font-rader text-4xl italic text-dark transition-all duration-300"
         >
           {formatPrice(priceMonthly)}
         </span>
@@ -71,8 +72,8 @@ const formatPrice = (p: number) => `S/ ${p.toLocaleString("en-US")}`;
       </div>
       {
         priceAnnual > 0 && (
-          <p class="pricing-card__annual-note text-xs text-brand font-medium mt-1 opacity-0 transition-opacity duration-300">
-            Pagando anualmente
+          <p class="pricing-card__annual-note text-xs text-brand font-semibold mt-1 opacity-0 transition-opacity duration-300">
+            Descuento Pagando Completo 
           </p>
         )
       }

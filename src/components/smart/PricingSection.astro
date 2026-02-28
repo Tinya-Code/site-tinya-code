@@ -6,7 +6,7 @@ import PricingTable from "@/components/ui/sections/PricingTable.astro";
 const { pricing = webPricing } = Astro.props;
 ---
 
-<div class="space-y-12">
+<div class="space-y-8">
   <!-- Billing Toggle -->
   <div class="flex flex-col items-center justify-center gap-4 animate-on-scroll">
     <button
@@ -26,17 +26,18 @@ const { pricing = webPricing } = Astro.props;
         id="billing-monthly"
         class="relative z-10 w-40 text-center py-2.5 text-white font-poppins text-sm font-semibold transition-colors duration-300"
       >
-        Pago mensual
+        Pago en 3 partes
       </span>
       <span
         id="billing-annual"
         class="relative z-10 w-40 flex items-center justify-center gap-2 py-2.5 text-dark/40 font-poppins text-sm font-semibold transition-colors duration-300"
       >
-        Pago anual
+        Pago completo
         <span
-          class="font-poppins text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-brand/10 text-brand"
+        id="billing-annual-span"
+          class="font-poppins text-[10px] cambio font-bold px-1.5 py-0.5 rounded-full bg-brand/10 text-brand"
         >
-          -15%
+          -10%
         </span>
       </span>
     </button>
@@ -50,12 +51,15 @@ const { pricing = webPricing } = Astro.props;
     transform: translateX(100%);
   }
 
-  #billing-toggle[aria-checked="true"] #billing-monthly {
+  #billing-toggle[aria-checked="true"] #billing-monthly  {
     color: rgba(20, 20, 20, 0.4);
   }
 
-  #billing-toggle[aria-checked="true"] #billing-annual {
+  #billing-toggle[aria-checked="true"] #billing-annual, #billing-annual-span {
     color: white;
+  }
+  #billing-toggle[aria-checked="false"]  #billing-annual-span {
+    color: var(--color-brand);
   }
 </style>
 

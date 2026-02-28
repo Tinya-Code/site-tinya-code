@@ -3,6 +3,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import PortfolioGallery from "@/components/smart/PortfolioGallery.astro";
 import CallToAction from "@/components/ui/sections/CallToAction.astro";
 import { siteConfig } from "@/data/siteConfig";
+import PageHero from "@/components/ui/sections/PageHero.astro";
 
 const { portfolio } = siteConfig.pages;
 
@@ -15,14 +16,14 @@ const seo = {
 
 <BaseLayout {...seo}>
   {/* 1. Portfolio Header (bg-light) */}
-  <section class="section-base section-light pb-0">
-    <div class="container-main text-center">
-      <div class="mb-12">
-        <h1 class="titulo-hero mb-4">{portfolio.title}</h1>
-        <p class="subtitulo mx-auto">{portfolio.subtitle}</p>
-      </div>
-    </div>
-  </section>
+
+  <PageHero
+  categoryLabel="Proyectos"
+  title={portfolio.title}
+  subtitle={portfolio.subtitle}
+  align="left"
+>
+</PageHero>
 
   {/* 2. Portfolio Grid (bg-white) */}
   <section class="section-base section-white">

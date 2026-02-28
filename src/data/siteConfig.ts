@@ -8,36 +8,37 @@ export const siteConfig = {
   defaultLanguage: "es",
 
   // Secciones de la Home
-  home: {
-    reasons: {
-      title: "4 Poderosas Razones para entrar al mundo digital",
-      subtitle: "Impulsamos tu crecimiento con estrategia y tecnología.",
-    },
-    sectors: {
-      title: "Sectores que Atendemos",
-      subtitle: "Soluciones especializadas para cada industria.",
-    },
-    whyUs: {
-      title: "¿Por qué elegir Tinya Code?",
-      subtitle: "Velocidad, enfoque B2B, soporte continuo y resultados medibles.",
-    },
-    methodology: {
-      title: "Nuestra Metodología",
-      subtitle: "5 fases diseñadas para el éxito de tu proyecto.",
-    },
-    services: {
-      title: "Servicios Destacados",
-      subtitle: "Lo que mejor sabemos hacer para tu negocio.",
-    },
-    testimonials: {
-      title: "Lo que dicen nuestros clientes",
-      subtitle: "Casos de éxito que respaldan nuestro trabajo.",
-    },
-    portfolio: {
-      title: "Nuestro Portafolio",
-      subtitle: "Explora nuestros últimos proyectos.",
-    },
+ home: {
+  reasons: {
+    title: "4 Poderosas Razones para entrar al mundo digital",
+    subtitle: "Más del 70% de las empresas en Perú ya invierten en transformación digital. Te ayudamos a aprovechar este cambio con soluciones estratégicas que generan visibilidad, clientes y resultados medibles.",
   },
+  sectors: {
+    title: "Sectores que Atendemos",
+    subtitle: "Desde retail y gastronomía hasta educación y servicios B2B, adaptamos nuestras soluciones digitales a las necesidades de cada sector, garantizando impacto real en tu mercado.",
+  },
+  whyUs: {
+    title: "¿Por qué elegir Tinya Code?",
+    subtitle: "Somos tu socio estratégico: entregamos proyectos en tiempos competitivos, con enfoque en negocios B2B, soporte constante y métricas claras que demuestran el retorno de tu inversión.",
+  },
+  methodology: {
+    title: "Nuestra Metodología",
+    subtitle: "Aplicamos un proceso probado en cinco etapas: diagnóstico, estrategia, diseño, implementación y optimización. Cada fase asegura que tu proyecto avance con claridad y resultados concretos.",
+  },
+  services: {
+    title: "Servicios Destacados",
+    subtitle: "Diseño web, e-commerce, branding y software a medida. Servicios pensados para potenciar tu presencia digital y convertir visitantes en clientes fieles.",
+  },
+  testimonials: {
+    title: "Lo que dicen nuestros clientes",
+    subtitle: "Más de 50 clientes en Perú y Latinoamérica han confiado en nosotros. Sus testimonios reflejan proyectos que aumentaron ventas, mejoraron procesos y fortalecieron su marca.",
+  },
+  portfolio: {
+    title: "Nuestro Portafolio",
+    subtitle: "Conoce los proyectos que hemos desarrollado para empresas locales e internacionales. Cada caso demuestra cómo transformamos ideas en soluciones digitales efectivas.",
+  },
+}
+,
 
   // Páginas internas
   pages: {
@@ -52,12 +53,13 @@ export const siteConfig = {
         text2:
           'En Tinya Code, fusionamos la estética premium con una arquitectura técnica robusta. Nuestro objetivo no es solo que tu web "se vea bien", sino que trabaje para ti 24/7.',
       },
-      stats: [
-        { value: "99.9%", label: "Uptime Garantizado" },
-        { value: "+50", label: "Proyectos Entregados" },
-        { value: "10ms", label: "Tiempo de Respuesta" },
-        { value: "B2B", label: "Foco industrial" },
-      ],
+  stats: [
+  { value: "5+", label: "Años Experiencia" },
+  { value: "20+", label: "Clientes Activos" },
+  { value: "100%", label: "Dedicación" },
+  { value: "24/7", label: "Soporte" },
+],
+
       reasonsTitle: "Por qué confiar en nosotros",
       reasonsSubtitle: "4 pilares que sostienen cada línea de código que escribimos.",
       teamTitle: "Nuestro Núcleo Técnico",

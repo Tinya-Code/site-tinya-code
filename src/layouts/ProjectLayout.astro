@@ -3,6 +3,9 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import type { CollectionEntry } from "astro:content";
 import { Icon } from "astro-icon/components";
 import { siteConfig } from "@/data/siteConfig";
+import { blogTerms } from "@/data/blogTerms";
+import BlogContentFormatter from "@/components/ui/common/BlogContentFormatter.astro";
+
 import { Image } from "astro:assets";
 
 interface Props {
@@ -19,9 +22,9 @@ const seo = {
 ---
 
 <BaseLayout title={seo.title} description={seo.description}>
-  <section class="section-base section-light">
-    <article class="container-main max-w-5xl mx-auto">
-      <div class="mb-8">
+  <section class="section-base  section-light">
+    <article class=" bg-light  mx-auto ">
+      <div class="mb-8 container-main">
         <a
           href="/portfolio"
           class="inline-flex items-center gap-2 text-dark/60 hover:text-brand font-poppins text-xs font-bold uppercase tracking-widest transition-colors group/back"
@@ -34,8 +37,8 @@ const seo = {
         </a>
       </div>
 
-      <header class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
-        <div class="space-y-8">
+      <header class="grid grid-cols-1 container-main lg:grid-cols-2 gap-12 items-center mb-16">
+        <div class="space-y-2">
           <div
             class="inline-flex items-center gap-2 text-brand text-[10px] font-bold uppercase tracking-widest font-poppins"
           >
@@ -43,7 +46,7 @@ const seo = {
             Caso de Éxito / {category}
           </div>
           <h1
-            class="text-4xl md:text-6xl font-poppins font-extrabold text-dark leading-tight italic"
+            class="text-4xl md:text-6xl font-rader font-extrabold text-dark leading-tight italic"
           >
             {title}
           </h1>
@@ -94,24 +97,23 @@ const seo = {
               <Image
                 src={heroImage}
                 alt={title}
-                width={1200}
-                height={800}
+                width={800}
+                height={500}
                 loading="eager"
-                class="w-full h-auto object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                class="w-full h-auto max-h-100 object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
               />
             )
           }
         </div>
       </header>
+      <main class="bg-white py-4 ">
 
-      <div
-        class="prose prose-lg max-w-none prose-headings:font-poppins prose-headings:font-bold prose-headings:italic prose-brand font-poppins"
-      >
-        <slot />
-      </div>
+                <BlogContentFormatter blogTerms={blogTerms}>
+            <slot />
+          </BlogContentFormatter>
 
-      <div
-        class="mt-20 p-10 bg-brand text-white rounded-sm text-center space-y-8 relative overflow-hidden"
+      <section
+        class="mt-20 container-main p-10 bg-brand text-white rounded-sm text-center space-y-8 relative overflow-hidden"
       >
         <h3 class="text-3xl md:text-4xl font-poppins font-bold italic text-white relative z-10">
           ¿Listo para lograr resultados similares?
@@ -128,7 +130,9 @@ const seo = {
             Iniciar mi Proyecto
           </a>
         </div>
-      </div>
+      </section>
+      </main>
+
     </article>
   </section>
 </BaseLayout>

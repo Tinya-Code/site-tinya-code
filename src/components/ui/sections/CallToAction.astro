@@ -23,7 +23,7 @@ const { title, subtitle, button, trustItems = [] } = Astro.props;
 
 <section class="section-base section-cta-bg relative overflow-hidden">
   <div class="container-main relative z-10">
-    <div class="animate-on-scroll flex flex-col items-center text-center gap-8 py-24 md:py-32">
+    <div class="animate-on-scroll flex flex-col items-center text-center gap-4 py-4">
       <div class="relative inline-block mb-4">
         <span class="line-draw bg-white/40"></span>
         <h2 class="font-poppins text-3xl md:text-5xl font-bold text-white max-w-3xl leading-tight">
@@ -47,11 +47,11 @@ const { title, subtitle, button, trustItems = [] } = Astro.props;
         {subtitle}
       </p>
 
-      <div class="flex flex-col items-center gap-12">
+      <div class="flex flex-col items-center gap-4">
         <Button
           href={button.href}
           variant="outline-white"
-          class="!px-10 !py-5 !text-lg hover:bg-white hover:text-brand transition-all duration-300"
+          class="!px-8 !py-4 !text-lg hover:bg-white hover:text-brand transition-all duration-300"
         >
           {button.text}
           <Icon

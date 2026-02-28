@@ -13,7 +13,7 @@ export interface NavLink {
 }
 
 export const navLinks: NavLink[] = [
-  {
+ /* {
     text: "Servicios",
     href: "/services",
     sublinks: [
@@ -98,11 +98,32 @@ export const navLinks: NavLink[] = [
   {
     text: "Nosotros",
     href: "/about",
+    sublinks: [
+            {
+        text: "Testimonios",
+        href: "/testimonials",
+        icon: "mdi:briefcase",
+      },
+                  {
+        text: "Methodologia",
+        href: "/methodology",
+        icon: "mdi:briefcase",
+      },
+                        {
+        text: "Contacto",
+        href: "/contact",
+        icon: "mdi:briefcase",
+      },
+    ]
+  },
+    {
+    text: "Precios",
+    href: "/pricing",
   },
   {
     text: "Blog",
     href: "/blog",
-  },
+  },*/
   {
     text: "Solicitar propuesta",
     href: "/contact",

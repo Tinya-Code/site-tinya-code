@@ -3,12 +3,13 @@ import { siteConfig } from "@/data/siteConfig";
 import Stats from "@/components/ui/sections/Stats.astro";
 
 // Smart component: Orchestrates stats data from siteConfig
-const { stats } = siteConfig.pages.about;
+const { stats  } = siteConfig.pages.about;
+const {bandera = false} = Astro.props;
 ---
 
 <section class="section-base section-stats-bg">
   <div class="container-main animate-on-scroll">
-    <Stats stats={stats} />
+    <Stats stats={stats} bandera={bandera} />
   </div>
 </section>
 

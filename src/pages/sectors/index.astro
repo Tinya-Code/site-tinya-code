@@ -4,6 +4,7 @@ import SectorCard from "@/components/ui/cards/SectorCard.astro";
 import AidaBannerSection from "@/components/smart/AidaBannerSection.astro";
 import { sectors } from "@/data/sectors";
 import { siteConfig } from "@/data/siteConfig";
+import PageHero from "@/components/ui/sections/PageHero.astro";
 
 const { sectors: sectorsLabels } = siteConfig.pages;
 
@@ -16,14 +17,14 @@ const seo = {
 
 <BaseLayout {...seo}>
   {/* 1. Header (bg-light) */}
-  <section class="section-base section-light pb-0">
-    <div class="container-main text-center">
-      <div class="mb-12">
-        <h1 class="titulo-hero mb-4">{sectorsLabels.title}</h1>
-        <p class="subtitulo mx-auto">{sectorsLabels.subtitle}</p>
-      </div>
-    </div>
-  </section>
+
+<PageHero
+  categoryLabel="Sectores"
+  title={sectorsLabels.title}
+  subtitle={sectorsLabels.subtitle}
+  align="left"
+>
+</PageHero>
 
   {/* 2. Sectors Grid (bg-white) */}
   <section class="section-base section-white">

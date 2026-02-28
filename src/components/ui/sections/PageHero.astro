@@ -1,0 +1,56 @@
+---
+import type { HeadingTag } from "@/types";
+
+interface Props {
+  title: string;
+  subtitle?: string;
+  headingTag?: HeadingTag;
+  categoryLabel?: string;
+  align?: "left" | "center";
+}
+
+const {
+  title,
+  subtitle,
+  headingTag: Tag = "h1",
+  categoryLabel,
+  align = "center",
+} = Astro.props;
+
+const alignClass = align === "left"
+  ? "text-left items-start"
+  : "text-center items-center";
+---
+
+<section class="section-base py-10 section-light">
+  <div class="container-main min-h-70">
+    <div class={`flex flex-col ${alignClass} max-w-3xl ${align === "center" ? "mx-auto" : ""}`}>
+
+      {categoryLabel && (
+        <div class={`flex items-center gap-3 mb-5 ${align === "center" ? "justify-center" : "justify-start"}`}>
+          <span class="border-t border-brand w-8"></span>
+          <span class="font-poppins text-xs font-semibold uppercase tracking-widest text-brand">
+            {categoryLabel}
+          </span>
+        </div>
+      )}
+
+      <Tag class="titulo-hero text-rader mb-4">
+        {title}
+      </Tag>
+
+      {subtitle && (
+        <p class={` ${align === "center" ? "mx-auto" : ""}`}>
+          {subtitle}
+        </p>
+      )}
+
+      {Astro.slots.has("default") && (
+        <div class={`mt-8 flex flex-wrap gap-4 ${align === "center" ? "justify-center" : "justify-start"}`}>
+          <slot />
+        </div>
+      )}
+
+    </div>
+  </div>
+</section>

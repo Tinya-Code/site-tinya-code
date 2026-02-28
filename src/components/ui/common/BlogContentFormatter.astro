@@ -56,9 +56,9 @@
           if (item.type === "internal-link" || item.type === "external-link") {
             const target =
               item.type === "external-link" ? ' target="_blank" rel="noopener noreferrer"' : "";
-            replacement = `<a href="${item.href}" class="blog-internal-link"${target}>${match[1]}</a>`;
+            replacement = `<a href="${item.href}" class="blog-internal-link"${target}>${match}</a>`;
           } else if (item.type === "highlight") {
-            replacement = `<mark class="blog-highlight">${match[1]}</mark>`;
+            replacement = `<mark class="blog-highlight">${match}</mark>`;
           } else if (item.type === "definition") {
             replacement = `<span class="blog-definition" tabindex="0" data-definition="${item.definition}">${match[1]}</span>`;
           }

@@ -1,32 +1,42 @@
 export interface Reason {
-  title: string;
-  description: string;
-  icon: string;
+  percentage: string;     // Solo el número o porcentaje
+  headline: string;       // Frase corta e impactante
+  detail: string;         // Explicación breve
+  source: string;         // Fuente citada
+  icon: string;           // Ícono representativo
 }
 
 export const reasons: Reason[] = [
   {
-    title: "Velocidad de Carga",
-    description:
-      "Optimizamos cada línea de código para garantizar que tu sitio vuele, mejorando la retención y el SEO.",
-    icon: "mdi:speedometer",
+    percentage: "58%",
+    headline: "Más ingresos y clientes",
+    detail:
+      "Las empresas en Perú con página web reportan un aumento en sus ingresos y clientes.",
+    source: "Asociación de Pequeñas Empresas de Perú, 2024",
+    icon: "mdi:trending-up",
   },
   {
-    title: "Enfoque B2B",
-    description:
-      "Diseñamos procesos pensados en la venta a empresas, maximizando la generación de leads cualificados.",
-    icon: "mdi:business",
+    percentage: "47%",
+    headline: "Prefieren comprar en línea",
+    detail:
+      "Los consumidores peruanos eligen la compra online por comodidad y accesibilidad.",
+    source: "Euromonitor International, 2023",
+    icon: "mdi:cart",
   },
   {
-    title: "Soporte Continuo",
-    description:
-      "No te dejamos solo. Ofrecemos acompañamiento técnico post-lanzamiento para que tu negocio nunca se detenga.",
-    icon: "mdi:headset",
+    percentage: "30%",
+    headline: "Publicidad más económica",
+    detail:
+      "La publicidad digital resulta más barata que los métodos tradicionales, maximizando la inversión.",
+    source: "Deloitte, 2023",
+    icon: "mdi:currency-usd",
   },
   {
-    title: "KPIs Reales",
-    description:
-      "Nos enfocamos en métricas que importan: conversión, ROI y crecimiento tangible para tu marca.",
-    icon: "mdi:chart-timeline-variant-shimmer",
+    percentage: "18.8%",
+    headline: "Crecimiento del e-commerce",
+    detail:
+      "El mercado de comercio electrónico en Perú sigue expandiéndose con más transacciones en línea.",
+    source: "Cámara de Comercio de Lima",
+    icon: "mdi:chart-line",
   },
 ];

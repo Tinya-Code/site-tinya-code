@@ -16,56 +16,56 @@ export interface PricingPlan {
 
 export const webPricing: PricingPlan[] = [
   {
-    id: "launch",
-    name: "Plan Launch",
-    price: "S/ 1,200",
-    priceMonthly: 1200,
-    priceAnnual: 0, // Solo pago único disponible
+    id: "landing",
+    name: "Landing Page",
+    price: "S/ 799",
+    priceMonthly: 799,
+    priceAnnual: 719, // 10% de descuento en pago completo
     period: "pago único",
-    description: "Perfecto para negocios que buscan su primera presencia profesional.",
+    description: "Ideal para negocios que buscan una presencia digital rápida y profesional.",
     features: [
       "Diseño 100% Responsivo",
-      "Hasta 5 secciones",
+      "Hasta 3 secciones",
       "Integración con WhatsApp",
       "SEO Básico",
       "Certificado SSL Gratuito",
       "Soporte por 30 días",
     ],
     ctaText: "Empezar ahora",
-    ctaHref: "/contact?plan=launch",
+    ctaHref: "/contact?plan=landing",
   },
   {
-    id: "scale",
-    name: "Plan Scale",
-    price: "S/ 2,500",
-    priceMonthly: 2500,
-    priceAnnual: 2200, // Ahorro del ~12% en pago anual
+    id: "ecommerce",
+    name: "E-commerce",
+    price: "S/ 1,799",
+    priceMonthly: 1799,
+    priceAnnual: 1619, // 10% de descuento en pago completo
     period: "pago único",
-    description: "Ideal para empresas en crecimiento que necesitan herramientas avanzadas.",
+    description: "Perfecto para empresas que quieren vender online con una tienda autogestionable.",
     features: [
-      "Todo lo del Plan Launch",
+      "Todo lo del Landing Page",
       "Hasta 10 secciones",
-      "Blog o Portfolio autogestionable",
+      "Tienda online con carrito y pagos",
       "Integración con Analytics",
       "Formularios dinámicos",
       "Capacitación de uso",
       "Soporte por 90 días",
     ],
-    ctaText: "Elegir Scale",
-    ctaHref: "/contact?plan=scale",
+    ctaText: "Elegir E-commerce",
+    ctaHref: "/contact?plan=ecommerce",
     featured: true,
     badge: "Más Popular",
   },
   {
-    id: "enterprise",
-    name: "Corporate / SaaS",
+    id: "saas",
+    name: "SaaS / Corporate",
     price: "Desde S/ 5,000",
     priceMonthly: 5000,
-    priceAnnual: 4500,
+    priceAnnual: 4500, // 10% de descuento en pago completo
     period: "proyecto",
-    description: "Soluciones robustas a medida para necesidades corporativas complejas.",
+    description: "Soluciones robustas y a medida para software corporativo o SaaS.",
     features: [
-      "Arquitectura a medida",
+      "Arquitectura personalizada",
       "Integración con APIs externas",
       "Sistemas de gestión interna",
       "Seguridad avanzada",
@@ -73,6 +73,7 @@ export const webPricing: PricingPlan[] = [
       "Soporte prioritario 24/7",
     ],
     ctaText: "Contactar ventas",
-    ctaHref: "/contact?plan=enterprise",
+    ctaHref: "/contact?plan=saas",
   },
 ];
+

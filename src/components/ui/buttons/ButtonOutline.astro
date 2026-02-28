@@ -1,0 +1,21 @@
+---
+interface Props {
+  label?: string;
+  href?: string;
+  class?: string;
+  variant?: 'dark' | 'white';
+  [x: string]: any;
+}
+
+const { label, href, class: className, variant = 'dark', ...rest } = Astro.props;
+const Element = href ? 'a' : 'button';
+const variantClass = variant === 'white' ? 'btn-outline-white' : 'btn-outline';
+---
+
+<Element
+  href={href}
+  class:list={[variantClass, className]}
+  {...rest}
+>
+  {label || <slot />}
+</Element>

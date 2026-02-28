@@ -51,4 +51,5 @@ export const projects: Project[] = [
     image: "/generico.jpeg",
     href: "/projects/ecommerce-moda",
   },
+  
 ];

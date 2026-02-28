@@ -3,7 +3,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import SectionHeader from "@/components/ui/sections/SectionHeader.astro";
 import Hero from "@/components/ui/sections/Hero.astro";
 import { siteConfig } from "@/data/siteConfig";
-
+import PricingSection from "@/components/smart/PricingSection.astro";
 import ServicesGrid from "@/components/smart/ServicesGrid.astro";
 import ReasonsGrid from "@/components/smart/ReasonsGrid.astro";
 import SectorsGrid from "@/components/smart/SectorsGrid.astro";
@@ -38,8 +38,9 @@ const seo = {
       <ReasonsGrid />
     </div>
   </section>
+  
 
-  <!-- 3. Servicios destacados (bg-light) -->
+  <!-- 3. Servicios destacados (bg-light) 
   <section class="section-base section-light">
     <div class="container-main">
       <SectionHeader
@@ -49,12 +50,13 @@ const seo = {
       <ServicesGrid />
     </div>
   </section>
-
+-->
   <!-- 4. Por qué elegirnos (bg-white) -->
   <WhyChooseUsSection />
 
   <!-- 5. Estadísticas (bg-dark) -->
   <StatsSection />
+  
 
   <!-- 6. Metodología (bg-light) -->
   <MethodologySection />
@@ -70,7 +72,13 @@ const seo = {
     </div>
   </section>
 
-  <!-- 8. Sectores que Atendemos (bg-light) -->
+
+    <section class="section-base section-light">
+    <div class="container-main ">
+      <PricingSection />
+    </div>
+  </section>
+  <!-- 8. Sectores que Atendemos (bg-light) 
   <section class="section-base section-light">
     <div class="container-main">
       <SectionHeader
@@ -80,7 +88,7 @@ const seo = {
       <SectorsGrid />
     </div>
   </section>
-
+-->
   <!-- 9. Portafolio destacado (bg-white) -->
   <section class="section-base section-white">
     <div class="container-main">

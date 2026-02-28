@@ -1,72 +1,369 @@
 ---
-interface Props {
-  phases: {
-    step: string;
-    title: string;
-    description: string;
-  }[];
+import { Icon } from "astro-icon/components";
+
+interface Phase {
+  step: string;
+  title: string;
+  description: string;
+  icon: string;
+  image?: string;
 }
 
-const { phases } = Astro.props;
-const isHorizontal = phases.length === 5;
+interface Props {
+  phases: Phase[];
+  autoplayMs?: number;
+}
+
+const { phases, autoplayMs = 20000 } = Astro.props;
 ---
 
-<div
-  class:list={[
-    "mx-auto w-full",
-    isHorizontal
-      ? "grid grid-cols-1 lg:grid-cols-5 gap-y-12 lg:gap-x-12 lg:gap-y-0"
-      : "flex flex-col max-w-2xl",
-  ]}
->
-  {
-    phases.map((phase, index) => (
-      <div
-        class:list={[
-          "relative animate-on-scroll group",
-          isHorizontal ? "flex lg:flex-col gap-6 lg:gap-0" : "flex gap-6",
-          `animate-delay-${(index % 3) + 1}`,
-        ]}
-      >
-        {/* Connector lines logic */}
-        {index < phases.length - 1 && (
-          <>
-            {/* Vertical line: always on non-horizontal, or mobile on horizontal */}
-            <div
-              class:list={[
-                "absolute left-[11px] z-0 border-l border-gray-light",
-                isHorizontal ? "top-10 bottom-[-3rem] lg:hidden" : "top-8 bottom-0",
-              ]}
-            />
-
-            {/* Horizontal line: only desktop and horizontal mode */}
-            {isHorizontal && <div class="methodology-connector hidden lg:block" />}
-          </>
+<!-- ══ MOBILE — cards con IntersectionObserver ══ -->
+<div class="md:hidden flex flex-col gap-4 w-full">
+  {phases.map((phase, index) => (
+    <div
+      class="mobile-phase-card flex flex-row items-stretch  rounded-sm bg-white overflow-hidden transition-all duration-500"
+      data-index={index}
+    >
+      {/* Imagen izquierda */}
+      <div class="mobile-phase-img w-24 shrink-0 overflow-hidden transition-[width] duration-500">
+        {phase.image ? (
+          <img
+            src={phase.image}
+            alt={phase.title}
+            class="w-full h-full object-cover transition-transform duration-500"
+            loading={index === 0 ? "eager" : "lazy"}
+          />
+        ) : (
+          <div class="w-full h-full bg-gradient-to-br from-brand/10 to-brand/5 flex items-center justify-center">
+            <Icon name={phase.icon} class="size-6 text-brand/40" />
+          </div>
         )}
-
-        {/* Step number */}
-        <span
-          class:list={[
-            "methodology-step-number font-poppins text-xs font-bold text-brand border border-brand bg-white rounded-sm px-2 py-1 shrink-0 h-fit relative z-10",
-            isHorizontal ? "lg:mb-6" : "mt-1",
-          ]}
-        >
-          {phase.step.padStart(2, "0")}
-        </span>
-
-        {/* Content */}
-        <div class:list={[isHorizontal ? "flex-1" : "pb-12 last:pb-0"]}>
-          <h3 class="font-poppins font-semibold text-base text-dark transition-colors duration-200 group-hover:text-brand">
-            {phase.title}
-          </h3>
-          <p class="font-poppins text-sm text-gray leading-relaxed mt-1">{phase.description}</p>
-        </div>
       </div>
-    ))
-  }
+
+      {/* Texto derecha */}
+      <div class="flex flex-col justify-center gap-1.5 px-4 py-3 flex-1 min-w-0">
+        <div class="flex items-center gap-2">
+          <span class="inline-flex items-center justify-center w-5 h-5 border border-brand/30 text-brand rounded-sm bg-brand/5 font-poppins text-[0.55rem] font-bold leading-none shrink-0">
+            {phase.step}
+          </span>
+          <div class="p-1 bg-brand/[0.06] rounded-sm border border-brand/10">
+            <Icon name={phase.icon} class="size-3.5 text-brand" />
+          </div>
+        </div>
+        <h3 class="font-rader italic text-2xl text-dark leading-snug">
+          {phase.title}
+        </h3>
+        <p class="mobile-phase-desc font-poppins text-xs text-gray leading-relaxed overflow-hidden max-h-0 opacity-0 transition-[max-height,opacity] duration-500">
+          {phase.description}
+        </p>
+      </div>
+    </div>
+  ))}
 </div>
 
+<!-- ══ DESKTOP — acordeón horizontal ══ -->
+<div
+  class="methodology-accordion hidden md:flex lg:flex-row lg:items-stretch gap-2 w-full"
+  data-autoplay={autoplayMs}
+  role="tablist"
+  aria-label="Fases de metodología"
+>
+  {phases.map((phase, index) => (
+    <button
+      class:list={[
+        "methodology-item",
+        "group relative flex items-stretch",
+        " rounded-sm bg-white text-left cursor-pointer outline-none",
+        "overflow-hidden",
+        "focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:ring-offset-1",
+        index === 0 ? "border-brand ring-1 ring-brand" : "border-gray-light",
+      ]}
+      data-index={index}
+      role="tab"
+      aria-selected={index === 0 ? "true" : "false"}
+      aria-controls={`phase-panel-${index}`}
+      id={`phase-tab-${index}`}
+    >
+      {/* ── Imagen izquierda ── */}
+      <div class="methodology-img-wrap shrink-0 overflow-hidden h-full">
+        {phase.image ? (
+          <img
+            src={phase.image}
+            alt={phase.title}
+            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            loading={index === 0 ? "eager" : "lazy"}
+          />
+        ) : (
+          <div class="w-full h-full bg-gradient-to-br from-brand/10 via-brand/5 to-transparent flex items-center justify-center">
+            <Icon name={phase.icon} class="methodology-placeholder-icon size-6 text-brand/30 transition-all duration-300" />
+          </div>
+        )}
+      </div>
+
+      {/* ── Texto derecha ── */}
+      <div class="methodology-content flex flex-col items-center gap-2.5 overflow-hidden bg-white">
+        <div class="px-4 py-4 flex flex-col gap-2 h-full ">
+
+          {/* Número + ícono */}
+          <div class="flex items-center gap-2">
+            <span class="methodology-step inline-flex items-center justify-center p-1 border border-brand/30 text-brand rounded-sm bg-brand/5 font-poppins text-xl font-bold leading-none shrink-0 transition-all duration-300">
+              {phase.step}
+            </span>
+            <div class="methodology-icon-wrap p-1 rounded-sm border border-brand/10 bg-brand/[0.06] transition-all duration-300">
+              <Icon name={phase.icon} class="methodology-icon size-4 text-brand transition-all duration-300" />
+            </div>
+          </div>
+
+          {/* Título */}
+          <h3 class="font-rader italic text-4xl text-dark leading-snug">
+            {phase.title}
+          </h3>
+
+          {/* Descripción */}
+          <p class="methodology-desc font-poppins text-xs text-gray leading-relaxed overflow-hidden">
+            {phase.description}
+          </p>
+        </div>
+      </div>
+
+      {/* ── Label colapsado ── */}
+      <div class="methodology-collapsed absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 px-1 pointer-events-none select-none bg-white transition-opacity duration-200">
+        <Icon name={phase.icon} class="size-6 text-brand/40 shrink-0" />
+        <span class="font-poppins text-xs font-semibold text-dark/30 [writing-mode:vertical-lr] rotate-180 whitespace-nowrap tracking-widest uppercase">
+          {phase.title}
+        </span>
+      </div>
+
+      {/* ── Barra de progreso ── */}
+      <div class="absolute bottom-0 left-0 right-0 h-px bg-brand/10 overflow-hidden z-20" aria-hidden="true">
+        <div class="methodology-progress-bar h-full bg-brand w-0 origin-left" />
+      </div>
+
+      {/* ── Track lateral ── */}
+      <div class="absolute top-0 left-0 bottom-0 w-1 bg-brand/8 overflow-hidden z-20" aria-hidden="true">
+        <div class="methodology-track-fill w-full bg-brand h-0 origin-top" />
+      </div>
+    </button>
+  ))}
+</div>
+
+<style>
+  /* ══ DESKTOP ══ */
+  @media (min-width: 768px) {
+    .methodology-accordion { height: 360px; }
+
+    /* Colapsado */
+    .methodology-item {
+      flex: 0 0 48px;
+      transition:
+        flex 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+    }
+
+    /* Expandido — solo el activo, nunca 2 a la vez */
+    .methodology-item.is-active { flex: 1 1 0%; }
+
+    /* Imagen: 0 → aparece */
+    .methodology-item .methodology-img-wrap {
+      width: 0;
+      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .methodology-item.is-active .methodology-img-wrap { width: 360px; }
+
+    /* Texto: oculto → visible */
+    .methodology-item .methodology-content {
+      width: 0;
+      opacity: 0;
+      pointer-events: none;
+      transition: width 0.45s ease, opacity 0.3s ease;
+    }
+    .methodology-item.is-active .methodology-content {
+      width: auto;
+      min-width: 160px;
+      opacity: 1;
+      pointer-events: auto;
+      transition: width 0.5s ease, opacity 0.35s ease 0.1s;
+    }
+
+    /* Descripción */
+    .methodology-item .methodology-desc {
+      max-height: 0;
+      opacity: 0;
+      transition: max-height 0.3s ease, opacity 0.25s ease;
+    }
+    .methodology-item.is-active .methodology-desc {
+      max-height: 120px;
+      opacity: 1;
+      transition: max-height 0.4s ease 0.1s, opacity 0.3s ease 0.15s;
+    }
+
+    /* Ícono crece */
+    .methodology-item.is-active .methodology-icon { width: 1.25rem; height: 1.25rem; }
+    .methodology-item.is-active .methodology-icon-wrap { padding: 0.5rem; }
+
+    /* Placeholder crece */
+    .methodology-item.is-active .methodology-placeholder-icon {
+      width: 3rem; height: 3rem;
+      color: rgb(var(--color-brand) / 0.4);
+    }
+
+    /* Collapsed label */
+    .methodology-item.is-active .methodology-collapsed { opacity: 0; pointer-events: none; }
+    .methodology-item:not(.is-active) .methodology-collapsed { opacity: 1; }
+  }
+
+  /* ── Estado activo ── */
+  .methodology-item.is-active {
+    border-color: rgb(var(--color-brand));
+    box-shadow: 0 0 0 1px rgb(var(--color-brand) / 0.5);
+  }
+
+  /* ── Barras ── */
+  .methodology-item.is-active .methodology-progress-bar {
+    animation: meth-prog var(--autoplay-ms, 20000ms) linear forwards;
+  }
+  .methodology-item.is-active .methodology-track-fill {
+    animation: track-fill var(--autoplay-ms, 20000ms) linear forwards;
+  }
+  .methodology-accordion.is-paused .methodology-progress-bar,
+  .methodology-accordion.is-paused .methodology-track-fill {
+    animation-play-state: paused;
+  }
+  @keyframes meth-prog  { to { width: 100%; } }
+  @keyframes track-fill { to { height: 100%; } }
+
+  /* ══ MOBILE — card activa ══ */
+
+  .mobile-phase-card.is-visible .mobile-phase-img { width: 13rem; }
+  .mobile-phase-card.is-visible .mobile-phase-desc {
+    max-height: 80px;
+    opacity: 1;
+  }
+</style>
+
 <script>
-  import { initScrollAnimations } from "@/scripts/observer";
-  initScrollAnimations();
+  const A = ["border-brand", "ring-1", "ring-brand"];
+  const I = ["border-gray-light"];
+
+  /* ══ MOBILE: IntersectionObserver ══ */
+  function initMobile() {
+    const cards = Array.from(
+      document.querySelectorAll<HTMLElement>(".mobile-phase-card")
+    );
+    if (!cards.length) return;
+
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          entry.target.classList.toggle("is-visible", entry.isIntersecting);
+        });
+      },
+      {
+        threshold: 1,   // se activa cuando el 55% de la card es visible
+        rootMargin: "0px",
+      }
+    );
+
+    cards.forEach((card) => obs.observe(card));
+  }
+
+  /* ══ DESKTOP: acordeón ══ */
+  function initDesktop() {
+    document.querySelectorAll<HTMLElement>(".methodology-accordion").forEach((root) => {
+      const clone = root.cloneNode(true) as HTMLElement;
+      root.parentNode!.replaceChild(clone, root);
+
+      const items = Array.from(clone.querySelectorAll<HTMLElement>(".methodology-item"));
+      const ms    = parseInt(clone.dataset.autoplay ?? "20000", 10);
+      let cur = 0, timer: ReturnType<typeof setInterval> | null = null, paused = false;
+
+      clone.style.setProperty("--autoplay-ms", `${ms}ms`);
+
+      const resetBars = (el: HTMLElement) => {
+        [".methodology-progress-bar", ".methodology-track-fill"].forEach((s) => {
+          const b = el.querySelector<HTMLElement>(s);
+          if (!b) return;
+          b.style.animation = "none";
+          void b.offsetWidth;
+          b.style.animation = "";
+        });
+      };
+
+      // Activa SOLO un item — siempre uno único abierto
+      const activate = (i: number) => {
+        items.forEach((item, idx) => {
+          const on = idx === i;
+          item.classList.toggle("is-active", on);
+          item.setAttribute("aria-selected", String(on));
+          item.classList.remove(...A, ...I);
+          item.classList.add(...(on ? A : I));
+          resetBars(item);
+        });
+        cur = i;
+      };
+
+      const start = () => {
+        if (timer) clearInterval(timer);
+        timer = setInterval(() => activate((cur + 1) % items.length), ms);
+      };
+      const stop = () => { if (timer) { clearInterval(timer); timer = null; } };
+
+      items.forEach((item, i) => {
+        // Hover — activa ese item como el único abierto
+        item.addEventListener("mouseenter", () => {
+          stop();
+          activate(i);   // cierra el anterior, abre este
+        });
+
+        item.addEventListener("mouseleave", () => {
+          if (!paused) start();
+        });
+
+        // Click — fija la selección y pausa/reanuda
+        item.addEventListener("click", () => {
+          if (i === cur && paused) {
+            paused = false;
+            clone.classList.remove("is-paused");
+            start();
+          } else {
+            paused = true;
+            clone.classList.add("is-paused");
+            stop();
+            activate(i);
+          }
+        });
+
+        // Teclado
+        item.addEventListener("keydown", (e: KeyboardEvent) => {
+          const map: Record<string, number> = {
+            ArrowRight: (i + 1) % items.length,
+            ArrowDown:  (i + 1) % items.length,
+            ArrowLeft:  (i - 1 + items.length) % items.length,
+            ArrowUp:    (i - 1 + items.length) % items.length,
+          };
+          if (!(e.key in map)) return;
+          e.preventDefault();
+          activate(map[e.key]!);
+          items[map[e.key]!].focus();
+          stop(); start();
+        });
+      });
+
+      document.addEventListener("visibilitychange", () =>
+        document.hidden ? stop() : (!paused && start())
+      );
+
+      activate(0);
+      start();
+    });
+  }
+
+  function init() {
+    initMobile();
+    initDesktop();
+  }
+
+  init();
+  document.addEventListener("astro:after-swap", init);
 </script>
