@@ -165,15 +165,15 @@ export const siteConfig = {
       "Soluciones de software, diseño web y automatización diseñadas para escalar tu negocio en mercados competitivos.",
     primaryButton: {
       text: "Ver Servicios",
-      href: "/services",
+      href: "#precio",
     },
     secondaryButton: {
       text: "Nuestro Portafolio",
-      href: "/portfolio",
+      href: "#portafolio",
     },
     image: "/generico.jpeg",
     metric: {
-      value: "+50",
+      value: "+20",
       label: "Proyectos Entregados",
     },
   },

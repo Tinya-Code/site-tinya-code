@@ -8,7 +8,7 @@
   }
 
   .titulo-seccion {
-    @apply font-rader text-3xl lg:text-5xl font-bold leading-snug;
+    @apply font-rader text-4xl lg:text-5xl font-bold leading-snug;
   }
 
   .subtitulo {

@@ -31,25 +31,6 @@ const seo = {
     </div>
   </section>
 
-  {/* 3. Custom Plan (bg-light) */}
-  <section class="section-base section-light">
-    <div class="container-main text-center max-w-4xl mx-auto space-y-8">
-      <h2 class="titulo-seccion text-dark">{pricing.custom.title}</h2>
-      <p class="text-dark/70 text-lg font-poppins text-balance">
-        {pricing.custom.text}
-      </p>
-      <div class="flex flex-wrap justify-center gap-6">
-        {
-          pricing.custom.badges.map((badge) => (
-            <div class="flex items-center gap-2 text-sm font-semibold font-poppins text-dark/70">
-              <span class="size-2 bg-brand inline-block" aria-hidden="true" />
-              {badge}
-            </div>
-          ))
-        }
-      </div>
-    </div>
-  </section>
 
   {/* 4. CTA (bg-brand) */}
   <CallToAction {...siteConfig.cta} />

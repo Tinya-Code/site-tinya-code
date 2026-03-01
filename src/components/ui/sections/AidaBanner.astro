@@ -33,14 +33,14 @@ const {
 <section class:list={["section-base", `section-${background}`]}>
   <div class="container-main">
     <div class="mb-12 text-center">
-      <p
+  <!--  <p
         class:list={[
           "font-poppins text-xs font-semibold uppercase tracking-widest mb-3",
           background === "brand" ? "text-white" : "text-brand",
         ]}
       >
         {modelLabel}
-      </p>
+      </p>-->   
       <h2
         class:list={[
           "titulo-seccion",
@@ -58,7 +58,7 @@ const {
         {subtitle}
       </p>
     </div>
-
+<!-- 
     <div class="flex flex-col md:flex-row gap-10 md:gap-6 max-w-4xl mx-auto">
       {
         phases.map(({ letter, phase, description }) => (
@@ -84,7 +84,7 @@ const {
         ))
       }
     </div>
-
+-->
     <div class="flex flex-col sm:flex-row items-center justify-center gap-6 mt-12">
       <Button
         href={ctaHref}
@@ -96,8 +96,8 @@ const {
           badges.map((badge) => (
             <span
               class:list={[
-                "font-poppins text-xs",
-                background === "brand" || background === "dark" ? "text-white/60" : "text-gray",
+                "font-poppins italic text-sm",
+                background === "brand" || background === "dark" ? "text-white/60" : "text-brand",
               ]}
             >
               {badge}

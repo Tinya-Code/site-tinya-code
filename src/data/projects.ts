@@ -13,7 +13,7 @@ export const projects: Project[] = [
     title: "Portal Inmobiliario Premium",
     description: "Plataforma de alta gama para la visualización y venta de propiedades de lujo.",
     category: "Diseño Web",
-    image: "/generico.jpeg",
+    image: "/logos/logo-repiit.svg",
     href: "/projects/inmobiliaria-lujo",
   },
   {

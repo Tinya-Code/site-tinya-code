@@ -49,7 +49,7 @@ export const webPricing: PricingPlan[] = [
       "Integración con Analytics",
       "Formularios dinámicos",
       "Capacitación de uso",
-      "Soporte por 90 días",
+      "Soporte por 60 días",
     ],
     ctaText: "Elegir E-commerce",
     ctaHref: "/contact?plan=ecommerce",
@@ -61,8 +61,8 @@ export const webPricing: PricingPlan[] = [
     name: "SaaS / Corporate",
     price: "Desde S/ 5,000",
     priceMonthly: 5000,
-    priceAnnual: 4500, // 10% de descuento en pago completo
-    period: "proyecto",
+    priceAnnual: 5000, // 10% de descuento en pago completo
+    period: "desde",
     description: "Soluciones robustas y a medida para software corporativo o SaaS.",
     features: [
       "Arquitectura personalizada",
@@ -70,7 +70,7 @@ export const webPricing: PricingPlan[] = [
       "Sistemas de gestión interna",
       "Seguridad avanzada",
       "Escalabilidad en la nube",
-      "Soporte prioritario 24/7",
+      "Soporte prioritario 24/7 durante el proyecto",
     ],
     ctaText: "Contactar ventas",
     ctaHref: "/contact?plan=saas",

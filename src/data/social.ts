@@ -1,7 +1,7 @@
 export const socialLinks = [
   {
     name: "WhatsApp",
-    href: "https://wa.me/51900000000",
+    href: "https://wa.me/51924932128",
     icon: "mdi:whatsapp",
     label: "Contactar por WhatsApp",
   },

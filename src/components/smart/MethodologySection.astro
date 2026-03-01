@@ -6,12 +6,13 @@ import { siteConfig } from "@/data/siteConfig";
 
 // Smart component: Orchestrates methodology data and section structure
 const { title, subtitle } = siteConfig.home.methodology;
+const {color = "light"} = Astro.props;
 ---
 
-<section class="section-base section-light py-12">
+<section class={`section-base section-${color} py-12`}>
   <div class="container-main space-y-2">
     <SectionHeader title={title} subtitle={subtitle} />
-    <Methodology phases={methodologyContent} autoplayMs={10000}/>
+    <Methodology phases={methodologyContent} autoplayMs={10000} color={color}/>
   </div>
 </section>
 

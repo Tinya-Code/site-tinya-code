@@ -31,38 +31,9 @@ const seo = {
     </div>
   </section>
 
-  {/* 3. Trust Labels (bg-light) */}
-  <section class="section-base section-light">
-    <div class="container-main">
-      <div class="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-30 grayscale">
-        {
-          testimonials.trustLabels.map((label) => (
-            <div class="text-2xl font-poppins font-bold uppercase tracking-tighter">{label}</div>
-          ))
-        }
-      </div>
-    </div>
-  </section>
 
-  {/* 4. Final CTA (bg-dark) */}
-  <section class="section-base section-dark">
-    <div class="container-main text-center space-y-8">
-      <h2 class="text-3xl md:text-4xl font-poppins font-bold italic text-white">
-        {testimonials.cta.title}
-      </h2>
-      <p class="text-white/70 text-lg max-w-2xl mx-auto font-poppins">
-        {testimonials.cta.text}
-      </p>
-      <div class="pt-4">
-        <a
-          href="/contact"
-          class="inline-block bg-brand text-white font-poppins font-bold px-10 py-4 rounded-sm hover:translate-y-[-2px] transition-all duration-200"
-        >
-          {testimonials.cta.buttonText}
-        </a>
-      </div>
-    </div>
-  </section>
+
+
 
   {/* 5. AidaBanner (bg-light) */}
   <AidaBannerSection />

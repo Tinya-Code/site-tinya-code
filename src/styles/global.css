@@ -227,7 +227,7 @@
   }
 
   .label-base {
-    @apply block font-poppins text-sm font-medium text-dark mb-1;
+    @apply block text-lg font-poppins text-[11px] uppercase tracking-wider font-semibold text-dark mb-1;
   }
 
   /* ── Navegación ── */

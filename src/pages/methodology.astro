@@ -4,6 +4,7 @@ import MethodologySection from "@/components/smart/MethodologySection.astro";
 import AidaBannerSection from "@/components/smart/AidaBannerSection.astro";
 import { siteConfig } from "@/data/siteConfig";
 import { Image } from "astro:assets";
+import PageHero from "@/components/ui/sections/PageHero.astro";
 
 const { methodology } = siteConfig.pages;
 
@@ -16,28 +17,28 @@ const seo = {
 
 <BaseLayout {...seo}>
   {/* 1. Hero / Introduction (bg-white) */}
-  <section class="section-base section-white">
-    <div class="container-main text-center">
-      <div class="mb-12">
-        <h1 class="titulo-hero mb-4">{methodology.title}</h1>
-        <p class="subtitulo mx-auto">{methodology.subtitle}</p>
-      </div>
-    </div>
-  </section>
+
+    <PageHero
+  categoryLabel="Metodologias"
+  title={methodology.title}
+  subtitle={methodology.subtitle}
+  align="left"
+>
+</PageHero>
 
   {/* 2. Methodology Steps (bg-light via MethodologySection) */}
-  <MethodologySection />
+  <MethodologySection color="white" />
 
   {/* 3. Focus Section (bg-white) */}
   <section class="section-base section-white">
     <div class="container-main">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         <div class="space-y-6">
-          <h2 class="text-3xl font-poppins font-bold text-dark italic">
+          <h2 class="titulo-seccion text-dark italic">
             {methodology.focus.title}
           </h2>
           <p
-            class="text-dark/70 text-lg leading-relaxed font-poppins"
+            class="texto-cuerpo "
             set:html={methodology.focus.text.replace(
               "**AIDA (Atención, Interés, Deseo, Acción)**",
               '<strong class="font-bold text-brand">AIDA (Atención, Interés, Deseo, Acción)</strong>',
@@ -48,7 +49,7 @@ const seo = {
               methodology.focus.items.map((item) => (
                 <li class="flex items-start gap-3 font-poppins text-dark/80">
                   <span class="text-brand font-bold">✓</span>
-                  <span class="font-medium">{item}</span>
+                  <span class="texto-apoyo">{item}</span>
                 </li>
               ))
             }
@@ -56,11 +57,11 @@ const seo = {
         </div>
         <div class="relative rounded-sm overflow-hidden border border-accent/20">
           <Image
-            src="/generico.jpeg"
+            src="https://i.pinimg.com/736x/a0/4e/f4/a04ef437c08668c14b068287b75a77ed.jpg"
             alt={methodology.focus.title}
             width={800}
             height={600}
-            class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+            class="w-full h-full max-h-100 object-cover  transition-all duration-700"
           />
         </div>
       </div>

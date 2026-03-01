@@ -133,15 +133,15 @@ export const navLinks: NavLink[] = [
 
 export const footerLinks = {
   main: [
-    { text: "Diseño Web", href: "/services/web-design" },
-    { text: "Tiendas Virtuales", href: "/services/ecommerce" },
-    { text: "Landing Pages", href: "/services/landing-pages" },
-    { text: "Software a Medida", href: "/services/software" },
-    { text: "Excel y AppScript", href: "/services/excel-appscript" },
-    { text: "SaaS", href: "/services/saas" },
+    { text: "Diseño Web",href: "#precio" },//href: "/services/web-design" },
+    { text: "Tiendas Virtuales",href: "#precio" }, //href: "/services/ecommerce" },
+    { text: "Landing Pages",href: "#precio" }, //href: "/services/landing-pages" },
+  //  { text: "Software a Medida", href: "/services/software" },
+  //  { text: "Excel y AppScript", href: "/services/excel-appscript" },
+    { text: "SaaS", href: "#precio" }//href: "/services/saas" },
   ],
   company: [
-    { text: "Nosotros", href: "/about" },
+    //{ text: "Nosotros", href: "/about" },
     { text: "Metodología", href: "/methodology" },
     { text: "Precios", href: "/pricing" },
     { text: "Testimonios", href: "/testimonials" },

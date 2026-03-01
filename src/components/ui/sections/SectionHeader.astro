@@ -14,7 +14,7 @@ const { title, subtitle, centered = false, class: className, as: Tag = "h2" } = 
 
 <div
   class:list={[
-    "mb-10 md:mb-14",
+    "mb-8 ",
     centered ? "text-center mx-auto max-w-3xl" : "text-left",
     className,
   ]}
@@ -25,13 +25,13 @@ const { title, subtitle, centered = false, class: className, as: Tag = "h2" } = 
 
   {
     !centered && (
-      <span class="line-draw animate-on-scroll w-12 mt-3 mb-8 animate-delay-2 border-brand" />
+      <span class="line-draw animate-on-scroll w-12 mt-3 mb-4 animate-delay-2 border-brand" />
     )
   }
 
   {
     subtitle && (
-      <p class:list={[" animate-on-scroll animate-delay-2", centered && "mx-auto"]}>
+      <p class:list={["  animate-on-scroll max-w-4xl animate-delay-2", centered && "mx-auto"]}>
         {subtitle}
       </p>
     )
