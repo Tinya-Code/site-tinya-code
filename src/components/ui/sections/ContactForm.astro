@@ -18,83 +18,212 @@ interface Props {
     service: string;
     message: string;
   };
-  services: {
-    label: string;
-    value: string;
-  }[];
 }
 
-const { labels, placeholders, services } = Astro.props;
+const { labels, placeholders } = Astro.props;
+
+const GOOGLE_FORM_ACTION = "https://docs.google.com/forms/d/1yjNrP5vCwX9zRJ6w5z5eM6Z4t4616aY2JyLfQZp1U4A/formResponse";
+
+const FIELD_IDS = {
+  name: "entry.2033182916",
+  email: "entry.183097233",
+  phone: "entry.1392004704",
+  company: "entry.1220292383",
+  service: "entry.1097828001",
+  message: "entry.1860060751",
+};
 ---
 
-<form class="space-y-5  w-full">
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-    <div>
-      <label for="name" class="label-base ">{labels.name}</label>
-      <input
-        type="text"
-        id="name"
-        name="name"
-        placeholder={placeholders.name}
-        required
-        class="input-base"
-      />
-    </div>
-    <div>
-      <label for="email" class="label-base">{labels.email}</label>
-      <input
-        type="email"
-        id="email"
-        name="email"
-        placeholder={placeholders.email}
-        required
-        class="input-base"
-      />
-    </div>
-  </div>
+<div class="w-full">
+  <form 
+    id="contactForm" 
+    action={GOOGLE_FORM_ACTION} 
+    method="POST" 
+    class="space-y-5"
+  >
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <!-- Nombre completo -->
+      <div>
+        <label for="nombre" class="block font-poppins text-sm font-medium text-dark mb-1">{labels.name}</label>
+        <input 
+          type="text" 
+          id="nombre" 
+          name={FIELD_IDS.name} 
+          placeholder={placeholders.name} 
+          required
+          class="w-full bg-white border border-gray-light rounded-sm px-4 py-3 font-poppins text-sm text-dark placeholder:text-gray focus:outline-none focus:border-brand transition-colors duration-200"
+        >
+      </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-    <div>
-      <label for="company" class="label-base">{labels.company}</label>
-      <input
-        type="text"
-        id="company"
-        name="company"
-        placeholder={placeholders.company}
-        class="input-base"
-      />
+      <!-- Correo electrónico -->
+      <div>
+        <label for="email" class="block font-poppins text-sm font-medium text-dark mb-1">{labels.email}</label>
+        <input 
+          type="email" 
+          id="email" 
+          name={FIELD_IDS.email} 
+          placeholder={placeholders.email} 
+          required
+          class="w-full bg-white border border-gray-light rounded-sm px-4 py-3 font-poppins text-sm text-dark placeholder:text-gray focus:outline-none focus:border-brand transition-colors duration-200"
+        >
+      </div>
     </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <!-- Teléfono -->
+      <div>
+        <label for="telefono" class="block font-poppins text-sm font-medium text-dark mb-1">Número de teléfono / WhatsApp</label>
+        <input 
+          type="tel" 
+          id="telefono" 
+          name={FIELD_IDS.phone} 
+          placeholder="Ej: +51 999 999 999" 
+          required
+          class="w-full bg-white border border-gray-light rounded-sm px-4 py-3 font-poppins text-sm text-dark placeholder:text-gray focus:outline-none focus:border-brand transition-colors duration-200"
+        >
+      </div>
+
+      <!-- Empresa -->
+      <div>
+        <label for="empresa" class="block font-poppins text-sm font-medium text-dark mb-1">{labels.company}</label>
+        <input 
+          type="text" 
+          id="empresa" 
+          name={FIELD_IDS.company} 
+          placeholder={placeholders.company} 
+          class="w-full bg-white border border-gray-light rounded-sm px-4 py-3 font-poppins text-sm text-dark placeholder:text-gray focus:outline-none focus:border-brand transition-colors duration-200"
+        >
+      </div>
+    </div>
+
+    <!-- Servicio de interés -->
     <div>
-      <label for="service" class="label-base">{labels.service}</label>
-      <select id="service" name="service" class="input-base">
-        <option value="">{placeholders.service}</option>
-        {services.map((service) => <option value={service.value}>{service.label}</option>)}
+      <label for="servicio" class="block font-poppins text-sm font-medium text-dark mb-1">{labels.service}</label>
+      <select 
+        id="servicio" 
+        name={FIELD_IDS.service} 
+        required
+        class="w-full bg-white border border-gray-light rounded-sm px-4 py-3 font-poppins text-sm text-dark placeholder:text-gray focus:outline-none focus:border-brand transition-colors duration-200 appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2024%2024%22%20stroke%3D%22currentColor%22%3E%3Cpath%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%222%22%20d%3D%22M19%209l-7%207-7-7%22%20%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-[right_1rem_center] bg-no-repeat"
+      >
+        <option value="" disabled selected>Selecciona un servicio</option>
+        <option value="Landing Page">Landing Page</option>
+        <option value="Sitio web institucional (multi página)">Sitio web institucional (multi página)</option>
+        <option value="Ecommerce / Tienda online">Ecommerce / Tienda online</option>
+        <option value="Blog">Blog</option>
+        <option value="Desarrollo a medida">Desarrollo a medida</option>
+        <option value="Automatización con Google Apps Script / Excel">Automatización con Google Apps Script / Excel</option>
+        <option value="SaaS / Plataforma personalizada">SaaS / Plataforma personalizada</option>
+        <option value="Otros">Otros (especificar abajo)</option>
       </select>
     </div>
-  </div>
 
-  <div>
-    <label for="message" class="label-base">{labels.message}</label>
-    <textarea
-      id="message"
-      name="message"
-      rows="5"
-      placeholder={placeholders.message}
-      required
-      class="textarea-base"></textarea>
-  </div>
-
-  <div
-    class="flex flex-col sm:flex-row items-center justify-between gap-6 pt-6 border-t border-gray-light/20"
-  >
-    <div class="flex items-center gap-3">
-      <div class="size-2 rounded-full bg-brand/40 animate-pulse"></div>
-      <p class="font-poppins text-[11px] text-gray uppercase tracking-wider font-medium">
-        {labels.privacy}
-      </p>
+    <!-- Campo adicional para "Otros" (oculto por defecto) -->
+    <div id="wrapperOtros" class="hidden animate-in fade-in slide-in-from-top-2 duration-300">
+      <label for="otrosServicio" class="block font-poppins text-sm font-medium text-dark mb-1">¿Cuál es el servicio que necesitas?</label>
+      <input 
+        type="text" 
+        id="otrosServicio" 
+        placeholder="Describe brevemente el servicio..." 
+        class="w-full bg-white border border-gray-light rounded-sm px-4 py-3 font-poppins text-sm text-dark placeholder:text-gray focus:outline-none focus:border-brand transition-colors duration-200"
+      >
     </div>
-    <Button type="submit" class="w-full sm:w-auto !px-12 !py-4 shadow-lg shadow-brand/10">
-      {labels.submit}
-    </Button>
+
+    <!-- Mensaje -->
+    <div>
+      <label for="mensaje" class="block font-poppins text-sm font-medium text-dark mb-1">{labels.message}</label>
+      <textarea 
+        id="mensaje" 
+        name={FIELD_IDS.message} 
+        placeholder={placeholders.message}
+        class="w-full bg-white border border-gray-light rounded-sm px-4 py-3 font-poppins text-sm text-dark placeholder:text-gray focus:outline-none focus:border-brand transition-colors duration-200 resize-none min-h-32"
+      ></textarea>
+    </div>
+
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-6 pt-6 border-t border-gray-light/20">
+      <div class="flex items-center gap-3">
+        <div class="size-2 rounded-full bg-brand/40 animate-pulse"></div>
+        <p class="font-poppins text-[11px] text-gray uppercase tracking-wider font-medium">
+          {labels.privacy}
+        </p>
+      </div>
+      <Button 
+        type="submit" 
+        id="submitBtn"
+        class="w-full sm:w-auto !px-12 !py-4 shadow-lg shadow-brand/10"
+      >
+        {labels.submit}
+      </Button>
+    </div>
+  </form>
+
+  <!-- Success Message -->
+  <div 
+    id="mensajeExito" 
+    class="hidden mt-6 p-6 bg-brand/5 border border-brand/20 rounded-sm"
+  >
+    <p class="font-poppins text-sm font-bold text-brand text-center">
+      ¡Gracias! Te contactaré en menos de 24 horas.
+    </p>
   </div>
-</form>
+</div>
+
+<script>
+  const form = document.getElementById("contactForm") as HTMLFormElement;
+  const mensajeExito = document.getElementById("mensajeExito");
+  const submitBtn = document.getElementById("submitBtn");
+  const selectServicio = document.getElementById("servicio") as HTMLSelectElement;
+  const wrapperOtros = document.getElementById("wrapperOtros");
+  const inputOtros = document.getElementById("otrosServicio") as HTMLInputElement;
+
+  if (form && mensajeExito && submitBtn && selectServicio && wrapperOtros && inputOtros) {
+    
+    // Toggle "Otros" field
+    selectServicio.addEventListener("change", () => {
+      if (selectServicio.value === "Otros") {
+        wrapperOtros.classList.remove("hidden");
+        inputOtros.setAttribute("required", "true");
+        inputOtros.focus();
+      } else {
+        wrapperOtros.classList.add("hidden");
+        inputOtros.removeAttribute("required");
+      }
+    });
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      
+      // Basic UI feedback
+      const originalBtnText = submitBtn.textContent;
+      submitBtn.textContent = "Enviando...";
+      submitBtn.setAttribute("disabled", "true");
+
+      try {
+        const formData = new FormData(form);
+        
+        // If "Otros" is selected, override the service entry with the manual text
+        if (selectServicio.value === "Otros") {
+          const serviceFieldId = selectServicio.getAttribute("name");
+          if (serviceFieldId) {
+            formData.set(serviceFieldId, inputOtros.value);
+          }
+        }
+        
+        await fetch(form.action, {
+          method: "POST",
+          body: formData,
+          mode: "no-cors"
+        });
+
+        // Show success state
+        form.classList.add("hidden");
+        mensajeExito.classList.remove("hidden");
+        form.reset();
+        wrapperOtros.classList.add("hidden");
+      } catch (error) {
+        alert("Hubo un error al enviar el formulario. Por favor, intenta de nuevo o contáctanos directamente.");
+        submitBtn.textContent = originalBtnText;
+        submitBtn.removeAttribute("disabled");
+      }
+    });
+  }
+</script>

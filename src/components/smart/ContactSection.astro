@@ -1,0 +1,104 @@
+---
+import ContactForm from "@/components/ui/sections/ContactForm.astro";
+import SectionHeader from "@/components/ui/sections/SectionHeader.astro";
+import Icon from "@/components/ui/common/Icon.astro";
+import { contactData, socialLinks } from "@/data/social";
+import { siteConfig } from "@/data/siteConfig";
+
+interface Props {
+  variant?: "white" | "light";
+  isMainHeading?: boolean;
+}
+
+const { variant = "white", isMainHeading = false } = Astro.props;
+const { contact: contactLabels } = siteConfig.pages;
+---
+
+<section class:list={["section-base py-4 w-full flex flex-col container-main", variant === "white" ? "section-white" : "section-light"]}>
+  {isMainHeading ? (
+    <div class="mb-12">
+      <h1 class="titulo-hero mb-4">{contactLabels.title}</h1>
+      <p class="subtitulo">{contactLabels.subtitle}</p>
+    </div>
+  ) : (
+    <SectionHeader
+      title={contactLabels.title}
+      subtitle={contactLabels.subtitle}
+      variant={variant}
+    />
+  )}
+
+  <div class="flex flex-col gap-4 justify-between items-start md:flex-row w-full">
+    {/* Sidebar Section */}
+    <div class="lg:col-span-4 rounded-sm bg-light min-w-60 hidden md:flex md:flex-col p-4 h-auto space-y-10">
+      <div class="space-y-6">
+        <h3 class="font-poppins text-sm text-dark uppercase tracking-wider font-semibold">
+          {contactLabels.sidebar}
+        </h3>
+        <div class="space-y-4">
+          <a
+            href={`mailto:${contactData.email}`}
+            class="flex items-center gap-4 text-gray hover:text-brand transition-colors group"
+          >
+            <Icon
+              name="mdi:email-outline"
+              size={5}
+              class="text-dark group-hover:text-brand transition-colors"
+              ariaHidden={true}
+            />
+            <span class="text-sm font-poppins font-medium">{contactData.email}</span>
+          </a>
+          <a
+            href={`tel:${contactData.phone}`}
+            class="flex items-center gap-4 text-gray hover:text-brand transition-colors group"
+          >
+            <Icon
+              name="mdi:phone-outline"
+              size={5}
+              class="text-dark group-hover:text-brand transition-colors"
+              ariaHidden={true}
+            />
+            <span class="text-sm font-poppins font-medium">{contactData.phone}</span>
+          </a>
+          <div class="flex items-center gap-4 text-gray">
+            <Icon name="mdi:map-marker-outline" size={5} class="text-dark" ariaHidden={true} />
+            <span class="text-sm font-poppins font-medium">
+              {contactData.address} {isMainHeading && "(Global Delivery)"}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <h3 class="font-poppins text-xs text-dark uppercase tracking-wider font-semibold">
+          {contactLabels.social}
+        </h3>
+        <div class="flex gap-4">
+          {
+            socialLinks.map((net) => (
+              <a
+                href={net.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="size-10 flex items-center justify-center text-dark hover:text-brand transition-colors"
+                aria-label={net.label}
+              >
+                <Icon name={net.icon} size={6} ariaHidden={true} />
+              </a>
+            ))
+          }
+        </div>
+      </div>
+
+ 
+    </div>
+
+    {/* Form Section */}
+    <div class="p-4 bg-light rounded-sm w-full">
+      <ContactForm
+        labels={siteConfig.contactForm.labels}
+        placeholders={siteConfig.contactForm.placeholders}
+      />
+    </div>
+  </div>
+</section>

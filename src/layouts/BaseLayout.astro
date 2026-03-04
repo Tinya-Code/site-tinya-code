@@ -2,6 +2,8 @@
 import BaseHead from "@/components/ui/common/BaseHead.astro";
 import Navbar from "@/components/ui/common/Navbar.astro";
 import Footer from "@/components/ui/common/Footer.astro";
+import WhatsAppButton from "@/components/ui/common/WhatsAppButton.astro";
+import ScrollToTop from "@/components/ui/common/ScrollToTop.astro";
 import SchemaOrganization from "@/components/ui/common/SchemaOrganization.astro";
 import { siteConfig } from "@/data/siteConfig";
 import { navLinks, footerLinks } from "@/data/navigation";
@@ -79,5 +81,7 @@ const socialUrls = socialLinks.map((link) => link.href);
       footerColumns={siteConfig.footer.columns}
       copyrightText={siteConfig.footer.copyright}
     />
+    <WhatsAppButton />
+    <ScrollToTop />
   </body>
 </html>

@@ -6,15 +6,14 @@
   --font-poppins: "Poppins", sans-serif;
   --font-rader: "RaderBoldItalic", serif;
 
-  /* Colores Activos */
-  --color-dark: #141414;
-  --color-light: #edf1e8;
-  --color-accent: #FFC312;
+  --color-dark: #141420;       /* dark con pizca de azul, conecta con gray */
+  --color-light: #f0f2f7;      /* frío-neutro, en sintonía con gray */
+  --color-accent: #ffd166;     /* amarillo-oro, contraste limpio */
   --color-white: #ffffff;
-  --color-brand:#ff9f43;
-  --color-brand-dark: #e0b15c;
-  --color-gray: #60739f;
-  --color-gray-light: #e5e9f0;
+  --color-brand: #ff9f43;      /* sin cambio */
+  --color-brand-dark: #d4893a; /* más apagado, armoniza con el azul */
+  --color-gray: #60739f;       /* sin cambio */
+  --color-gray-light: #dde3ef; /* mismo tono azulado */
 }
 
 /* ─── Fuentes personalizadas ──────────────────────────────────────────────── */

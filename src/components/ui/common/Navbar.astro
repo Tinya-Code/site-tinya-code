@@ -29,30 +29,30 @@ function isSubActive(sublinks?: SubLink[]): boolean {
   id="main-header"
   class="sticky top-0 h-15 md:h-23 z-50 w-full bg-white  transition-all duration-300"
 >
-<section class="w-full h-8 md:flex  items-center bg-gray-light text-sm hidden ">
-  <div class=" w-full h-8 container-main flex items-center justify-around gap-6 py-1">
+<section class="w-full h-8 md:flex  items-center bg-black text-sm hidden ">
+  <div class=" w-full h-8 container-main flex items-center justify-start gap-6 py-1">
     <!-- Teléfono -->
     <a href={`tel:${contactData.phone}`} class="flex items-center gap-1">
-      <Icon name="mdi:phone" class="w-4 h-4 text-brand" />
-      <span>{contactData.phone}</span>
+      <Icon name="mdi:phone" class="w-4 h-4 text-white hover:text-blue-400" />
+      <span class="text-white ">{contactData.phone}</span>
     </a>
 
     <!-- Email -->
     <a href={`mailto:${contactData.email}`} class="flex items-center gap-1">
-      <Icon name="mdi:email" class="w-4 h-4 text-brand" />
-      <span>{contactData.email}</span>
+      <Icon name="mdi:email" class="w-4 h-4 text-white" />
+      <span class="text-white ">{contactData.email}</span>
     </a>
 
     <!-- Dirección -->
     <div class="flex items-center gap-1">
-      <Icon name="mdi:map-marker" class="w-4 h-4 text-brand" />
-      <span>{contactData.address}</span>
+      <Icon name="mdi:map-marker" class="w-4 h-4 text-white hover:text-orange-400" />
+      <span class="text-white ">{contactData.address}</span>
     </div>
 
     <!-- WhatsApp -->
     <a href={`https://wa.me/${contactData.whatsapp.replace(/[^0-9]/g, '')}`} target="_blank" class="flex items-center gap-1">
-      <Icon name="mdi:whatsapp" class="w-4 h-4 text-brand" />
-      <span>{contactData.whatsapp}</span>
+      <Icon name="mdi:whatsapp" class="w-4 h-4 text-white hover:text-emerald-400" />
+      <span class="text-white ">{contactData.whatsapp}</span>
     </a>
   </div>
 </section>

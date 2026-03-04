@@ -7,33 +7,55 @@ export interface Props {
   centered?: boolean;
   class?: string;
   as?: HeadingTag;
+  variant: "light" | "dark" | "white" ;
 }
 
-const { title, subtitle, centered = false, class: className, as: Tag = "h2" } = Astro.props;
+const {
+  title,
+  subtitle,
+  centered = false,
+  class: className,
+  as: Tag = "h2",
+  variant = "light",
+} = Astro.props as Props;
+
+// Colores según fondo — todos pasan WCAG AA mínimo 4.5:1
+const styles = {
+  light: {
+    title:    "text-dark",          // #141420 sobre #f0f2f7 → ~14:1 ✓
+    subtitle: "text-dark/60",       // suficiente contraste sobre claro ✓
+  },
+  white: {
+    title:    "text-dark",          // #141420 sobre #ffffff → ~16:1 ✓
+    subtitle: "text-gray",          // #60739f sobre #ffffff → ~4.6:1 ✓ (justo)
+  },
+  dark: {
+    title:    "text-white",         // #ffffff sobre #141420 → ~16:1 ✓
+    subtitle: "text-white/60",      // blanco al 60% sobre dark → ~6:1 ✓
+  },
+};
+
+const { title: titleColor, subtitle: subtitleColor } = styles[variant];
 ---
 
 <div
   class:list={[
-    "mb-8 ",
-    centered ? "text-center mx-auto max-w-3xl" : "text-left",
+    "mb-10",
+    centered ? "text-center mx-auto max-w-2xl" : "text-left",
     className,
   ]}
 >
-  <Tag class="titulo-seccion  mb-4 animate-on-scroll">
+  <Tag class:list={["titulo-seccion animate-on-scroll", titleColor]}>
     {title}
   </Tag>
 
-  {
-    !centered && (
-      <span class="line-draw animate-on-scroll w-12 mt-3 mb-4 animate-delay-2 border-brand" />
-    )
-  }
-
-  {
-    subtitle && (
-      <p class:list={["  animate-on-scroll max-w-4xl animate-delay-2", centered && "mx-auto"]}>
-        {subtitle}
-      </p>
-    )
-  }
+  {subtitle && (
+    <p class:list={[
+      "texto-cuerpo mt-3 animate-on-scroll animate-delay-2 max-w-2xl font-normal",
+      subtitleColor,
+      centered && "mx-auto",
+    ]}>
+      {subtitle}
+    </p>
+  )}
 </div>

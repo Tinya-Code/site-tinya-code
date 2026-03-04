@@ -1,0 +1,42 @@
+---
+import { Icon } from "astro-icon/components";
+---
+
+<button
+  id="scroll-to-top"
+  class:list={[
+    "fixed bottom-24 right-6 z-[60]",
+    "flex items-center justify-center",
+    "bg-dark text-white border border-accent/20",
+    "size-12 rounded-sm shadow-lg hover:bg-brand",
+    "opacity-0 invisible translate-y-4",
+    "transition-all duration-300 pointer-events-none",
+    "focus:ring-2 focus:ring-brand focus:outline-none",
+  ]}
+  aria-label="Subir al principio de la página"
+>
+  <Icon name="mdi:chevron-up" class="size-6" />
+</button>
+
+<script>
+  const scrollBtn = document.getElementById("scroll-to-top");
+
+  if (scrollBtn) {
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 300) {
+        scrollBtn.classList.remove("opacity-0", "invisible", "translate-y-4", "pointer-events-none");
+        scrollBtn.classList.add("opacity-100", "visible", "translate-y-0", "pointer-events-auto");
+      } else {
+        scrollBtn.classList.add("opacity-0", "invisible", "translate-y-4", "pointer-events-none");
+        scrollBtn.classList.remove("opacity-100", "visible", "translate-y-0", "pointer-events-auto");
+      }
+    });
+
+    scrollBtn.addEventListener("click", () => {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    });
+  }
+</script>

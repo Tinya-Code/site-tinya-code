@@ -31,7 +31,7 @@ export const siteConfig = {
   },
   testimonials: {
     title: "Lo que dicen nuestros clientes",
-    subtitle: "Más de 50 clientes en Perú y Latinoamérica han confiado en nosotros. Sus testimonios reflejan proyectos que aumentaron ventas, mejoraron procesos y fortalecieron su marca.",
+    subtitle: "Más de 25 clientes en Perú y Latinoamérica han confiado en nosotros. Sus testimonios reflejan proyectos que aumentaron ventas, mejoraron procesos y fortalecieron su marca.",
   },
   portfolio: {
     title: "Nuestro Portafolio",
@@ -54,7 +54,7 @@ export const siteConfig = {
           'En Tinya Code, fusionamos la estética premium con una arquitectura técnica robusta. Nuestro objetivo no es solo que tu web "se vea bien", sino que trabaje para ti 24/7.',
       },
   stats: [
-  { value: "5+", label: "Años Experiencia" },
+  { value: "3+", label: "Años Experiencia" },
   { value: "20+", label: "Clientes Activos" },
   { value: "100%", label: "Dedicación" },
   { value: "24/7", label: "Soporte" },
@@ -171,7 +171,7 @@ export const siteConfig = {
       text: "Nuestro Portafolio",
       href: "#portafolio",
     },
-    image: "/generico.jpeg",
+    image: "/astro.gif",
     metric: {
       value: "+20",
       label: "Proyectos Entregados",

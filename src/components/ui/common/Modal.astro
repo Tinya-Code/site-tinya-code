@@ -1,0 +1,133 @@
+---
+import Icon from "./Icon.astro";
+
+interface Props {
+  id: string;
+}
+
+const { id } = Astro.props;
+---
+
+<dialog
+  id={id}
+  class="modal-dialog fixed inset-0 z-[100] w-full h-full max-w-none max-h-none bg-transparent m-0 p-0 border-none backdrop:bg-dark/80 backdrop:backdrop-blur-sm"
+>
+  {/* Global confetti canvas for the modal */}
+  <canvas 
+    id={`${id}-confetti`} 
+    class="pointer-events-none absolute inset-0 z-[110] w-full h-full"
+  ></canvas>
+
+  <div class="flex items-center justify-center min-h-screen p-4">
+    <div 
+      class="modal-content relative bg-white rounded-sm w-full max-w-xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300"
+      role="document"
+    >
+      {/* Close Button */}
+      <button
+        type="button"
+        class="close-modal absolute top-4 right-4 z-10 p-2 text-dark/40 hover:text-brand transition-colors focus:outline-none"
+        aria-label="Cerrar modal"
+        data-modal-id={id}
+      >
+        <Icon name="mdi:close" size={6} />
+      </button>
+
+      <div class="modal-body p-6 md:p-8">
+        <slot />
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<style>
+  /* Base Dialog Styles */
+  .modal-dialog {
+    display: none;
+    background: transparent;
+    border: none;
+  }
+
+  .modal-dialog[open] {
+    display: block;
+  }
+
+  /* Backdrop Custom Styling */
+  .modal-dialog::backdrop {
+    background: rgba(20, 20, 32, 0.8);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    transition: opacity 0.3s ease-out;
+  }
+
+  .modal-dialog[open]::backdrop {
+    opacity: 1;
+  }
+
+  /* Entrance Animations */
+  .modal-content {
+    animation: modal-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  @keyframes modal-in {
+    from {
+      opacity: 0;
+      transform: scale(0.9) translateY(20px);
+      filter: blur(10px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+      filter: blur(0);
+    }
+  }
+
+  /* Exit Animations (Optional if using JS close) */
+  .modal-content.closing {
+    animation: modal-out 0.2s ease-in forwards;
+  }
+
+  @keyframes modal-out {
+    to {
+      opacity: 0;
+      transform: scale(0.95) translateY(5px);
+    }
+  }
+</style>
+
+<script>
+  // Utility to handle modal interactions
+  const initModals = () => {
+    const modals = document.querySelectorAll<HTMLDialogElement>('.modal-dialog');
+    const closeButtons = document.querySelectorAll('.close-modal');
+
+    closeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const modalId = btn.getAttribute('data-modal-id');
+        if (modalId) {
+          const modal = document.getElementById(modalId) as HTMLDialogElement;
+          modal?.close();
+        }
+      });
+    });
+
+    // Close on backdrop click (native dialog behavior enhancement)
+    modals.forEach(modal => {
+      modal.addEventListener('click', (e) => {
+        const rect = modal.getBoundingClientRect();
+        const isInDialog = (
+          rect.top <= e.clientY &&
+          e.clientY <= rect.top + rect.height &&
+          rect.left <= e.clientX &&
+          e.clientX <= rect.left + rect.width
+        );
+        if (!isInDialog) {
+          modal.close();
+        }
+      });
+    });
+  };
+
+  initModals();
+  document.addEventListener('astro:after-swap', initModals);
+</script>

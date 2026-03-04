@@ -7,10 +7,9 @@
     @apply font-rader text-5xl lg:text-7xl font-bold leading-tight tracking-tight;
   }
 
-  .titulo-seccion {
-    @apply font-rader text-4xl lg:text-5xl font-bold leading-snug;
-  }
-
+.titulo-seccion {
+  @apply font-rader text-4xl lg:text-5xl font-bold leading-snug tracking-tight;
+}
   .subtitulo {
     @apply font-poppins text-lg lg:text-xl font-medium;
   }

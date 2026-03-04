@@ -1,6 +1,6 @@
 ---
 import Icon from "../common/Icon.astro";
-import { Image } from "astro:assets";
+import Image from "astro/components/Image.astro";
 
 interface Props {
   name: string;
@@ -14,45 +14,65 @@ interface Props {
 const { name, role, company, content, avatar, rating = 5 } = Astro.props;
 ---
 
-<div class="flex flex-col gap-6 h-full border-l-2 border-brand pl-6">
-  <!-- Rating Stars -->
-  <div class="flex gap-1" aria-hidden="true">
-    {
-      [...Array(5)].map((_, i) => (
-        <Icon
-          name="mdi:star"
-          size={4}
-          class:list={[i < rating ? "text-brand" : "text-gray-light"]}
-        />
-      ))
-    }
+<div class="group relative flex flex-col gap-6 p-7 sm:p-8 overflow-hidden
+            bg-white hover:bg-gray-50/80
+            transition-colors duration-500">
+
+  <!-- Esquinas geométricas decorativas -->
+  <div class="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-brand/20 group-hover:border-brand/50 group-hover:w-10 group-hover:h-10 transition-all duration-500 rounded-tl-sm pointer-events-none"></div>
+  <div class="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-brand/20 group-hover:border-brand/50 group-hover:w-10 group-hover:h-10 transition-all duration-500 rounded-br-sm pointer-events-none"></div>
+
+  <!-- Comilla tipográfica decorativa -->
+  <div class="absolute -top-1 right-7 font-poppins font-extrabold text-[7rem] leading-none text-brand/5 group-hover:text-brand/10 transition-colors duration-500 select-none pointer-events-none">
+    "
   </div>
 
-  <!-- Content -->
-  <blockquote class="flex-grow">
-    <p class="font-poppins text-base text-gray leading-relaxed italic">
-      "{content}"
+  <!-- Testimonio -->
+  <blockquote class="relative z-10 flex-grow">
+    <p class="font-poppins text-sm sm:text-[0.9375rem] text-gray leading-[1.8] tracking-wide">
+      {content}
     </p>
   </blockquote>
 
-  <!-- Author -->
-  <div class="flex items-center gap-4 pt-2 border-t border-gray-light">
-    <div class="size-10 rounded-full overflow-hidden shrink-0">
-      <Image src={avatar} alt={name} width={80} height={80} class="w-full h-full object-cover" />
+  <!-- Separador con acento brand -->
+  <div class="relative flex items-center gap-3">
+    <div class="w-2 h-2 rotate-45 bg-brand/30 group-hover:bg-brand/60 transition-colors duration-300 shrink-0"></div>
+    <div class="h-px flex-1 bg-gradient-to-r from-brand/20 to-transparent"></div>
+  </div>
+
+  <!-- Autor -->
+  <div class="relative z-10 flex items-center gap-4">
+
+    <!-- Avatar con marco geométrico -->
+    <div class="relative shrink-0">
+      <div class="absolute -inset-1 rounded-full border border-brand/20 group-hover:border-brand/40 group-hover:scale-105 transition-all duration-400"></div>
+      <div class="size-11 sm:size-12 rounded-full overflow-hidden relative z-10">
+        <Image
+          src={avatar}
+          alt={name}
+          width={96}
+          height={96}
+          class="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-500"
+        />
+      </div>
     </div>
-    <div class="flex flex-col">
-      <cite class="not-italic font-poppins font-bold text-sm text-dark tracking-tight">
+
+    <!-- Info -->
+    <div class="flex flex-col gap-1 min-w-0">
+      <cite class="not-italic font-poppins font-bold text-sm sm:text-base text-dark leading-none tracking-tight truncate">
         {name}
       </cite>
-      <div class="flex items-center gap-2">
-        <span class="font-poppins text-xs text-gray uppercase tracking-widest leading-none">
+      <div class="flex items-center gap-1.5 flex-wrap">
+        <span class="font-poppins text-[11px] text-brand font-semibold uppercase tracking-widest leading-none">
           {company}
         </span>
-        <span class="text-dark/20">•</span>
-        <span class="font-poppins text-xs text-dark/40 font-medium">
+        <span class="w-1 h-1 rounded-full bg-gray/30 shrink-0"></span>
+        <span class="font-poppins text-[11px] text-gray/60 leading-none truncate">
           {role}
         </span>
       </div>
     </div>
+
   </div>
+
 </div>

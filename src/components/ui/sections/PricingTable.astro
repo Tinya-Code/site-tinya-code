@@ -1,5 +1,8 @@
 ---
 import PricingCard from "@/components/ui/cards/PricingCard.astro";
+import Modal from "@/components/ui/common/Modal.astro";
+import PricingContactForm from "@/components/ui/sections/PricingContactForm.astro";
+import { siteConfig } from "@/data/siteConfig";
 import type { ComponentProps } from "astro/types";
 
 interface Props {
@@ -19,7 +22,37 @@ const { plans } = Astro.props;
   }
 </div>
 
+{/* Global Pricing Modal */}
+<Modal id="pricingRequestModal">
+  <PricingContactForm 
+    labels={siteConfig.contactForm.labels} 
+    placeholders={siteConfig.contactForm.placeholders} 
+  />
+</Modal>
+
 <script>
   import { initScrollAnimations } from "@/scripts/observer";
-  initScrollAnimations();
+
+  const initPricingTable = () => {
+    initScrollAnimations();
+
+    const triggers = document.querySelectorAll('.pricing-modal-trigger');
+    const modal = document.getElementById('pricingRequestModal') as HTMLDialogElement;
+
+    triggers.forEach(trigger => {
+      trigger.addEventListener('click', () => {
+        const plan = trigger.getAttribute('data-plan-name');
+        
+        // Dispatch custom event to let the form know which plan was selected
+        document.dispatchEvent(new CustomEvent('open-pricing-modal', {
+          detail: { plan }
+        }));
+
+        modal?.showModal();
+      });
+    });
+  };
+
+  initPricingTable();
+  document.addEventListener("astro:after-swap", initPricingTable);
 </script>

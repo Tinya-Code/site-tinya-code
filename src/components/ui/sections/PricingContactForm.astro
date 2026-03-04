@@ -1,0 +1,214 @@
+---
+import Button from "@/components/ui/buttons/Button.astro";
+
+interface Props {
+  labels: {
+    name: string;
+    email: string;
+    company: string;
+    submit: string;
+  };
+  placeholders: {
+    name: string;
+    email: string;
+    company: string;
+  };
+}
+
+const { labels, placeholders } = Astro.props;
+
+const GOOGLE_FORM_ACTION = "https://docs.google.com/forms/d/1yjNrP5vCwX9zRJ6w5z5eM6Z4t4616aY2JyLfQZp1U4A/formResponse";
+
+const FIELD_IDS = {
+  name: "entry.2033182916",
+  email: "entry.183097233",
+  phone: "entry.1392004704",
+  company: "entry.1220292383",
+  service: "entry.1097828001",
+  message: "entry.1860060751",
+};
+---
+
+<div class="pricing-contact-form-container w-full relative">
+  <div class="text-center mb-8">
+    <h3 class="font-rader italic text-3xl text-dark mb-2" id="modalPlanTitle">Solicitar Plan</h3>
+    <p class="font-poppins text-sm text-gray">Completa tus datos y te contactaremos en menos de 24 horas.</p>
+  </div>
+
+  <form 
+    id="pricingModalForm" 
+    action={GOOGLE_FORM_ACTION} 
+    method="POST" 
+    class="space-y-4"
+  >
+    {/* Hidden field for the specific plan */}
+    <input type="hidden" name={FIELD_IDS.service} id="modalHiddenPlan" value="" />
+    <input type="hidden" name={FIELD_IDS.message} id="modalHiddenMessage" value="" />
+
+    <div>
+      <label for="modal_nombre" class="block font-poppins text-xs font-semibold text-dark/60 uppercase tracking-wider mb-1.5">{labels.name}</label>
+      <input 
+        type="text" 
+        id="modal_nombre" 
+        name={FIELD_IDS.name} 
+        placeholder={placeholders.name} 
+        required
+        class="w-full bg-light border border-gray-light/30 rounded-sm px-4 py-3 font-poppins text-sm text-dark placeholder:text-gray/50 focus:outline-none focus:border-brand transition-colors duration-200"
+      >
+    </div>
+
+    <div>
+      <label for="modal_email" class="block font-poppins text-xs font-semibold text-dark/60 uppercase tracking-wider mb-1.5">{labels.email}</label>
+      <input 
+        type="email" 
+        id="modal_email" 
+        name={FIELD_IDS.email} 
+        placeholder={placeholders.email} 
+        required
+        class="w-full bg-light border border-gray-light/30 rounded-sm px-4 py-3 font-poppins text-sm text-dark placeholder:text-gray/50 focus:outline-none focus:border-brand transition-colors duration-200"
+      >
+    </div>
+
+    <div>
+      <label for="modal_telefono" class="block font-poppins text-xs font-semibold text-dark/60 uppercase tracking-wider mb-1.5">Teléfono / WhatsApp</label>
+      <input 
+        type="tel" 
+        id="modal_telefono" 
+        name={FIELD_IDS.phone} 
+        placeholder="+51 999 999 999" 
+        required
+        class="w-full bg-light border border-gray-light/30 rounded-sm px-4 py-3 font-poppins text-sm text-dark placeholder:text-gray/50 focus:outline-none focus:border-brand transition-colors duration-200"
+      >
+    </div>
+
+    <div>
+      <label for="modal_empresa" class="block font-poppins text-xs font-semibold text-dark/60 uppercase tracking-wider mb-1.5">{labels.company}</label>
+      <input 
+        type="text" 
+        id="modal_empresa" 
+        name={FIELD_IDS.company} 
+        placeholder={placeholders.company} 
+        class="w-full bg-light border border-gray-light/30 rounded-sm px-4 py-3 font-poppins text-sm text-dark placeholder:text-gray/50 focus:outline-none focus:border-brand transition-colors duration-200"
+      >
+    </div>
+
+    <Button 
+      type="submit" 
+      id="modalSubmitBtn"
+      class="w-full justify-center !py-4 shadow-xl shadow-brand/20 mt-4"
+    >
+      {labels.submit}
+    </Button>
+  </form>
+
+  {/* Success Message */}
+  <div 
+    id="modalMensajeExito" 
+    class="hidden flex flex-col items-center justify-center py-10 text-center animate-in fade-in zoom-in duration-500"
+  >
+    <div class="size-20 bg-brand/10 rounded-full flex items-center justify-center mb-6">
+      <svg class="size-10 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+      </svg>
+    </div>
+    <h3 class="font-rader italic text-3xl text-dark mb-2">¡Solicitud Enviada!</h3>
+    <p class="font-poppins text-gray leading-relaxed max-w-xs mx-auto mb-8">
+      Gracias por tu interés en <span id="successPlanName" class="text-brand font-bold"></span>. Nos contactaremos en menos de 24 horas.
+    </p>
+    <Button variant="outline" class="close-modal-success cursor-pointer">Seguir navegando</Button>
+  </div>
+</div>
+
+<script>
+  import confetti from 'canvas-confetti';
+
+  const initPricingModalForm = () => {
+    const form = document.getElementById("pricingModalForm") as HTMLFormElement;
+    const mensajeExito = document.getElementById("modalMensajeExito");
+    const container = document.querySelector(".pricing-contact-form-container form");
+    const submitBtn = document.getElementById("modalSubmitBtn");
+    const modalTitle = document.getElementById("modalPlanTitle");
+    const successPlanSpan = document.getElementById("successPlanName");
+    const closeSuccessBtn = document.querySelector(".close-modal-success");
+
+    if (!form || !mensajeExito || !submitBtn) return;
+
+    // Listen for custom event to set the plan
+    document.addEventListener('open-pricing-modal', (e: any) => {
+      const { plan } = e.detail;
+      console.log("Evento 'open-pricing-modal' recibido. Plan:", plan);
+      
+      if (modalTitle) modalTitle.textContent = `Solicitar ${plan || 'Plan'}`;
+      if (successPlanSpan) successPlanSpan.textContent = plan || 'tu plan';
+      
+      const hiddenPlan = document.getElementById("modalHiddenPlan") as HTMLInputElement;
+      const hiddenMessage = document.getElementById("modalHiddenMessage") as HTMLInputElement;
+      
+      if (hiddenPlan) hiddenPlan.value = plan || "";
+      if (hiddenMessage) hiddenMessage.value = `El usuario solicitó información detallada para el plan: ${plan}`;
+
+      // Reset form on each open
+      form.classList.remove("hidden");
+      mensajeExito.classList.add("hidden");
+      form.reset();
+      submitBtn.removeAttribute("disabled");
+      submitBtn.textContent = "Solicitar propuesta";
+    });
+
+    closeSuccessBtn?.addEventListener('click', () => {
+      const dialog = form.closest('dialog');
+      dialog?.close();
+    });
+
+    form.addEventListener("submit", async (ev) => {
+      ev.preventDefault();
+      
+      submitBtn.textContent = "Procesando...";
+      submitBtn.setAttribute("disabled", "true");
+
+      try {
+        const formData = new FormData(form);
+        await fetch(form.action, {
+          method: "POST",
+          body: formData,
+          mode: "no-cors"
+        });
+
+        // Use internal canvas for confetti (ensures it's over the modal)
+        const dialog = form.closest('dialog');
+        const canvas = dialog?.querySelector('canvas') as HTMLCanvasElement;
+        if (canvas) {
+          const myConfetti = confetti.create(canvas, { resize: true, useWorker: true });
+          
+          // Burst 1
+          myConfetti({
+            particleCount: 150,
+            spread: 70,
+            origin: { y: 0.5 },
+            colors: ['#141420', '#6366f1', '#ffffff']
+          });
+
+          // Extra bursts
+          setTimeout(() => {
+            myConfetti({ particleCount: 40, angle: 60, spread: 55, origin: { x: 0, y: 0.4 } });
+            myConfetti({ particleCount: 40, angle: 120, spread: 55, origin: { x: 1, y: 0.4 } });
+          }, 200);
+        }
+
+        // Show success state
+        form.classList.add("hidden");
+        mensajeExito.classList.remove("hidden");
+        const titleContainer = document.querySelector(".pricing-contact-form-container div:first-child");
+        if (titleContainer) titleContainer.classList.add("hidden");
+        
+      } catch (error) {
+        alert("Algo salió mal. Por favor, intenta de nuevo.");
+        submitBtn.textContent = "Solicitar propuesta";
+        submitBtn.removeAttribute("disabled");
+      }
+    });
+  };
+
+  initPricingModalForm();
+  document.addEventListener('astro:after-swap', initPricingModalForm);
+</script>

@@ -12,49 +12,60 @@ interface Phase {
 interface Props {
   phases: Phase[];
   autoplayMs?: number;
-  color:string;
+  dark?: boolean;
 }
 
-const { phases, autoplayMs = 20000 , color} = Astro.props;
+const { phases, autoplayMs = 20000, dark = false } = Astro.props;
+
+const bg     = dark ? "bg-dark"         : "bg-white";
+const bgSoft = dark ? "bg-white/5"      : "bg-light";
+const text   = dark ? "text-white"      : "text-dark";
+const textMuted = dark ? "text-white/50" : "text-gray";
+const border = dark ? "border-white/10" : "border-gray-light";
+const iconBg = dark ? "bg-brand/15"     : "bg-brand/8";
 ---
 
-<!-- ══ MOBILE — cards con IntersectionObserver ══ -->
-<div class="md:hidden flex flex-col gap-4 w-full">
+<!-- ══ MOBILE ══ -->
+<div class="md:hidden flex flex-col w-full divide-y divide-gray-light/60">
   {phases.map((phase, index) => (
     <div
-      class={`mobile-phase-card flex flex-row items-stretch  rounded-sm bg-${color=="white"?"light":""}  overflow-hidden transition-all duration-500`}
+      class="mobile-phase-card group flex items-stretch gap-0 overflow-hidden transition-all duration-500"
       data-index={index}
     >
-      {/* Imagen izquierda */}
-      <div class="mobile-phase-img w-24 shrink-0 overflow-hidden transition-[width] duration-500">
+      <!-- Imagen -->
+      <div class="mobile-phase-img w-0 shrink-0 overflow-hidden transition-[width] duration-500">
         {phase.image ? (
           <img
             src={phase.image}
             alt={phase.title}
-            class="w-full h-full object-cover transition-transform duration-500"
+            class="w-full h-full object-cover"
             loading={index === 0 ? "eager" : "lazy"}
           />
         ) : (
-          <div class="w-full h-full bg-gradient-to-br from-brand/10 to-brand/5 flex items-center justify-center">
-            <Icon name={phase.icon} class="size-6 text-brand/40" />
+          <div class={`w-full h-full ${bgSoft} flex items-center justify-center`}>
+            <Icon name={phase.icon} class="size-5 text-brand/30" />
           </div>
         )}
       </div>
 
-      {/* Texto derecha */}
-      <div class="flex flex-col justify-center gap-1.5 px-4 py-3 flex-1 min-w-0">
+      <!-- Contenido -->
+      <div class={`flex flex-col justify-center gap-2 px-5 py-5 flex-1 min-w-0 ${bg}`}>
+        <!-- Step + icon -->
         <div class="flex items-center gap-2">
-          <span class="inline-flex items-center justify-center w-6 h-6 border border-brand/30 text-brand rounded-sm bg-brand/5 font-rader text-lg font-bold leading-none shrink-0">
+          <span class={`font-rader text-sm font-bold ${textMuted}`}>
             {phase.step}
           </span>
-          <div class="p-1 bg-brand/[0.06] rounded-sm border border-brand/10">
-            <Icon name={phase.icon} class="size-4 text-brand" />
+          <div class={`w-1 h-1 rounded-full bg-brand/30`}></div>
+          <div class={`p-1.5 rounded-sm ${iconBg}`}>
+            <Icon name={phase.icon} class="size-3.5 text-brand" />
           </div>
         </div>
-        <h3 class="font-rader italic text-2xl text-dark leading-snug">
+
+        <h3 class={`font-rader italic text-xl ${text} leading-snug`}>
           {phase.title}
         </h3>
-        <p class="mobile-phase-desc font-poppins text-xs text-gray leading-relaxed overflow-hidden max-h-0 opacity-0 transition-[max-height,opacity] duration-500">
+
+        <p class={`mobile-phase-desc font-poppins text-xs ${textMuted} leading-relaxed max-h-0 opacity-0 overflow-hidden transition-[max-height,opacity] duration-500`}>
           {phase.description}
         </p>
       </div>
@@ -62,214 +73,192 @@ const { phases, autoplayMs = 20000 , color} = Astro.props;
   ))}
 </div>
 
-<!-- ══ DESKTOP — acordeón horizontal ══ -->
+<!-- ══ DESKTOP ══ -->
 <div
-  class="methodology-accordion hidden md:flex lg:flex-row lg:items-stretch gap-2 w-full"
+  class={`methodology-accordion hidden md:flex items-stretch gap-1.5 w-full ${bg}`}
   data-autoplay={autoplayMs}
   role="tablist"
-  aria-label="Fases de metodología"
 >
   {phases.map((phase, index) => (
     <button
       class:list={[
         "methodology-item",
-        "group relative flex items-stretch",
-        " rounded-sm bg-white text-left cursor-pointer outline-none",
-        "overflow-hidden",
-        "focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:ring-offset-1",
-        index === 0 ? "border-brand ring-1 ring-brand" : "border-gray-light",
+        "group relative flex items-stretch text-left cursor-pointer outline-none",
+        "overflow-hidden rounded-sm",
+        border,
+        "",
+        "focus-visible:ring-2 focus-visible:ring-brand/40",
       ]}
       data-index={index}
       role="tab"
       aria-selected={index === 0 ? "true" : "false"}
-      aria-controls={`phase-panel-${index}`}
-      id={`phase-tab-${index}`}
     >
-      {/* ── Imagen izquierda ── */}
-      <div class="methodology-img-wrap shrink-0 overflow-hidden z-10 h-full">
+
+      <!-- Imagen -->
+      <div class="methodology-img-wrap shrink-0 overflow-hidden">
         {phase.image ? (
           <img
             src={phase.image}
             alt={phase.title}
-            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             loading={index === 0 ? "eager" : "lazy"}
           />
         ) : (
-          <div class="w-full h-full bg-gradient-to-br from-brand/10 via-brand/5 to-transparent flex items-center justify-center">
-            <Icon name={phase.icon} class="methodology-placeholder-icon size-6 text-brand/30 transition-all duration-300" />
+          <div class={`w-full h-full ${bgSoft} flex items-center justify-center`}>
+            <Icon name={phase.icon} class="methodology-placeholder-icon size-5 text-brand/20 transition-all duration-500" />
           </div>
         )}
       </div>
 
-      {/* ── Texto derecha ── */}
-      <div class={`methodology-content  flex flex-col items-center gap-2.5 overflow-hidden bg-${color=="white"?"light":""} `}>
-        <div class="px-4 py-4 flex flex-col gap-2 h-full ">
+      <!-- Contenido expandido -->
+      <div class={`methodology-content flex flex-col gap-3 overflow-hidden ${bg} relative`}>
 
-          {/* Número + ícono */}
+        <!-- Ícono decorativo de fondo -->
+        <Icon
+          name={phase.icon}
+          class={`absolute -right-4 -bottom-4 size-48 ${dark ? "text-white/[0.03]" : "text-brand/[0.06]"} pointer-events-none select-none transition-opacity duration-500`}
+        />
 
-      
- <Icon name={phase.icon} class={` absolute size-80 right-0 text-${color=="white"?"white opacity-80 ":"brand"} opacity-15 transition-all duration-300`} />
-   
+        <div class="relative z-10 flex flex-col gap-3 px-6 py-6 h-full">
 
+          <!-- Step + icon -->
+          <div class="flex items-center gap-2.5">
+            <span class={`font-rader text-xs font-bold tracking-widest uppercase ${textMuted}`}>
+              {phase.step}
+            </span>
+            <div class="w-4 h-px bg-brand/20"></div>
+            <div class={`p-1.5 rounded-sm ${iconBg} border ${dark ? "border-white/5" : "border-brand/10"}`}>
+              <Icon name={phase.icon} class="size-3.5 text-brand" />
+            </div>
+          </div>
 
-          {/* Título */}
-          <h3 class={`font-rader italic md:text-2xl z-10 lg:text-4xl text-${color=="white"?"dark":"dark"} `}>
+          <!-- Título -->
+          <h3 class={`font-rader italic text-2xl lg:text-3xl ${text} leading-snug`}>
             {phase.title}
           </h3>
 
-          {/* Descripción */}
-          <p class={`methodology-desc font-poppins z-10 text-xs lg:text-sm text-${color=="white"?"gray":"gray"}  leading-relaxed overflow-hidden`}>
+          <!-- Descripción -->
+          <p class={`methodology-desc font-poppins text-xs lg:text-sm ${textMuted} leading-relaxed overflow-hidden`}>
             {phase.description}
           </p>
+
         </div>
       </div>
 
-      {/* ── Label colapsado ── */}
-      <div class="methodology-collapsed absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 px-1 pointer-events-none select-none bg-white transition-opacity duration-200">
-              <span class="methodology-step inline-flex items-center justify-center p-1 border border-brand/30 text-brand/40 rounded-sm bg-brand/5 font-poppins text-xl font-bold leading-none shrink-0 transition-all duration-300">
-              {phase.step}
-            </span>
-        <Icon name={phase.icon} class="size-6 text-brand/40 shrink-0" />
-        <span class="font-poppins text-xs font-semibold text-dark/30 [writing-mode:vertical-lr] rotate-180 whitespace-nowrap tracking-widest uppercase">
+      <!-- Label colapsado -->
+      <div class={`methodology-collapsed absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 pointer-events-none select-none ${bg} transition-opacity duration-300`}>
+        <span class={`font-rader text-lg font-bold ${textMuted}`}>
+          {phase.step}
+        </span>
+        <div class="w-px h-4 bg-brand/20"></div>
+        <Icon name={phase.icon} class="size-4 text-brand/40" />
+        <span class={`font-poppins text-[10px] font-semibold ${textMuted} [writing-mode:vertical-lr] rotate-180 whitespace-nowrap tracking-widest uppercase mt-1`}>
           {phase.title}
         </span>
       </div>
 
-      {/* ── Barra de progreso ── */}
-      <div class="absolute bottom-0 left-0 right-0 h-px bg-brand/10 overflow-hidden z-20" aria-hidden="true">
+      <!-- Barra de progreso inferior -->
+      <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-brand/10 overflow-hidden z-20">
         <div class="methodology-progress-bar h-full bg-brand w-0 origin-left" />
       </div>
 
-      {/* ── Track lateral ── */}
-      <div class="absolute top-0 left-0 bottom-0 w-1 bg-brand/8 overflow-hidden z-20" aria-hidden="true">
-        <div class="methodology-track-fill w-full bg-brand h-0 origin-top" />
-      </div>
     </button>
   ))}
 </div>
 
 <style>
-  /* ══ DESKTOP ══ */
   @media (min-width: 768px) {
-    .methodology-accordion { height: 360px; }
+    .methodology-accordion { height: 380px; }
 
-    /* Colapsado */
     .methodology-item {
-      flex: 0 0 48px;
-      transition:
-        flex 0.55s cubic-bezier(0.4, 0, 0.2, 1),
-        border-color 0.25s ease,
-        box-shadow 0.25s ease;
+      flex: 0 0 44px;
+      transition: flex 0.6s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s ease;
     }
-
-    /* Expandido — solo el activo, nunca 2 a la vez */
     .methodology-item.is-active { flex: 1 1 0%; }
 
-    /* Imagen: 0 → aparece */
+    /* Imagen */
     .methodology-item .methodology-img-wrap {
       width: 0;
-      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: width 0.55s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .methodology-item.is-active .methodology-img-wrap { width: 360px; }
+    .methodology-item.is-active .methodology-img-wrap { width: 320px; }
 
-    /* Texto: oculto → visible */
+    /* Contenido */
     .methodology-item .methodology-content {
       width: 0;
       opacity: 0;
       pointer-events: none;
-      transition: width 0.45s ease, opacity 0.3s ease;
+      transition: width 0.5s ease, opacity 0.25s ease;
     }
     .methodology-item.is-active .methodology-content {
       width: auto;
-      min-width: 160px;
+      min-width: 180px;
       opacity: 1;
       pointer-events: auto;
-      transition: width 0.5s ease, opacity 0.35s ease 0.1s;
+      transition: width 0.55s ease, opacity 0.35s ease 0.15s;
     }
 
     /* Descripción */
     .methodology-item .methodology-desc {
       max-height: 0;
       opacity: 0;
-      transition: max-height 0.3s ease, opacity 0.25s ease;
+      transition: max-height 0.35s ease, opacity 0.25s ease;
     }
     .methodology-item.is-active .methodology-desc {
-      max-height: 160px;
+      max-height: 180px;
       opacity: 1;
-      transition: max-height 0.4s ease 0.1s, opacity 0.3s ease 0.15s;
+      transition: max-height 0.45s ease 0.15s, opacity 0.3s ease 0.2s;
     }
 
-    /* Ícono crece */
-    .methodology-item.is-active .methodology-icon { width: 1.25rem; height: 1.25rem; }
-    .methodology-item.is-active .methodology-icon-wrap { padding: 0.5rem; }
-
-    /* Placeholder crece */
+    /* Placeholder icon */
     .methodology-item.is-active .methodology-placeholder-icon {
-      width: 3rem; height: 3rem;
-      color: rgb(var(--color-brand) / 0.4);
+      width: 2.5rem;
+      height: 2.5rem;
+      color: rgb(var(--color-brand) / 0.3);
     }
 
-    /* Collapsed label */
-    .methodology-item.is-active .methodology-collapsed { opacity: 0; pointer-events: none; }
+    /* Collapsed */
+    .methodology-item.is-active .methodology-collapsed  { opacity: 0; pointer-events: none; }
     .methodology-item:not(.is-active) .methodology-collapsed { opacity: 1; }
   }
 
-  /* ── Estado activo ── */
+  /* Activo */
   .methodology-item.is-active {
-    border-color: rgb(var(--color-brand));
-    box-shadow: 0 0 0 1px rgb(var(--color-brand) / 0.5);
+    border-color: rgb(var(--color-brand) / 0.6);
   }
 
-  /* ── Barras ── */
+  /* Progreso */
   .methodology-item.is-active .methodology-progress-bar {
     animation: meth-prog var(--autoplay-ms, 20000ms) linear forwards;
   }
-  .methodology-item.is-active .methodology-track-fill {
-    animation: track-fill var(--autoplay-ms, 20000ms) linear forwards;
-  }
-  .methodology-accordion.is-paused .methodology-progress-bar,
-  .methodology-accordion.is-paused .methodology-track-fill {
+  .methodology-accordion.is-paused .methodology-progress-bar {
     animation-play-state: paused;
   }
-  @keyframes meth-prog  { to { width: 100%; } }
-  @keyframes track-fill { to { height: 100%; } }
+  @keyframes meth-prog { to { width: 100%; } }
 
-  /* ══ MOBILE — card activa ══ */
-
-  .mobile-phase-card.is-visible .mobile-phase-img { width: 13rem; }
+  /* Mobile activa */
+  .mobile-phase-card.is-visible .mobile-phase-img { width: 11rem; }
   .mobile-phase-card.is-visible .mobile-phase-desc {
-    max-height: 133px;
+    max-height: 120px;
     opacity: 1;
   }
 </style>
 
 <script>
-  const A = ["border-brand", "ring-1", "ring-brand"];
-  const I = ["border-gray-light"];
-
-  /* ══ MOBILE: IntersectionObserver ══ */
   function initMobile() {
-    const cards = Array.from(
-      document.querySelectorAll<HTMLElement>(".mobile-phase-card")
-    );
+    const cards = document.querySelectorAll<HTMLElement>(".mobile-phase-card");
     if (!cards.length) return;
 
     const obs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          entry.target.classList.toggle("is-visible", entry.isIntersecting);
-        });
-      },
-      {
-        threshold: 0.2,   // se activa cuando el 55% de la card es visible
-        rootMargin: "0px",
-      }
+      (entries) => entries.forEach((e) =>
+        e.target.classList.toggle("is-visible", e.isIntersecting)
+      ),
+      { threshold: 0.10 }
     );
 
-    cards.forEach((card) => obs.observe(card));
+    cards.forEach((c) => obs.observe(c));
   }
 
-  /* ══ DESKTOP: acordeón ══ */
   function initDesktop() {
     document.querySelectorAll<HTMLElement>(".methodology-accordion").forEach((root) => {
       const clone = root.cloneNode(true) as HTMLElement;
@@ -281,25 +270,20 @@ const { phases, autoplayMs = 20000 , color} = Astro.props;
 
       clone.style.setProperty("--autoplay-ms", `${ms}ms`);
 
-      const resetBars = (el: HTMLElement) => {
-        [".methodology-progress-bar", ".methodology-track-fill"].forEach((s) => {
-          const b = el.querySelector<HTMLElement>(s);
-          if (!b) return;
-          b.style.animation = "none";
-          void b.offsetWidth;
-          b.style.animation = "";
-        });
+      const resetBar = (el: HTMLElement) => {
+        const b = el.querySelector<HTMLElement>(".methodology-progress-bar");
+        if (!b) return;
+        b.style.animation = "none";
+        void b.offsetWidth;
+        b.style.animation = "";
       };
 
-      // Activa SOLO un item — siempre uno único abierto
       const activate = (i: number) => {
         items.forEach((item, idx) => {
           const on = idx === i;
           item.classList.toggle("is-active", on);
           item.setAttribute("aria-selected", String(on));
-          item.classList.remove(...A, ...I);
-          item.classList.add(...(on ? A : I));
-          resetBars(item);
+          resetBar(item);
         });
         cur = i;
       };
@@ -311,17 +295,9 @@ const { phases, autoplayMs = 20000 , color} = Astro.props;
       const stop = () => { if (timer) { clearInterval(timer); timer = null; } };
 
       items.forEach((item, i) => {
-        // Hover — activa ese item como el único abierto
-        item.addEventListener("mouseenter", () => {
-          stop();
-          activate(i);   // cierra el anterior, abre este
-        });
+        item.addEventListener("mouseenter", () => { stop(); activate(i); });
+        item.addEventListener("mouseleave", () => { if (!paused) start(); });
 
-        item.addEventListener("mouseleave", () => {
-          if (!paused) start();
-        });
-
-        // Click — fija la selección y pausa/reanuda
         item.addEventListener("click", () => {
           if (i === cur && paused) {
             paused = false;
@@ -335,13 +311,10 @@ const { phases, autoplayMs = 20000 , color} = Astro.props;
           }
         });
 
-        // Teclado
         item.addEventListener("keydown", (e: KeyboardEvent) => {
           const map: Record<string, number> = {
             ArrowRight: (i + 1) % items.length,
-            ArrowDown:  (i + 1) % items.length,
             ArrowLeft:  (i - 1 + items.length) % items.length,
-            ArrowUp:    (i - 1 + items.length) % items.length,
           };
           if (!(e.key in map)) return;
           e.preventDefault();
@@ -360,11 +333,7 @@ const { phases, autoplayMs = 20000 , color} = Astro.props;
     });
   }
 
-  function init() {
-    initMobile();
-    initDesktop();
-  }
-
+  function init() { initMobile(); initDesktop(); }
   init();
   document.addEventListener("astro:after-swap", init);
 </script>

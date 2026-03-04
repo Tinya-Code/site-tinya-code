@@ -47,8 +47,8 @@ const {
 } = Astro.props;
 ---
 
-<section class="section-base section-light overflow-hidden">
-  <div class="container-main grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+<section class="section-base py-6  section-light overflow-hidden ">
+  <div class="container-main grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20 items-center">
     <!-- Content -->
     <div class="text-center lg:text-left order-2 lg:order-1">
       <!-- Category Label -->
@@ -99,20 +99,18 @@ const {
     </div>
 
     <!-- Image + Metric -->
-    <div class="order-1 lg:order-2 relative group">
-      <div class="relative overflow-hidden rounded-sm border border-gray-light">
-        <Image
-          src={image}
-          alt={title}
-          width={800}
-          height={600}
-          loading="eager"
-          class="w-full aspect-square lg:aspect-[4/3] object-cover transition-transform duration-500 group-hover:scale-105"
-        />
-        <div
-          class="absolute inset-0 bg-gradient-to-tr from-brand/5 to-transparent pointer-events-none"
-        >
-        </div>
+    <div class="order-2 lg:order-2 relative group">
+      <Image
+        src={image}
+        alt={title}
+        width={800}
+        height={800}
+        loading="eager"
+        class="w-full h-full aspect-square object-cover transition-transform duration-500"
+      />
+      <div
+        class="absolute inset-0  pointer-events-none"
+      >
       </div>
 
       <!-- Metric Card -->

@@ -4,24 +4,30 @@ import Methodology from "@/components/ui/sections/Methodology.astro";
 import SectionHeader from "@/components/ui/sections/SectionHeader.astro";
 import { siteConfig } from "@/data/siteConfig";
 
-// Smart component: Orchestrates methodology data and section structure
 const { title, subtitle } = siteConfig.home.methodology;
-const {color = "light"} = Astro.props;
+
+interface Props {
+  color?: "light" | "dark" | "white";
+}
+
+const { color = "light" } = Astro.props;
+
+const isDark = color === "dark";
 ---
 
-<section class={`section-base section-${color} py-12`}>
-  <div class="container-main space-y-2">
-    <SectionHeader title={title} subtitle={subtitle} />
-    <Methodology phases={methodologyContent} autoplayMs={10000} color={color}/>
+<section class:list={["section-base py-12", `section-${color}`]}>
+  <div class="container-main space-y-8">
+    <SectionHeader title={title} subtitle={subtitle} variant={color} />
+    <Methodology
+      phases={methodologyContent}
+      autoplayMs={10000}
+      dark={isDark}
+    />
   </div>
 </section>
 
 <script>
   import { initScrollAnimations } from "@/scripts/observer";
-
-  // Initialize animations
   initScrollAnimations();
-
-  // Handle View Transitions
   document.addEventListener("astro:after-swap", initScrollAnimations);
 </script>

@@ -13,9 +13,8 @@ import TestimonialsGrid from "@/components/smart/TestimonialsGrid.astro";
 import StatsSection from "@/components/smart/StatsSection.astro";
 import AidaBannerSection from "@/components/smart/AidaBannerSection.astro";
 import PortfolioGallery from "@/components/smart/PortfolioGallery.astro";
-import ContactForm from "@/components/ui/sections/ContactForm.astro";
-import { contactData, socialLinks } from "@/data/social";
-import Icon from "@/components/ui/common/Icon.astro";
+import ContactSection from "@/components/smart/ContactSection.astro";
+import FaqAccordion from "@/components/smart/FaqAccordion.astro";
 
 const seo = {
   title: "Tinya Code — Diseño Web y Software B2B en Lima",
@@ -37,6 +36,7 @@ const seo = {
       <SectionHeader
         title={siteConfig.home.reasons.title}
         subtitle={siteConfig.home.reasons.subtitle}
+        variant="white"
       />
       <ReasonsGrid />
     </div>
@@ -53,31 +53,35 @@ const seo = {
     </div>
   </section>
 -->
-  <!-- 4. Por qué elegirnos (bg-white) -->
+  <!-- 4. Por qué elegirnos (bg-white) 
   <WhyChooseUsSection />
-
+-->
   <!-- 5. Estadísticas (bg-dark) -->
   <StatsSection />
 
   <!-- 6. Metodología (bg-light) -->
   <MethodologySection />
 
-  <!-- 7. Testimonios destacados (bg-white) -->
+  <!-- 7. Testimonios destacados (bg-white).      subtitle={siteConfig.home.testimonials.subtitle}  -->
   <section class="section-base section-white">
     <div class="container-main">
       <SectionHeader
         title={siteConfig.home.testimonials.title}
-        subtitle={siteConfig.home.testimonials.subtitle}
+        centered = {true}
+        variant="white"
       />
       <TestimonialsGrid />
     </div>
   </section>
+  
+  
 
   <section id="precio" class="section-base section-light">
     <div class="container-main">
             <SectionHeader
         title={siteConfig.pages.pricing.title}
         centered = {true}
+        variant="light"
       />
       <PricingSection />
     </div>
@@ -99,6 +103,7 @@ const seo = {
       <SectionHeader
         title={siteConfig.home.portfolio.title}
         subtitle={siteConfig.home.portfolio.subtitle}
+        variant="white"
       />
       <div class="mt-12">
         <PortfolioGallery />
@@ -107,79 +112,9 @@ const seo = {
   </section>
 
   <!-- 10. CTA Final / Aida Banner (bg-brand) -->
-  <AidaBannerSection />
-  <section class="section-base w-full flex flex-col container-main section-white">
-    <SectionHeader
-      title={siteConfig.pages.contact.title}
-      subtitle={siteConfig.pages.contact.subtitle}
-    />
+  <AidaBannerSection background = "dark" />
 
-    <div class="flex flex-col gap-4 justify-between items-start md:flex-row w-full">
-      <div class="lg:col-span-4 rounded-sm  bg-light min-w-60 hidden md:flex md:flex-col p-4  h-auto  space-y-10">
-        <div class="space-y-6">
-          <h3 class="font-poppins text-sm text-dark uppercase tracking-wider font-semibold ">
-            {siteConfig.pages.contact.sidebar}
-          </h3>
-          <div class="space-y-4">
-            <a
-              href={`mailto:${contactData.email}`}
-              class="flex items-center gap-4 text-gray hover:text-brand transition-colors group"
-            >
-              <Icon
-                name="mdi:email-outline"
-                size={5}
-                class="text-dark group-hover:text-brand transition-colors"
-                ariaHidden={true}
-              />
-              <span class="text-sm font-poppins font-medium">{contactData.email}</span>
-            </a>
-            <a
-              href={`tel:${contactData.phone}`}
-              class="flex items-center gap-4 text-gray hover:text-brand transition-colors group"
-            >
-              <Icon
-                name="mdi:phone-outline"
-                size={5}
-                class="text-dark group-hover:text-brand transition-colors"
-                ariaHidden={true}
-              />
-              <span class="text-sm font-poppins font-medium">{contactData.phone}</span>
-            </a>
-            <div class="flex items-center gap-4 text-gray">
-              <Icon name="mdi:map-marker-outline" size={5} class="text-dark" ariaHidden={true} />
-              <span class="text-sm font-poppins font-medium">{contactData.address} </span>
-            </div>
-          </div>
-        </div>
+<FaqAccordion/>
 
-        <div class="space-y-4">
-          <h3 class=" font-poppins text-xs text-dark uppercase tracking-wider font-semibold ">
-            {siteConfig.pages.contact.social}
-          </h3>
-          <div class="flex gap-4">
-            {
-              socialLinks.map((net) => (
-                <a
-                  href={net.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="size-10 flex items-center justify-center text-dark hover:text-brand transition-colors"
-                  aria-label={net.label}
-                >
-                  <Icon name={net.icon} size={6} ariaHidden={true} />
-                </a>
-              ))
-            }
-          </div>
-        </div>
-      </div>
-      <div class="p-4  bg-light rounded-sm w-full">
-        <ContactForm
-          labels={siteConfig.contactForm.labels}
-          placeholders={siteConfig.contactForm.placeholders}
-          services={siteConfig.contactForm.services}
-        />
-      </div>
-    </div>
-  </section>
+  <ContactSection variant="white" />
 </BaseLayout>

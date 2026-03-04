@@ -6,104 +6,100 @@ import Icon from "@/components/ui/common/Icon.astro";
 const categories = ["todos", "general", "proceso", "precios", "tecnico"];
 ---
 
-<section class="section-base section-light">
-  <div class="container-main">
-    <div class="max-w-4xl mx-auto space-y-12">
-      <!-- Interactive Header -->
-      <div class="space-y-10 animate-on-scroll">
-        <!-- Search Bar -->
-        <div class="relative max-w-xl mx-auto group">
-          <div class="absolute inset-y-0 left-5 flex items-center pointer-events-none">
-            <Icon
-              name="mdi:magnify"
-              size={5}
-              class="text-dark/30 group-focus-within:text-brand transition-colors"
-            />
-          </div>
-          <input
-            type="text"
-            id="faq-search"
-            placeholder="¿En qué podemos ayudarte hoy?"
-            class="faq-search-input w-full pl-14 pr-6 py-5 bg-white border border-gray-light/30 rounded-sm outline-none shadow-sm transition-all font-poppins text-sm placeholder:text-dark/30"
+<section class="section-base section-light py-16 md:py-24">
+  <div class="container-main max-w-4xl mx-auto">
+    <!-- Interactive Header -->
+    <div class="space-y-12 mb-16 animate-on-scroll">
+      <!-- Search Bar -->
+      <div class="relative max-w-xl mx-auto group">
+        <div class="absolute inset-y-0 left-5 flex items-center pointer-events-none">
+          <Icon
+            name="mdi:magnify"
+            size={5}
+            class="text-gray group-focus-within:text-brand transition-colors"
           />
         </div>
-
-        <!-- Category Tabs -->
-        <div class="flex flex-wrap items-center justify-center gap-3">
-          {
-            categories.map((cat) => (
-              <button
-                class:list={[
-                  "chip-sector faq-category-tab capitalize !px-6 !py-2.5 outline-none",
-                  cat === "todos" && "active",
-                ]}
-                data-category-tab={cat}
-                role="tab"
-                aria-selected={cat === "todos" ? "true" : "false"}
-              >
-                {cat}
-              </button>
-            ))
-          }
-        </div>
+        <input
+          type="text"
+          id="faq-search"
+          placeholder="¿En qué podemos ayudarte?"
+          class="w-full pl-14 pr-6 py-4 bg-white border border-gray-light rounded-sm font-poppins text-sm text-dark placeholder:text-gray focus:outline-none focus:border-brand transition-colors duration-200"
+        />
       </div>
 
-      <!-- FAQ List -->
-      <div class="space-y-5" id="faq-list">
+      <!-- Category Tabs (Chips) -->
+      <div class="flex flex-wrap items-center justify-center gap-3">
         {
-          faqs.map((faq, index) => (
-            <div
-              class="faq-item group animate-on-scroll"
-              data-category={faq.category}
-              data-question={faq.question.toLowerCase()}
-              data-answer={faq.answer.toLowerCase()}
-              style={`transition-delay: ${index * 50}ms`}
+          categories.map((cat) => (
+            <button
+              class:list={[
+                "flex items-center gap-2 border border-gray-light rounded-sm px-4 py-2 bg-white hover:border-brand hover:text-brand transition-colors duration-200 cursor-pointer",
+                "font-poppins text-sm font-medium text-dark capitalize",
+                cat === "todos" && "border-brand text-brand bg-brand/5",
+              ]}
+              data-category-tab={cat}
+              role="tab"
+              aria-selected={cat === "todos" ? "true" : "false"}
             >
-              <button
-                class="faq-trigger w-full flex justify-between items-center py-6 cursor-pointer text-left focus:outline-none"
-                aria-expanded="false"
-              >
-                <span class="font-poppins font-semibold text-base text-dark group-hover:text-brand transition-colors pr-8">
-                  {faq.question}
-                </span>
-                <Icon
-                  name="mdi:chevron-down"
-                  size={5}
-                  class="faq-icon text-dark/30 transition-transform duration-500 shrink-0"
-                  ariaHidden={true}
-                />
-              </button>
-              <div class="faq-content overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] max-h-0 opacity-0">
-                <p class="font-poppins text-sm text-gray leading-relaxed px-8 pb-8 pt-4 border-t border-gray-light/20">
-                  {faq.answer}
-                </p>
-              </div>
-            </div>
+              {cat}
+            </button>
           ))
         }
+      </div>
+    </div>
 
-        <!-- Empty State -->
-        <div id="faq-empty" class="hidden text-center py-20 space-y-6 animate-on-scroll">
+    <!-- FAQ List - Accordion Pattern -->
+    <div class="space-y-0" id="faq-list">
+      {
+        faqs.map((faq, index) => (
           <div
-            class="inline-flex items-center justify-center size-20 rounded-sm bg-white shadow-sm border border-gray-light/30 text-dark/20 mb-2"
+            class="faq-item border-b border-gray-light animate-on-scroll"
+            data-category={faq.category}
+            data-question={faq.question.toLowerCase()}
+            data-answer={faq.answer.toLowerCase()}
+            style={`transition-delay: ${index * 50}ms`}
           >
-            <Icon name="mdi:comment-search-outline" size={8} />
-          </div>
-          <div class="space-y-2">
-            <h3 class="font-poppins font-semibold text-xl text-dark">No hay resultados</h3>
-            <p class="font-poppins text-sm text-dark/50 max-w-xs mx-auto">
-              Intenta usar otros términos o explora las categorías de arriba.
-            </p>
-          </div>
-          <div class="pt-4">
-            <a
-              href="/contact"
-              class="inline-flex items-center gap-2 text-brand font-semibold hover:gap-3 transition-all"
+            <button
+              class="faq-trigger w-full flex justify-between items-center py-5 cursor-pointer font-poppins font-semibold text-base text-dark hover:text-brand transition-colors text-left focus:outline-none"
+              aria-expanded="false"
             >
-              Hablar con un experto
-              <Icon name="mdi:arrow-right" size={4} />
-            </a>
+              <span class="pr-8">{faq.question}</span>
+              <Icon
+                name="mdi:chevron-down"
+                class="faq-icon size-4 text-gray transition-transform duration-200 shrink-0"
+                ariaHidden={true}
+              />
+            </button>
+            <div class="faq-content overflow-hidden transition-all duration-300 max-h-0 opacity-0">
+              <p class="font-poppins text-sm text-gray leading-relaxed pb-5">
+                {faq.answer}
+              </p>
+            </div>
           </div>
+        ))
+      }
+
+      <!-- Empty State -->
+      <div id="faq-empty" class="hidden text-center py-20 animate-on-scroll">
+        <div
+          class="inline-flex items-center justify-center size-20 rounded-sm bg-white border border-gray-light text-gray/40 mb-6"
+        >
+          <Icon name="mdi:comment-search-outline" class="size-8" />
+        </div>
+        <div class="space-y-2">
+          <h3 class="font-poppins font-semibold text-xl text-dark">Sin resultados</h3>
+          <p class="font-poppins text-sm text-gray max-w-xs mx-auto">
+            Intenta con otros términos o elige una categoría.
+          </p>
+        </div>
+        <div class="pt-8">
+          <a
+            href="/contact"
+            class="inline-flex items-center gap-1 text-sm font-medium text-brand hover:text-brand-dark transition-colors duration-200"
+          >
+            Contactar con nosotros
+            <Icon name="mdi:arrow-right" class="size-4" />
+          </a>
         </div>
       </div>
     </div>
@@ -111,31 +107,25 @@ const categories = ["todos", "general", "proceso", "precios", "tecnico"];
 </section>
 
 <style>
-  .faq-search-input:focus {
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-  }
-
-  .faq-item {
-    border-bottom: 1px solid var(--color-gray-light);
-    transition: all 300ms ease;
-  }
-
-  .faq-item:last-child {
-    border-bottom: none;
-  }
-
   .faq-item.is-open .faq-icon {
     color: var(--color-brand);
     transform: rotate(180deg);
   }
 
   .faq-item.is-open .faq-content {
-    max-height: 800px;
+    max-height: 1000px;
     opacity: 1;
   }
 
   .faq-item.hidden-by-filter {
     display: none;
+  }
+
+  /* Active state for Category Tabs */
+  [data-category-tab].active {
+    border-color: var(--color-brand);
+    color: var(--color-brand);
+    background-color: rgba(var(--color-brand-rgb), 0.05);
   }
 </style>
 
@@ -213,6 +203,13 @@ const categories = ["todos", "general", "proceso", "precios", "tecnico"];
         const isActive = t === tab;
         t.classList.toggle("active", isActive);
         t.setAttribute("aria-selected", String(isActive));
+        
+        // Manual styling toggle if not using global classes
+        if (isActive) {
+          t.classList.add("border-brand", "text-brand", "bg-brand/5");
+        } else {
+          t.classList.remove("border-brand", "text-brand", "bg-brand/5");
+        }
       });
 
       filterFaqs();

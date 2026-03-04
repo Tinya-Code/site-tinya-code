@@ -1,0 +1,33 @@
+---
+import { Icon } from "astro-icon/components";
+import { contactData } from "@/data/social";
+
+interface Props {
+  className?: string;
+}
+
+const { className = "" } = Astro.props;
+
+// Format WhatsApp URL to include the number from contactData
+const whatsappUrl = `https://wa.me/${contactData.whatsapp.replace(/\+/g, "").replace(/\s/g, "")}`;
+---
+
+<a
+  href={whatsappUrl}
+  target="_blank"
+  rel="noopener noreferrer"
+  class:list={[
+    "fixed bottom-6 right-6 z-[60]",
+    "flex items-center gap-2",
+    "bg-[#25D366] text-white", // WhatsApp brand color for better recognition
+    "font-poppins text-xs font-bold uppercase tracking-widest",
+    "px-4 py-3 rounded-sm shadow-lg hover:shadow-xl",
+    "transition-all duration-300 transform hover:-translate-y-1",
+    "focus:ring-2 focus:ring-[#25D366] focus:ring-offset-2 focus:outline-none",
+    className,
+  ]}
+  aria-label="Contactar por WhatsApp"
+>
+  <Icon name="mdi:whatsapp" class="size-5" />
+  <span class="hidden sm:inline">WhatsApp</span>
+</a>
