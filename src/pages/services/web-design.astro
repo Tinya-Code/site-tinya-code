@@ -6,7 +6,7 @@ import DepositBadge from "@/components/ui/sections/DepositBadge.astro";
 import { services } from "@/data/services";
 import { siteConfig } from "@/data/siteConfig";
 import { Icon } from "astro-icon/components";
-import { Image } from "astro:assets";
+ /* removed */ ;
 
 const { services: servicesLabels } = siteConfig.pages;
 const service = services.find((s) => s.id === "web-design")!;
@@ -40,7 +40,7 @@ const seo = {
       </div>
 
       <div class="relative rounded-sm overflow-hidden border border-accent/20">
-        <Image
+        <img
           src={service.image}
           alt={service.title}
           width={800}

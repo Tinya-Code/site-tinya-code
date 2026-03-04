@@ -2,7 +2,6 @@
 import { testimonials } from "@/data/testimonials";
 import TestimonialCard from "@/components/ui/cards/TestimonialCard.astro";
 import Icon from "@/components/ui/common/Icon.astro";
-import { Image } from "astro:assets";
 
 // Smart component: fetches data from testimonials.ts and orchestrates slider logic
 ---
@@ -72,38 +71,38 @@ import { Image } from "astro:assets";
         {
           [...Array(2)].map(() => (
             <div class="flex items-center gap-12 shrink-0">
-              <Image
+              <img
                 src="/logos/logo-repiit.svg"
                 alt=""
-                width={150}
-                height={50}
+                width="150"
+                height="50"
                 loading="lazy"
                 aria-hidden="true"
                 class="h-8 md:h-10 w-auto opacity-30 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-500"
               />
-              <Image
+              <img
                 src="/logos/logo-travel.webp"
                 alt=""
-                width={150}
-                height={50}
+                width="150"
+                height="50"
                 loading="lazy"
                 aria-hidden="true"
                 class="h-8 md:h-10 w-auto opacity-30 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-500"
               />
-              <Image
+              <img
                 src="/logos/logo-amira.png"
                 alt=""
-                width={150}
-                height={50}
+                width="150"
+                height="50"
                 loading="lazy"
                 aria-hidden="true"
                 class="h-8 md:h-10 w-auto opacity-30 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-500"
               />
-              <Image
+              <img
                 src="/logos/logo-qillary.webp"
                 alt=""
-                width={150}
-                height={50}
+                width="150"
+                height="50"
                 loading="lazy"
                 aria-hidden="true"
                 class="h-8 md:h-10 w-auto opacity-30 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-500"

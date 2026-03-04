@@ -6,7 +6,6 @@ import { siteConfig } from "@/data/siteConfig";
 import { blogTerms } from "@/data/blogTerms";
 import BlogContentFormatter from "@/components/ui/common/BlogContentFormatter.astro";
 
-import { Image } from "astro:assets";
 
 interface Props {
   project: CollectionEntry<"projects">;
@@ -94,11 +93,11 @@ const seo = {
         <div class="relative rounded-sm overflow-hidden border border-accent/20 group">
           {
             heroImage && (
-              <Image
+              <img
                 src={heroImage}
                 alt={title}
-                width={800}
-                height={500}
+                width="800"
+                height="500"
                 loading="eager"
                 class="w-full h-auto max-h-100 object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
               />

@@ -7,7 +7,7 @@ import { services } from "@/data/services";
 import { siteConfig } from "@/data/siteConfig";
 import { aidaPhases, landingPageFocus } from "@/data/aida";
 import { Icon } from "astro-icon/components";
-import { Image } from "astro:assets";
+ /* removed */ ;
 
 const { services: servicesLabels } = siteConfig.pages;
 const service = services.find((s) => s.id === "landing-pages")!;
@@ -43,7 +43,7 @@ const seo = {
       </div>
 
       <div class="relative rounded-sm overflow-hidden border border-accent/20">
-        <Image
+        <img
           src={service.image}
           alt={service.title}
           width={800}

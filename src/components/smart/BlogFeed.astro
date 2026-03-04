@@ -1,7 +1,6 @@
 ---
 import { getCollection } from "astro:content";
 import BlogCard from "@/components/ui/cards/BlogCard.astro";
-import { Image } from "astro:assets";
 
 // Smart component: Orchestrates blog data and layout
 const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
@@ -31,15 +30,15 @@ const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
           href={`/blog/${post.id}/`}
           class="flex gap-4 group items-center bg-white p-3 rounded-sm border border-gray-light/20 shadow-sm active:scale-95 transition-transform"
         >
-          <div class="size-20 rounded-sm overflow-hidden flex-shrink-0 bg-gray-light/10">
-            <Image
+            <img
               src={post.data.heroImage || "/generico.jpeg"}
               alt={post.data.title}
-              width={200}
-              height={200}
+              width="200"
+              height="200"
+              loading="lazy"
+              decoding="async"
               class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
             />
-          </div>
           <div class="flex flex-col gap-1 justify-center">
             <span class="font-poppins text-[9px] font-bold text-brand uppercase tracking-widest">
               {post.data.category}

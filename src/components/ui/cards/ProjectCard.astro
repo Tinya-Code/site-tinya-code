@@ -1,5 +1,4 @@
 ---
-import { Image } from "astro:assets";
 import Icon from "../common/Icon.astro";
 import type { CardBase, WithCategory } from "@/types";
 
@@ -42,11 +41,13 @@ const featured = size === "featured";
   data-href={href}
 >
   <!-- Background Image -->
-  <Image
+  <img
     src={image || "/generico.jpeg"}
     alt={title}
     width={size === "featured" ? 1200 : 800}
     height={size === "featured" ? 800 : 600}
+    loading="lazy"
+    decoding="async"
     class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
   />
 

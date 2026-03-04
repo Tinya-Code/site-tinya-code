@@ -1,6 +1,5 @@
 ---
 import Button from "@/components/ui/buttons/Button.astro";
-import { Image } from "astro:assets";
 
 import type { HeadingTag } from "@/types";
 
@@ -83,11 +82,11 @@ const {
         <div class="flex items-center gap-4 opacity-40 grayscale">
           {
             partners.map((partner) => (
-              <Image
+              <img
                 src={partner.logo}
                 alt={partner.name}
-                width={80}
-                height={32}
+                width="80"
+                height="32"
                 loading="eager"
                 aria-hidden="true"
                 class="h-6 w-auto object-contain"
@@ -100,11 +99,11 @@ const {
 
     <!-- Image + Metric -->
     <div class="order-2 lg:order-2 relative group">
-      <Image
+      <img
         src={image}
         alt={title}
-        width={800}
-        height={800}
+        width="800"
+        height="800"
         loading="eager"
         class="w-full h-full aspect-square object-cover transition-transform duration-500"
       />

@@ -1,6 +1,6 @@
 ---
 import Icon from "./Icon.astro";
-import { Image } from "astro:assets";
+ /* removed */ ;
 
 interface Props {
   name: string;
@@ -38,7 +38,7 @@ const { name, role, company, content, avatar, rating = 5 } = Astro.props;
   <!-- Author -->
   <div class="flex items-center gap-4 pt-4">
     <div class="size-10 rounded-full overflow-hidden shrink-0">
-      <Image src={avatar} alt={name} width={80} height={80} class="w-full h-full object-cover" />
+      <img src={avatar} alt={name} width={80} height={80} class="w-full h-full object-cover" />
     </div>
     <div class="flex flex-col">
       <cite class="not-italic font-poppins font-bold text-sm text-dark tracking-tight">

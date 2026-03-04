@@ -1,5 +1,4 @@
 ---
-import { Image } from "astro:assets";
 import Icon from "../common/Icon.astro";
 import type { CollectionEntry } from "astro:content";
 
@@ -24,15 +23,16 @@ const featured = featuredProp ?? post.data.featured;
     <!-- Image -->
     <div
       class:list={[
-        "relative overflow-hidden w-full h-full",
         featured ? "aspect-square md:aspect-auto" : "aspect-video md:aspect-auto",
       ]}
     >
-      <Image
+      <img
         src={heroImage || "/generico.jpeg"}
         alt={title}
         width={featured ? 1200 : 800}
         height={featured ? 800 : 600}
+        loading={featured ? "eager" : "lazy"}
+        decoding="async"
         class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
       />
 

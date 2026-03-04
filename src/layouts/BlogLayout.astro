@@ -5,7 +5,6 @@ import { Icon } from "astro-icon/components";
 import { siteConfig } from "@/data/siteConfig";
 import BlogContentFormatter from "@/components/ui/common/BlogContentFormatter.astro";
 import { blogTerms } from "@/data/blogTerms";
-import { Image } from "astro:assets";
 import SchemaArticle from "@/components/ui/common/SchemaArticle.astro";
 
 interface Props {
@@ -164,11 +163,13 @@ const seo = {
             {relatedPosts.map((rel) => (
               <a href={`/blog/${rel.id}/`} class="group flex gap-4 items-start">
                 <div class="size-20 rounded-sm overflow-hidden flex-shrink-0 bg-dark">
-                  <Image
+                  <img
                     src={rel.data.heroImage || "/generico.jpeg"}
                     alt={rel.data.title}
-                    width={200}
-                    height={200}
+                    width="200"
+                    height="200"
+                    loading="lazy"
+                    decoding="async"
                     class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-500"
                   />
                 </div>

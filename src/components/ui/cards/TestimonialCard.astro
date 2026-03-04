@@ -47,7 +47,7 @@ const { name, role, company, content, avatar, rating = 5 } = Astro.props;
     <div class="relative shrink-0">
       <div class="absolute -inset-1 rounded-full border border-brand/20 group-hover:border-brand/40 group-hover:scale-105 transition-all duration-400"></div>
       <div class="size-11 sm:size-12 rounded-full overflow-hidden relative z-10">
-        <Image
+        <img
           src={avatar}
           alt={name}
           width={96}

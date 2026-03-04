@@ -4,7 +4,7 @@ import AidaBannerSection from "@/components/smart/AidaBannerSection.astro";
 import { sectors } from "@/data/sectors";
 import { siteConfig } from "@/data/siteConfig";
 import { Icon } from "astro-icon/components";
-import { Image } from "astro:assets";
+ /* removed */ ;
 
 const { sectors: sectorsLabels } = siteConfig.pages;
 const sector = sectors.find((s) => s.id === "servicios-generales")!;
@@ -37,7 +37,7 @@ const seo = {
           {sector.fullDescription}
         </p>
         <div class="relative rounded-sm overflow-hidden border border-accent/20">
-          <Image
+          <img
             src={sector.image}
             alt={sector.name}
             width={800}

@@ -1,5 +1,5 @@
 ---
-import { Image } from "astro:assets";
+ /* removed */ ;
 import "@/styles/global.css";
 import type { CollectionEntry } from "astro:content";
 import BaseLayout from "./BaseLayout.astro";
@@ -15,7 +15,7 @@ const { title, description, date, updatedDate, heroImage } = Astro.props;
     <div class="hero-image mb-8 rounded-sm overflow-hidden">
       {
         heroImage && (
-          <Image width={1020} height={510} src={heroImage} alt={title} class="w-full h-auto" />
+          <img width={1020} height={510} src={heroImage} alt={title} class="w-full h-auto" />
         )
       }
     </div>
