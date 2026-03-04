@@ -2,8 +2,8 @@ export const siteConfig = {
   name: "Tinya Code",
   description:
     "Elevamos tu presencia digital con soluciones tecnológicas de vanguardia. Especialistas en B2B y automatización.",
-  url: "https://tinyacode.com",
-  ogImage: "/generico.jpeg",
+  url: "https://studioaureola.com/",
+  ogImage: "/logonegro.svg",
   author: "Tinya Code Team",
   defaultLanguage: "es",
 

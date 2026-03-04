@@ -27,6 +27,7 @@ const projects = defineCollection({
       description: z.string(),
       date: z.coerce.date(),
       heroImage: z.string().optional(),
+      secondaryImage: z.string().optional(),
       category: z.string(),
       client: z.string().optional(),
       technologies: z.array(z.string()),
@@ -34,6 +35,15 @@ const projects = defineCollection({
       type: z.enum(["web", "tienda", "software", "excel"]).default("web"),
       demo: z.string().url().optional(),
       preview: z.string().optional(),
+      imageLayout: z.enum(["side-by-side", "stacked", "reversed", "grid", "asymmetric"]).default("side-by-side"),
+      images: z.array(z.object({
+        src: z.string(),
+        alt: z.string().optional(),
+        caption: z.string().optional()
+      })).optional(),
+      galleryLayout: z.enum(["grid", "carousel"]).default("grid"),
+      galleryDirection: z.enum(["left", "right"]).default("left"),
+      gallerySpeed: z.number().default(40),
       draft: z.boolean().default(false),
     }),
 });

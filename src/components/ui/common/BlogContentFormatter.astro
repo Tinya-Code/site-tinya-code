@@ -2,7 +2,7 @@
 
 ---
 
-<div class="blog-content prose-blog" id="blog-content">
+<div class="blog-content prose-blog p-4" id="blog-content">
   <slot />
 </div>
 
@@ -60,7 +60,7 @@
           } else if (item.type === "highlight") {
             replacement = `<mark class="blog-highlight">${match}</mark>`;
           } else if (item.type === "definition") {
-            replacement = `<span class="blog-definition" tabindex="0" data-definition="${item.definition}">${match[1]}</span>`;
+            replacement = `<span class="blog-definition" tabindex="0" data-definition="${item.definition}">${match[0]}</span>`;
           }
 
           newHtml = text.replace(regex, replacement);

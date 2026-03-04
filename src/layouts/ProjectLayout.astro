@@ -1,10 +1,14 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import ProjectGallery from "@/components/ui/gallery/ProjectGallery.astro";
+import ImageModal from "@/components/ui/common/ImageModal.astro";
+import BackButton from "@/components/ui/buttons/BackButton.astro";
 import type { CollectionEntry } from "astro:content";
 import { Icon } from "astro-icon/components";
 import { siteConfig } from "@/data/siteConfig";
 import { blogTerms } from "@/data/blogTerms";
 import BlogContentFormatter from "@/components/ui/common/BlogContentFormatter.astro";
+import CallToAction from "@/components/ui/sections/CallToAction.astro";
 
 
 interface Props {
@@ -12,7 +16,10 @@ interface Props {
 }
 
 const { project } = Astro.props;
-const { title, description, heroImage, category, client, technologies } = project.data;
+const { title, description, heroImage, secondaryImage, imageLayout, images, galleryLayout, galleryDirection, gallerySpeed, category, client, technologies, demo } = project.data;
+
+// Use first gallery image as hero if no heroImage is provided
+const mainImage = heroImage || (images && images.length > 0 ? images[0].src : '/generico.jpeg');
 
 const seo = {
   title: `${title} | Casos de Éxito ${siteConfig.name}`,
@@ -23,33 +30,22 @@ const seo = {
 <BaseLayout title={seo.title} description={seo.description}>
   <section class="section-base  section-light">
     <article class=" bg-light  mx-auto ">
-      <div class="mb-8 container-main">
-        <a
-          href="/portfolio"
-          class="inline-flex items-center gap-2 text-dark/60 hover:text-brand font-poppins text-xs font-bold uppercase tracking-widest transition-colors group/back"
-        >
-          <Icon
-            name="mdi:arrow-left"
-            class="size-4 group-hover/back:-translate-x-1 transition-transform"
-          />
-          Volver a Portafolio
-        </a>
-      </div>
+      <BackButton href="/portfolio" label="Volver a Portafolio" />
 
       <header class="grid grid-cols-1 container-main lg:grid-cols-2 gap-12 items-center mb-16">
         <div class="space-y-2">
           <div
-            class="inline-flex items-center gap-2 text-brand text-[10px] font-bold uppercase tracking-widest font-poppins"
+            class="texto-label text-brand inline-flex items-center gap-2"
           >
             <Icon name="mdi:briefcase-check-outline" class="size-4" />
             Caso de Éxito / {category}
           </div>
           <h1
-            class="text-4xl md:text-6xl font-rader font-extrabold text-dark leading-tight italic"
+            class="titulo-seccion italic"
           >
             {title}
           </h1>
-          <p class="text-lg text-gray leading-relaxed font-poppins">
+          <p class="texto-cuerpo text-gray leading-relaxed">
             {description}
           </p>
 
@@ -57,7 +53,7 @@ const seo = {
             {
               client && (
                 <div class="space-y-1">
-                  <span class="text-[10px] uppercase font-poppins font-bold text-gray tracking-widest opacity-60">
+                  <span class="texto-label text-gray opacity-60">
                     Cliente
                   </span>
                   <p class="font-poppins font-semibold text-dark">{client}</p>
@@ -66,7 +62,7 @@ const seo = {
             }
             <div class="space-y-1">
               <span
-                class="text-[10px] uppercase font-poppins font-bold text-gray tracking-widest opacity-60"
+                class="texto-label text-gray opacity-60"
                 >Categoría</span
               >
               <p class="font-poppins font-semibold text-dark">{category}</p>
@@ -74,7 +70,7 @@ const seo = {
             {
               technologies && (
                 <div class="col-span-2 space-y-2">
-                  <span class="text-[10px] uppercase font-poppins font-bold text-gray tracking-widest opacity-60">
+                  <span class="texto-label text-gray opacity-60">
                     Stack Tecnológico
                   </span>
                   <div class="flex flex-wrap gap-2">
@@ -87,22 +83,41 @@ const seo = {
                 </div>
               )
             }
+            {
+              demo && (
+                <div class="col-span-2 pt-4">
+                  <a 
+                    href={demo} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    class="btn-primary"
+                  >
+                    <Icon name="mdi:launch" class="size-4" />
+                    Visitar Sitio En Vivo
+                  </a>
+                </div>
+              )
+            }
           </div>
         </div>
 
-        <div class="relative rounded-sm overflow-hidden border border-accent/20 group">
-          {
-            heroImage && (
-              <img
-                src={heroImage}
-                alt={title}
-                width="800"
-                height="500"
-                loading="eager"
-                class="w-full h-auto max-h-100 object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-              />
-            )
-          }
+        <div 
+          class="relative rounded-sm overflow-hidden border border-gray-light bg-light/50 group transition-all duration-500 cursor-zoom-in"
+          data-image-modal="project-zoom"
+          data-src={mainImage}
+          data-alt={title}
+        >
+          <img
+            src={mainImage}
+            alt={title}
+            width="1200"
+            height="600"
+            loading="eager"
+            class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 aspect-video md:aspect-[21/9]"
+          />
+          <div class="absolute inset-0 bg-dark/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+            <span class="text-white font-poppins text-[10px] font-bold uppercase tracking-widest bg-dark/40 backdrop-blur-sm px-4 py-2 rounded-sm border border-white/10">Ampliar imagen</span>
+          </div>
         </div>
       </header>
       <main class="bg-white py-4 ">
@@ -111,27 +126,29 @@ const seo = {
             <slot />
           </BlogContentFormatter>
 
-      <section
-        class="mt-20 container-main p-10 bg-brand text-white rounded-sm text-center space-y-8 relative overflow-hidden"
-      >
-        <h3 class="text-3xl md:text-4xl font-poppins font-bold italic text-white relative z-10">
-          ¿Listo para lograr resultados similares?
-        </h3>
-        <p class="text-white/80 max-w-xl mx-auto relative z-10 font-poppins">
-          Cada proyecto es único. Hablemos sobre cómo podemos aplicar nuestra experiencia para
-          solucionar tus desafíos específicos.
-        </p>
-        <div class="pt-4 relative z-10">
-          <a
-            href="/contact"
-            class="inline-block bg-transparent text-white border border-white font-poppins font-bold px-12 py-4 rounded-sm hover:bg-white hover:text-dark transition-all duration-300 tracking-widest text-[10px] uppercase"
-          >
-            Iniciar mi Proyecto
-          </a>
-        </div>
-      </section>
+        {images && images.length > 0 && (
+          <div class="mt-20">
+            <h2 class="titulo-seccion container-main mb-8 italic">Galería del Proyecto</h2>
+            <ProjectGallery 
+              images={images} 
+              layout={galleryLayout} 
+              direction={galleryDirection}
+              speed={gallerySpeed}
+            />
+          </div>
+        )}
+
+      <CallToAction
+        title="¿Listo para lograr resultados similares?"
+        subtitle="Cada proyecto es único. Hablemos sobre cómo podemos aplicar nuestra experiencia para solucionar tus desafíos específicos."
+        buttonText="Iniciar mi Proyecto"
+        buttonHref="/contact"
+        background="brand"
+      />
       </main>
 
     </article>
   </section>
+  
+  <ImageModal id="project-zoom" />
 </BaseLayout>

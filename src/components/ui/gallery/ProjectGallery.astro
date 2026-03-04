@@ -1,0 +1,204 @@
+---
+interface Props {
+  images: {
+    src: string;
+    alt?: string;
+    caption?: string;
+  }[];
+  layout?: "grid" | "carousel" | "logos";
+  direction?: "left" | "right";
+  speed?: number;
+  imageClass?: string;
+}
+
+const { 
+  images, 
+  layout = "grid", 
+  direction = "left", 
+  speed = 40,
+  imageClass = ""
+} = Astro.props;
+
+// Quadruplicate images for ultra-wide screen safety and seamless looping
+const marqueeImages = [...images, ...images, ...images, ...images];
+---
+
+<div class="project-gallery-container mt-16 max-w-full overflow-hidden">
+  {
+    layout === "grid" ? (
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 container-main px-4 md:px-0">
+        {images.map((img, index) => (
+          <div 
+            class="relative aspect-video rounded-sm overflow-hidden border border-gray-light bg-light/50 group cursor-zoom-in"
+            data-image-modal="project-zoom"
+            data-src={img.src}
+            data-alt={img.alt || `Proyecto ${index + 1}`}
+            data-caption={img.caption}
+          >
+            <img
+              src={img.src}
+              alt={img.alt || `Imagen del proyecto ${index + 1}`}
+              class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+              loading="lazy"
+              decoding="async"
+            />
+            <div class="absolute inset-0 bg-dark/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <span class="text-white font-poppins text-[10px] font-bold uppercase tracking-widest bg-dark/40 backdrop-blur-sm px-4 py-2 rounded-sm border border-white/10">Ver detalle</span>
+            </div>
+          </div>
+        ))}
+      </div>
+     ) : layout === "logos" ? (
+      <div class="carousel-marquee-wrapper relative w-full overflow-hidden py-4" data-marquee data-speed={speed}>
+        <div 
+          class:list={[
+            "marquee-track flex gap-16 pr-16 items-center min-w-[200%]",
+            direction === "left" ? "animate-marquee-left" : "animate-marquee-right"
+          ]}
+        >
+          {marqueeImages.map((img, index) => (
+            <img
+              src={img.src}
+              alt={index < images.length ? (img.alt || "") : ""}
+              aria-hidden={index >= images.length ? "true" : undefined}
+              class={imageClass || "h-8 md:h-10 w-auto opacity-30 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-500 shrink-0"}
+              loading="lazy"
+              decoding="async"
+              width="150"
+              height="50"
+            />
+          ))}
+        </div>
+      </div>
+    ) : (
+      <div class="carousel-marquee-wrapper relative w-full overflow-hidden py-4" data-marquee data-speed={speed}>
+        <div 
+          class:list={[
+            "marquee-track flex gap-6 pr-6 min-w-[200%]",
+            direction === "left" ? "animate-marquee-left" : "animate-marquee-right"
+          ]}
+        >
+          {marqueeImages.map((img, index) => (
+            <div 
+              class="w-[280px] md:w-[450px] aspect-video rounded-sm overflow-hidden border border-gray-light bg-light/50 flex-shrink-0 cursor-zoom-in relative group"
+              data-image-modal="project-zoom"
+              data-src={img.src}
+              data-alt={img.alt || `Proyecto ${index + 1}`}
+              data-caption={img.caption}
+              aria-hidden={index >= images.length ? "true" : undefined}
+            >
+              <img
+                src={img.src}
+                alt={index < images.length ? (img.alt || `Imagen del proyecto ${index + 1}`) : ""}
+                class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                loading="lazy"
+                decoding="async"
+              />
+              <div class="absolute inset-0 bg-dark/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                 <span class="text-white font-poppins text-[10px] font-bold uppercase tracking-widest bg-dark/40 backdrop-blur-sm px-4 py-2 rounded-sm border border-white/10">Ampliar</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+</div>
+
+<style>
+  @keyframes marquee-left {
+    0% { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(-25%, 0, 0); }
+  }
+
+  @keyframes marquee-right {
+    0% { transform: translate3d(-25%, 0, 0); }
+    100% { transform: translate3d(0, 0, 0); }
+  }
+
+  .animate-marquee-left {
+    animation: marquee-left var(--duration, 40s) linear infinite;
+    will-change: transform;
+    width: max-content;
+  }
+
+  .animate-marquee-right {
+    animation: marquee-right var(--duration, 40s) linear infinite;
+    will-change: transform;
+    width: max-content;
+  }
+
+  .carousel-marquee-wrapper:hover .marquee-track {
+    animation-play-state: paused !important;
+  }
+</style>
+
+<script>
+  function initMarqueeObservers() {
+    const wrappers = document.querySelectorAll<HTMLElement>('.carousel-marquee-wrapper');
+    if (!wrappers.length) return;
+    
+    // Performance: Pause off-screen animations to save CPU/GPU and battery
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const wrapper = entry.target as HTMLElement;
+        const track = wrapper.querySelector<HTMLElement>('.marquee-track');
+        if (!track) return;
+        
+        const isVisible = entry.isIntersecting && !document.hidden;
+        track.style.animationPlayState = isVisible ? 'running' : 'paused';
+      });
+    }, { threshold: 0 });
+
+    const handleVisibility = () => {
+      wrappers.forEach(wrapper => {
+        const track = wrapper.querySelector<HTMLElement>('.marquee-track');
+        if (track) {
+          track.style.animationPlayState = document.hidden ? 'paused' : 'running';
+        }
+      });
+    };
+
+    document.addEventListener('visibilitychange', handleVisibility);
+
+    // Clean up observers on unmount for SPA transitions
+    document.addEventListener('astro:before-swap', () => {
+      observer.disconnect();
+      document.removeEventListener('visibilitychange', handleVisibility);
+    }, { once: true });
+    
+    wrappers.forEach(wrapper => {
+      observer.observe(wrapper);
+      
+      const track = wrapper.querySelector<HTMLElement>('.marquee-track');
+      if (track) {
+        // Calculate original width of ONE set of images. 
+        // We duplicated 4 times, so the total scrollWidth is 4x the original set width.
+        // Wait, width calculation is safest when images are loaded, but we can rough it.
+        const calculateDuration = () => {
+          const totalWidth = track.scrollWidth;
+          const originalSetWidth = totalWidth / 4;
+          const speedPxPerSecond = parseFloat(wrapper.dataset.speed || "40");
+          // Time = Distance / Speed
+          const duration = originalSetWidth / speedPxPerSecond;
+          track.style.setProperty('--duration', `${duration}s`);
+        };
+
+        // Calculate once immediately, then recalculate when window loads/resizes
+        calculateDuration();
+        window.addEventListener('load', calculateDuration);
+        window.addEventListener('resize', calculateDuration);
+        
+        // Clean up listeners on unmount
+        document.addEventListener('astro:before-swap', () => {
+          window.removeEventListener('load', calculateDuration);
+          window.removeEventListener('resize', calculateDuration);
+        }, { once: true });
+      }
+    });
+  }
+
+  // Initialize observers
+  initMarqueeObservers();
+  document.addEventListener('astro:after-swap', initMarqueeObservers);
+</script>

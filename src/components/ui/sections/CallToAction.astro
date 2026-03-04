@@ -11,49 +11,77 @@ interface TrustItem {
 interface Props {
   title: string;
   subtitle: string;
-  button: {
+  buttonText?: string;
+  buttonHref?: string;
+  background?: "brand" | "dark" | "light" | "white";
+  showDecorations?: boolean;
+  trustItems?: TrustItem[];
+  // Legacy support for older prop structure
+  button?: {
     text: string;
     href: string;
   };
-  trustItems?: TrustItem[];
 }
 
-const { title, subtitle, button, trustItems = [] } = Astro.props;
+const {
+  title,
+  subtitle,
+  buttonText,
+  buttonHref,
+  button,
+  background = "brand",
+  showDecorations = false,
+  trustItems = [],
+} = Astro.props;
+
+const finalButtonText = buttonText || button?.text || "Contactar ahora";
+const finalButtonHref = buttonHref || button?.href || "/contact";
+
+const isDark = background === "brand" || background === "dark";
 ---
 
-<section class="section-base section-cta-bg relative overflow-hidden">
+<section class:list={["section-base relative overflow-hidden", `section-${background}`, showDecorations && "section-cta-bg"]}>
   <div class="container-main relative z-10">
     <div class="animate-on-scroll flex flex-col items-center text-center gap-4 py-4">
       <div class="relative inline-block mb-4">
-        <span class="line-draw bg-white/40"></span>
-        <h2 class="font-poppins text-3xl md:text-5xl font-bold text-white max-w-3xl leading-tight">
+        {showDecorations && <span class:list={["line-draw", isDark ? "bg-white/40" : "bg-brand/20"]}></span>}
+        <h2 class:list={[
+          "titulo-seccion max-w-3xl leading-tight",
+          isDark ? "text-white" : "text-dark"
+        ]}>
           {title}
         </h2>
-        <svg
-          class="absolute -bottom-4 left-1/2 -translate-x-1/2 w-48 h-3 text-white/20"
-          viewBox="0 0 200 12"
-          fill="none"
-          preserveAspectRatio="none"
-        >
-          <path
-            d="M2 10C30 10 60 2 100 2C140 2 170 10 198 10"
-            stroke="currentColor"
-            stroke-width="4"
-            stroke-linecap="round"></path>
-        </svg>
+        
+        {showDecorations && (
+          <svg
+            class:list={["absolute -bottom-4 left-1/2 -translate-x-1/2 w-48 h-3", isDark ? "text-white/20" : "text-brand/20"]}
+            viewBox="0 0 200 12"
+            fill="none"
+            preserveAspectRatio="none"
+          >
+            <path
+              d="M2 10C30 10 60 2 100 2C140 2 170 10 198 10"
+              stroke="currentColor"
+              stroke-width="4"
+              stroke-linecap="round"></path>
+          </svg>
+        )}
       </div>
 
-      <p class="font-poppins text-base text-white/80 max-w-xl mb-4 leading-relaxed">
+      <p class:list={[
+        "subtitulo max-w-xl mb-4 leading-relaxed",
+        isDark ? "text-white/80" : "text-gray"
+      ]}>
         {subtitle}
       </p>
 
       <div class="flex flex-col items-center gap-4">
         <Button
-          href={button.href}
-          variant="outline-white"
-          class="!px-8 !py-4 !text-lg hover:bg-white hover:text-brand transition-all duration-300"
+          href={finalButtonHref}
+          variant={isDark ? "outline-white" : "primary"}
+          class="!px-8 !py-4 !text-lg"
         >
-          {button.text}
+          {finalButtonText}
           <Icon
             name="mdi:arrow-right"
             size={5}
@@ -64,17 +92,17 @@ const { title, subtitle, button, trustItems = [] } = Astro.props;
         <!-- Trust Items / Metrics Row -->
         {
           trustItems.length > 0 && (
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 md:gap-16 pt-12 border-t border-white/10 w-full max-w-4xl">
+            <div class:list={["grid grid-cols-1 sm:grid-cols-3 gap-8 md:gap-16 pt-12 border-t w-full max-w-4xl", isDark ? "border-white/10" : "border-gray-light"]}>
               {trustItems.map((item) => (
                 <div class="flex flex-col items-center gap-3 text-center group">
-                  <div class="size-10 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
-                    <Icon name={item.icon} size={5} class="text-white" />
+                  <div class:list={["size-10 rounded-full flex items-center justify-center transition-colors", isDark ? "bg-white/10 group-hover:bg-white/20" : "bg-brand/10 group-hover:bg-brand/20"]}>
+                    <Icon name={item.icon} size={5} class={isDark ? "text-white" : "text-brand"} />
                   </div>
                   <div class="space-y-1">
-                    <span class="block font-poppins text-sm font-bold text-white uppercase tracking-widest">
+                    <span class:list={["block font-poppins text-sm font-bold uppercase tracking-widest", isDark ? "text-white" : "text-dark"]}>
                       {item.text}
                     </span>
-                    <span class="block font-poppins text-[10px] text-white/50 uppercase tracking-tighter">
+                    <span class:list={["block font-poppins text-[10px] uppercase tracking-tighter", isDark ? "text-white/50" : "text-gray"]}>
                       {item.description}
                     </span>
                   </div>
@@ -87,9 +115,12 @@ const { title, subtitle, button, trustItems = [] } = Astro.props;
     </div>
   </div>
 
-  <!-- Perspective Circles decoration -->
-  <div class="absolute -top-24 -left-24 size-96 rounded-full bg-white/5 blur-3xl"></div>
-  <div class="absolute -bottom-24 -right-24 size-96 rounded-full bg-white/5 blur-3xl"></div>
+  {showDecorations && (
+    <>
+      <div class="absolute -top-24 -left-24 size-96 rounded-full bg-white/5 blur-3xl"></div>
+      <div class="absolute -bottom-24 -right-24 size-96 rounded-full bg-white/5 blur-3xl"></div>
+    </>
+  )}
 </section>
 
 <script>

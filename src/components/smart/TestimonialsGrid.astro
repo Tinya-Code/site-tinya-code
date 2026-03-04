@@ -2,8 +2,17 @@
 import { testimonials } from "@/data/testimonials";
 import TestimonialCard from "@/components/ui/cards/TestimonialCard.astro";
 import Icon from "@/components/ui/common/Icon.astro";
+import ProjectGallery from "@/components/ui/gallery/ProjectGallery.astro";
 
 // Smart component: fetches data from testimonials.ts and orchestrates slider logic
+
+// Client logos rendered via the ProjectGallery carousel marquee
+const clientLogos = [
+  { src: "/logos/logo-repiit.svg",  alt: "Repiit"  },
+  { src: "/logos/logo-travel.webp", alt: "Travel"  },
+  { src: "/logos/logo-amira.png",   alt: "Amira"   },
+  { src: "/logos/logo-qillary.webp",alt: "Qillary" },
+];
 ---
 
 <div class="space-y-16">
@@ -58,64 +67,14 @@ import Icon from "@/components/ui/common/Icon.astro";
     </div>
   </div>
 
-  <!-- Logos Infinite Loop -->
+  <!-- Logos Infinite Loop — via ProjectGallery carousel -->
   <div class="pt-12 border-t border-gray-light/30">
-    <div class="text-center mb-8">
+    <div class="text-center mb-6">
       <span class="font-poppins text-xs font-semibold text-gray/50 uppercase tracking-widest">
         Empresas que confían en nosotros
       </span>
     </div>
-    <div class="overflow-hidden relative">
-      <div class="flex items-center gap-12 logos-track py-4">
-        {/* Loop logos twice for infinite effect */}
-        {
-          [...Array(2)].map(() => (
-            <div class="flex items-center gap-12 shrink-0">
-              <img
-                src="/logos/logo-repiit.svg"
-                alt=""
-                width="150"
-                height="50"
-                loading="lazy"
-                aria-hidden="true"
-                class="h-8 md:h-10 w-auto opacity-30 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-500"
-              />
-              <img
-                src="/logos/logo-travel.webp"
-                alt=""
-                width="150"
-                height="50"
-                loading="lazy"
-                aria-hidden="true"
-                class="h-8 md:h-10 w-auto opacity-30 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-500"
-              />
-              <img
-                src="/logos/logo-amira.png"
-                alt=""
-                width="150"
-                height="50"
-                loading="lazy"
-                aria-hidden="true"
-                class="h-8 md:h-10 w-auto opacity-30 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-500"
-              />
-              <img
-                src="/logos/logo-qillary.webp"
-                alt=""
-                width="150"
-                height="50"
-                loading="lazy"
-                aria-hidden="true"
-                class="h-8 md:h-10 w-auto opacity-30 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-500"
-              />
-            </div>
-          ))
-        }
-      </div>
-      <div class="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-white to-transparent z-10">
-      </div>
-      <div class="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-white to-transparent z-10">
-      </div>
-    </div>
+    <ProjectGallery images={clientLogos} layout="logos" speed={25} />
   </div>
 </div>
 

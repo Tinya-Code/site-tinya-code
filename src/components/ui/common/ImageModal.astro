@@ -1,0 +1,97 @@
+---
+import Icon from "./Icon.astro";
+
+interface Props {
+  id: string;
+}
+
+const { id } = Astro.props;
+---
+
+<dialog
+  id={id}
+  class="image-modal fixed inset-0 z-[100] w-full h-full max-w-none max-h-none bg-transparent m-0 p-0 border-none outline-none backdrop:bg-dark/90 backdrop:backdrop-blur-md"
+>
+  <div class="flex items-center justify-center min-h-screen p-4 md:p-12 relative">
+    {/* Close Trigger (Backdrop) */}
+    <div class="absolute inset-0 cursor-zoom-out close-trigger"></div>
+
+    <div class="relative z-10 max-w-6xl w-full flex flex-col items-center gap-4">
+      <button
+        type="button"
+        class="absolute -top-12 right-0 md:-right-12 p-2 text-white/60 hover:text-white transition-colors focus:outline-none close-trigger"
+        aria-label="Cerrar vista"
+      >
+        <Icon name="mdi:close" size={8} />
+      </button>
+
+      <img
+        id={`${id}-img`}
+        src=""
+        alt=""
+        class="max-w-full max-h-[85vh] object-contain shadow-2xl rounded-sm animate-in zoom-in duration-300"
+      />
+      
+      <p id={`${id}-caption`} class="text-white/80 font-poppins text-sm text-center max-w-2xl"></p>
+    </div>
+  </div>
+</dialog>
+
+<style>
+  .image-modal {
+    display: none;
+  }
+  .image-modal[open] {
+    display: block;
+  }
+  
+  .image-modal::backdrop {
+    animation: fade-in 0.3s ease-out forwards;
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+</style>
+
+<script is:inline>
+  function initImageModal() {
+    const triggers = document.querySelectorAll('[data-image-modal]');
+    const closeTriggers = document.querySelectorAll('.close-trigger');
+
+    triggers.forEach(trigger => {
+      trigger.addEventListener('click', (e) => {
+        const modalId = trigger.getAttribute('data-image-modal');
+        const src = trigger.getAttribute('data-src');
+        const alt = trigger.getAttribute('data-alt') || '';
+        const caption = trigger.getAttribute('data-caption') || '';
+
+        const modal = document.getElementById(modalId);
+        const img = document.getElementById(`${modalId}-img`);
+        const captionEl = document.getElementById(`${modalId}-caption`);
+
+        if (modal && img) {
+          img.src = src;
+          img.alt = alt;
+          if (captionEl) captionEl.textContent = caption;
+          modal.showModal();
+          document.body.style.overflow = 'hidden';
+        }
+      });
+    });
+
+    closeTriggers.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const modal = btn.closest('dialog');
+        if (modal) {
+          modal.close();
+          document.body.style.overflow = '';
+        }
+      });
+    });
+  }
+
+  initImageModal();
+  document.addEventListener('astro:after-swap', initImageModal);
+</script>

@@ -1,65 +1,100 @@
 ---
+import Tooltip from "@/components/ui/common/Tooltip.astro";
 import { webPricing } from "@/data/pricing";
 import PricingTable from "@/components/ui/sections/PricingTable.astro";
+import type { PricingPlan } from "@/types";
 
-// Smart component: Orchestrates pricing data and billing toggle
-const { pricing = webPricing } = Astro.props;
+// Smart component: Orchestrates pricing data and payment toggle
+interface Props {
+  pricing?: PricingPlan[];
+  splitPaymentLabel?: string;
+  fullPaymentLabel?: string;
+  discountLabel?: string;
+}
+
+const { 
+  pricing = webPricing,
+  splitPaymentLabel = "Pago en partes",
+  fullPaymentLabel = "Pago completo",
+  discountLabel = "-10%"
+} = Astro.props;
 ---
 
-<div class="space-y-8 scroll-mt-5">
-  <!-- Billing Toggle -->
-  <div class="flex flex-col items-center justify-center gap-4 animate-on-scroll">
-    <button
-      id="billing-toggle"
-      class="flex items-center gap-2 bg-white/50 p-1.5 rounded-sm border border-gray-light/30 shadow-sm relative focus:outline-none focus:ring-2 focus:ring-brand"
-      role="switch"
-      aria-checked="false"
-      aria-label="Alternar entre pago mensual y anual"
+<div class="space-y-6 scroll-mt-5">
+  <!-- Payment Toggle -->
+  <div class="flex flex-col  items-center justify-center gap-4 animate-on-scroll">
+    <div
+      id="billing-toggle-container"
+      class="flex items-center gap-2 bg-white p-1 rounded-sm border border-gray-light shadow-sm relative focus-within:ring-2 focus-within:ring-brand overflow-hidden cursor-pointer selection:bg-transparent"
+      role="group"
+      aria-labelledby="toggle-desc"
     >
+      <span id="toggle-desc" class="sr-only">Cambiar entre pago en partes y pago completo</span>
+      
       <div
         id="billing-indicator"
-        class="absolute left-1.5 top-1.5 bottom-1.5 w-[calc(50%-0.375rem)] bg-brand rounded-sm transition-transform duration-300 pointer-events-none"
+        class="absolute left-1 top-1 bottom-1 w-[calc(50%-0.25rem)] bg-brand rounded-sm transition-transform duration-300 pointer-events-none z-0"
       >
       </div>
 
-      <span
-        id="billing-monthly"
-        class="relative z-10 w-40 text-center py-2.5 text-white font-poppins text-sm font-semibold transition-colors duration-300"
+      <div
+        id="btn-split"
+        class="relative z-10 min-w-[140px] px-6 flex items-center justify-center gap-2 py-3 text-white font-poppins text-sm font-semibold transition-colors duration-300"
       >
-        Pago en 3 partes
-      </span>
-      <span
-        id="billing-annual"
-        class="relative z-10 w-40 flex items-center justify-center gap-2 py-2.5 text-dark/40 font-poppins text-sm font-semibold transition-colors duration-300"
+        {splitPaymentLabel}
+      </div>
+
+      <div
+        id="btn-full"
+        class="relative z-10 min-w-[140px] px-6 flex items-center justify-center gap-2 py-3 text-dark/40 font-poppins text-sm font-semibold transition-colors duration-300"
       >
-        Pago completo
+        {fullPaymentLabel}
         <span
-        id="billing-annual-span"
-          class="font-poppins text-[10px] cambio font-bold px-1.5 py-0.5 rounded-full bg-brand/10 text-brand"
+          id="billing-annual-span"
+          class="font-poppins text-[10px] cambio font-bold px-1.5 py-0.5 rounded-full bg-brand/10 text-brand-dark transition-colors duration-300"
         >
-          -10%
+          {discountLabel}
         </span>
-      </span>
-    </button>
+      </div>
+    </div>
+
+    <!-- Pricing Legend -->
+    <div class="flex flex-wrap justify-center gap-x-8 gap-y-2 pt-2">
+      <div class="flex items-center gap-2 text-[11px] text-gray uppercase tracking-wider font-semibold">
+        
+     
+        <Tooltip text="Inversión dividida: 30% inicio, 40% avance, 30% entrega final." position="top" iconSize={3} />
+        {splitPaymentLabel}
+      </div>
+      <div class="flex items-center gap-2 text-[11px] text-gray uppercase tracking-wider font-semibold">
+         <Tooltip text="Obtén un descuento inmediato del 10% realizando el pago total al inicio." position="top" iconSize={3} />
+
+        {fullPaymentLabel}
+       
+      </div>
+    </div>
   </div>
 
   <PricingTable plans={pricing} />
 </div>
 
 <style>
-  #billing-toggle[aria-checked="true"] #billing-indicator {
+  /* Container States */
+  #billing-toggle-container.is-full #billing-indicator {
     transform: translateX(100%);
   }
 
-  #billing-toggle[aria-checked="true"] #billing-monthly  {
+  #billing-toggle-container.is-full #btn-split {
     color: rgba(20, 20, 20, 0.4);
   }
 
-  #billing-toggle[aria-checked="true"] #billing-annual, #billing-annual-span {
+  #billing-toggle-container.is-full #btn-full {
     color: white;
   }
-  #billing-toggle[aria-checked="false"]  #billing-annual-span {
-    color: var(--color-brand);
+  
+  #billing-toggle-container.is-full #billing-annual-span {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
   }
 </style>
 
@@ -67,35 +102,42 @@ const { pricing = webPricing } = Astro.props;
   import { initScrollAnimations } from "@/scripts/observer";
 
   const initPricing = (): void => {
-    const toggle = document.getElementById("billing-toggle");
+    const container = document.getElementById("billing-toggle-container");
     const cards = document.querySelectorAll<HTMLElement>(".pricing-card");
 
-    if (!toggle) return;
+    if (!container) return;
 
-    toggle.addEventListener("click", () => {
-      const isAnnual = toggle.getAttribute("aria-checked") === "true";
-      const newState = !isAnnual;
+    container.addEventListener("click", (e) => {
+      // Don't toggle if a tooltip was clicked
+      if ((e.target as HTMLElement).closest('.tooltip-container')) return;
 
-      toggle.setAttribute("aria-checked", String(newState));
-
+      const isFull = container.classList.toggle("is-full");
+      
       // Update cards instantly (no animation)
       cards.forEach((card) => {
-        const priceMonthly = parseFloat(card.getAttribute("data-price-monthly") || "0");
-        const priceAnnual = parseFloat(card.getAttribute("data-price-annual") || "0");
+        const splitRaw = card.getAttribute("data-price-split") || "";
+        const fullRaw = card.getAttribute("data-price-full") || "";
+        
+        // Formateador de moneda es-PE
+        const formatValue = (val: string) => {
+          const num = parseFloat(val);
+          return isNaN(num) ? val : `S/ ${num.toLocaleString("es-PE")}`;
+        };
+
         const priceEl = card.querySelector<HTMLElement>(".pricing-card__price");
         const noteEl = card.querySelector<HTMLElement>(".pricing-card__annual-note");
 
         if (!priceEl) return;
 
-        // Si no tiene priceAnnual, el precio no cambia
-        const periodIsAnnual = newState && priceAnnual > 0;
-        const targetPrice = periodIsAnnual ? priceAnnual : priceMonthly;
+        const hasFullPrice = Boolean(fullRaw && !isNaN(parseFloat(fullRaw)));
+        const periodIsFull = isFull && hasFullPrice;
+        const targetValue = periodIsFull ? fullRaw : splitRaw;
 
-        priceEl.textContent = `S/ ${targetPrice.toLocaleString("en-US")}`;
+        priceEl.textContent = formatValue(targetValue);
 
         if (noteEl) {
-          noteEl.classList.toggle("opacity-100", periodIsAnnual);
-          noteEl.classList.toggle("opacity-0", !periodIsAnnual);
+          noteEl.classList.toggle("opacity-100", periodIsFull);
+          noteEl.classList.toggle("opacity-0", !periodIsFull);
         }
       });
     });

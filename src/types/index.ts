@@ -26,3 +26,18 @@ export interface WithIcon {
 export interface WithIndex {
   index?: number;
 }
+export interface PricingPlan {
+  id: string;
+  name: string;
+  description: string;
+  priceSplit: number | string;
+  priceFull: number | string;
+  period: string;
+  features: (string | { text: string; tooltip: string })[];
+  ctaLabel?: string;
+  ctaHref: string;
+  featured?: boolean;
+  badge?: string;
+  hideDiscount?: boolean;
+  customDiscountLabel?: string;
+}

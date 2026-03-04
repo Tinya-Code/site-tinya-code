@@ -1,0 +1,116 @@
+@layer components {
+  /* ─── Animaciones de Entrada ────────────────────────────────────────────── */
+
+  .animate-on-scroll {
+    @apply opacity-0 translate-y-6 transition-all duration-[400ms] ease-out;
+  }
+
+  .animate-on-scroll.is-visible {
+    @apply opacity-100 translate-y-0;
+  }
+
+  .animate-on-scroll-left {
+    @apply opacity-0 -translate-x-6 transition-all duration-[400ms] ease-out;
+  }
+
+  .animate-on-scroll-left.is-visible {
+    @apply opacity-100 translate-x-0;
+  }
+
+  .animate-on-scroll-right {
+    @apply opacity-0 translate-x-6 transition-all duration-[400ms] ease-out;
+  }
+
+  .animate-on-scroll-right.is-visible {
+    @apply opacity-100 translate-x-0;
+  }
+
+  /* Delay escalonado para grillas — máximo 3 niveles */
+  .animate-delay-1 {
+    @apply [transition-delay:0ms];
+  }
+  .animate-delay-2 {
+    @apply [transition-delay:100ms];
+  }
+  .animate-delay-3 {
+    @apply [transition-delay:200ms];
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-on-scroll,
+    .animate-on-scroll-left,
+    .animate-on-scroll-right {
+      @apply opacity-100 translate-none transition-none;
+    }
+    .animate-delay-1,
+    .animate-delay-2,
+    .animate-delay-3 {
+      @apply [transition-delay:0ms];
+    }
+  }
+
+  /* ─── @keyframes Globales ───────────────────────────────────────────────── */
+
+  @keyframes btn-shine {
+    0% {
+      transform: translateX(-100%) skewX(-15deg);
+      opacity: 0;
+    }
+    30% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(200%) skewX(-15deg);
+      opacity: 0;
+    }
+  }
+
+  @keyframes draw-line {
+    from {
+      transform: scaleX(0);
+      transform-origin: left center;
+    }
+    to {
+      transform: scaleX(1);
+      transform-origin: left center;
+    }
+  }
+
+  @keyframes border-grow {
+    from {
+      height: 0;
+    }
+    to {
+      height: 100%;
+    }
+  }
+
+  @keyframes logos-scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes pulse-dot {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.4;
+    }
+  }
+
+  @keyframes skeleton-pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.4;
+    }
+  }
+}

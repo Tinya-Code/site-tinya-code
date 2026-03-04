@@ -1,26 +1,16 @@
 ---
+import Tooltip from "../common/Tooltip.astro";
 import Icon from "../common/Icon.astro";
 import Button from "@/components/ui/buttons/Button.astro";
-import type { CardBase } from "@/types";
+import type { PricingPlan } from "@/types";
 
-interface Props extends Omit<CardBase, "image" | "href"> {
-  id: string;
-  name:string;
-  priceMonthly: number;
-  priceAnnual: number;
-  period: string;
-  features: (string | { text: string; tooltip: string })[];
-  ctaLabel?: string;
-  ctaHref: string;
-  featured?: boolean;
-  badge?: string;
-}
+interface Props extends PricingPlan {}
 
 const {
   id,
-   name,
-  priceMonthly,
-  priceAnnual,
+  name,
+  priceSplit,
+  priceFull,
   period,
   description,
   features,
@@ -28,10 +18,15 @@ const {
   ctaHref,
   featured = false,
   badge,
+  hideDiscount = false,
+  customDiscountLabel,
 } = Astro.props;
 
 // Formateador de moneda
-const formatPrice = (p: number) => `S/ ${p.toLocaleString("es-PE")}`;
+const formatPrice = (p: number | string) => {
+  if (typeof p === "string") return p;
+  return `S/ ${p.toLocaleString("es-PE")}`;
+};
 ---
 
 <div
@@ -42,8 +37,8 @@ const formatPrice = (p: number) => `S/ ${p.toLocaleString("es-PE")}`;
       : "border border-gray-light",
   ]}
   data-plan-id={id}
-  data-price-monthly={priceMonthly}
-  data-price-annual={priceAnnual}
+  data-price-split={priceSplit}
+  data-price-full={priceFull}
 >
   {
     (featured || badge) && (
@@ -64,14 +59,20 @@ const formatPrice = (p: number) => `S/ ${p.toLocaleString("es-PE")}`;
         <span
           class="pricing-card__price font-rader text-4xl italic text-dark transition-all duration-300"
         >
-          {formatPrice(priceMonthly)}
+          {formatPrice(priceSplit)}
         </span>
-        <span class="pricing-card__period text-sm font-medium text-dark/40">
+        <span class="pricing-card__period text-sm font-medium text-dark/40 flex items-center gap-1">
           /{period}
+          {period === "pago único" && (
+            <Tooltip text="Inversión total por el proyecto completado. Sin mensualidades." iconSize={3} />
+          )}
+          {period === "proyecto" && (
+            <Tooltip text="El costo final depende de la complejidad y requerimientos específicos." iconSize={3} />
+          )}
         </span>
       </div>
       {
-        priceAnnual > 0 && (
+        !hideDiscount && typeof priceFull === "number" && priceFull > 0 && (
           <p class="pricing-card__annual-note text-xs text-brand font-semibold mt-1 opacity-0 transition-opacity duration-300">
             Descuento Pagando Completo 
           </p>
@@ -92,23 +93,7 @@ const formatPrice = (p: number) => `S/ ${p.toLocaleString("es-PE")}`;
               <div class="flex items-center gap-1.5 leading-snug">
                 <span>{text}</span>
                 {tooltip && (
-                  <div class="relative flex items-center">
-                    <button
-                      type="button"
-                      class="tooltip-trigger flex items-center justify-center p-0.5 text-gray/40 hover:text-brand transition-colors focus:outline-none"
-                      aria-label={`Más información sobre ${text}`}
-                      data-tooltip={tooltip}
-                    >
-                      <Icon name="mdi:information-outline" size={3} />
-                    </button>
-                    
-                    {/* Tooltip Card (Desktop Hover / Mobile Click via JS) */}
-                    <div class="tooltip-box absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-48 p-3 bg-dark text-white text-[11px] leading-tight rounded-sm opacity-0 translate-y-2 transition-all duration-200 z-50 pointer-events-none group-hover/feature:lg:opacity-100 group-hover/feature:lg:visible group-hover/feature:lg:translate-y-0">
-                      {tooltip}
-                      {/* Arrow */}
-                      <div class="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-dark"></div>
-                    </div>
-                  </div>
+                  <Tooltip text={tooltip} iconSize={3} />
                 )}
               </div>
             </li>
@@ -136,55 +121,9 @@ const formatPrice = (p: number) => `S/ ${p.toLocaleString("es-PE")}`;
     transform: scale(1.02);
   }
 
-  /* Tooltip logic for mobile/JS */
-  .tooltip-box {
-    visibility: hidden;
-  }
-
-  .tooltip-box.is-visible,
-  .group\/feature:hover .tooltip-box {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-    pointer-events: auto;
-  }
-
   @media (max-width: 1023px) {
     .pricing-card--featured {
       transform: none;
     }
   }
 </style>
-
-<script>
-  // Mobile Tooltip Logic: Tap to toggle
-  const initTooltips = () => {
-    const triggers = document.querySelectorAll('.tooltip-trigger');
-    
-    triggers.forEach(trigger => {
-      trigger.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const box = trigger.nextElementSibling;
-        if (!box) return;
-
-        // Close others
-        document.querySelectorAll('.tooltip-box').forEach(b => {
-          if (b !== box) b.classList.remove('is-visible');
-        });
-
-        box.classList.toggle('is-visible');
-      });
-    });
-
-    // Close on click outside
-    document.addEventListener('click', () => {
-      document.querySelectorAll('.tooltip-box').forEach(b => b.classList.remove('is-visible'));
-    });
-  };
-
-  // Initial run
-  initTooltips();
-
-  // Handle View Transitions
-  document.addEventListener("astro:after-swap", initTooltips);
-</script>
